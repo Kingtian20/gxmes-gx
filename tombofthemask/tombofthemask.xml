@@ -1,7 +1,4 @@
 <!DOCTYPE html>
-
-
-
 <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@main/tomb/">
 <html lang="en">
 <head>
@@ -14,8 +11,8 @@
       padding: 0;
       height: 100%;
       width: 100%;
-      overflow: hidden;
-      background: black;
+      overflow: hidden; /* prevent scrollbars */
+      background: black; /* optional: black background */
     }
     #gameContainer {
       width: 100vw;
