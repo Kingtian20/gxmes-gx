@@ -1,0 +1,812 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" />
+    <title>GX Verse</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #0000ff;
+        --secondary-color: #00fff7;
+      }
+
+      body {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section {
+        position: relative;
+      }
+
+      section h1 {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        animation: glitch 2s infinite;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      section h1::before,
+      section h1::after {
+        content: "GX GAMES";
+        position: absolute;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+        clip: rect(0, 900px, 0, 0);
+      }
+
+      section h1::before {
+        color: var(--secondary-color);
+      }
+
+      section h1::after {
+        color: var(--primary-color);
+      }
+
+      @keyframes glitch {
+        0% {
+          text-shadow:
+            0 0 2px #fff,
+            0 0 10px var(--primary-color);
+        }
+        20% {
+          text-shadow:
+            -2px 0 var(--secondary-color),
+            2px 2px var(--primary-color);
+        }
+        40% {
+          text-shadow:
+            2px -2px var(--secondary-color),
+            -2px 2px var(--primary-color);
+        }
+        60% {
+          text-shadow:
+            0 0 3px #fff,
+            0 0 15px var(--primary-color);
+        }
+        80% {
+          text-shadow:
+            2px 0 var(--secondary-color),
+            -2px -2px var(--primary-color);
+        }
+        100% {
+          text-shadow:
+            0 0 2px #fff,
+            0 0 10px var(--primary-color);
+        }
+      }
+
+      .home {
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .search-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .search-box {
+        position: relative;
+        width: 100%;
+        height: 54px;
+        background: #000;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .line-driver {
+        position: absolute;
+        inset: 0;
+        border-radius: 100px;
+        z-index: -1;
+        overflow: hidden;
+
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+      }
+
+      .line-driver::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+        animation: rotate 3s linear infinite;
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .search-box input {
+        width: 100%;
+        height: 100%;
+        padding: 0 25px;
+        border: none;
+        background: transparent;
+        color: #fff;
+        font-size: 1.1rem;
+        outline: none;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      @keyframes rotate {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .search-box:hover {
+        transform: scale(1.05);
+      }
+
+      .search-box:focus-within {
+        transform: scale(1.02);
+      }
+
+      .search-box:focus-within .line-driver {
+        filter: drop-shadow(0 0 12px var(--secondary-color));
+      }
+
+      .action-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        align-items: center;
+        width: 320px;
+        padding: 10px 15px;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: #000;
+        border-radius: 100px;
+        z-index: 10;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .action-bar:hover {
+        transform: translateX(-50%) scale(1.05);
+      }
+
+      .action-bar button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.3rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .action-bar button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      #home-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+      }
+
+      .g-circle {
+        position: relative;
+        display: inline-block;
+        color: #fff;
+        z-index: 5;
+        perspective: 600px;
+        animation: glow 10s linear infinite;
+      }
+
+      @keyframes glow {
+        0% {
+          filter: drop-shadow(0 0 10px #ffff00);
+        }
+        50% {
+          filter: drop-shadow(0 0 1px #ffff00);
+        }
+        100% {
+          filter: drop-shadow(0 0 10px #ffff00);
+        }
+      }
+
+      .g-circle::before,
+      .g-circle::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1.4em;
+        height: 1.4em;
+        border: 10px solid #ffff00;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%) rotateX(70deg) rotateY(-20deg);
+
+        box-shadow:
+          0 0 10px rgba(255, 255, 0, 0.6),
+          inset 0 0 10px rgba(255, 255, 0, 0.6);
+      }
+
+      .g-circle::before {
+        z-index: -1;
+      }
+
+      .g-circle::after {
+        z-index: 1;
+        clip-path: inset(50% 0 0 0);
+      }
+
+      .grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+        padding-bottom: 100px;
+      }
+
+      .game-item {
+        aspect-ratio: 1/1;
+        background: #111;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
+      }
+
+      .game-item:hover {
+        transform: translateY(-10px) scale(1.05);
+        border-color: white;
+        box-shadow: 0 0 20px var(--primary-color);
+        z-index: 2;
+      }
+
+      .game-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .game-item:hover img {
+        transform: scale(1.1);
+        opacity: 0.5;
+      }
+
+      .game-title {
+        position: absolute;
+        bottom: -50px;
+        width: 100%;
+        padding: 15px 10px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        color: white;
+        font-weight: bold;
+        transition: bottom 0.3s ease-out;
+      }
+
+      .game-item:hover .game-title {
+        bottom: 0;
+      }
+
+      .game-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+      }
+
+      .game-overlay.active {
+        transform: translateY(0);
+      }
+
+      #game-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      .newtab-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+      }
+
+      .game-controls {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 320px;
+        height: 65px;
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 100px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 10px;
+        padding: 0 15px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(0, 255, 247, 0.1);
+        z-index: 10000;
+      }
+
+      .game-controls button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .game-controls button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .action-bar button::after,
+      .game-controls button::after {
+        content: attr(title);
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #000;
+        background: var(--primary-color);
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .action-bar button:hover::after,
+      .game-controls button:hover::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        top: -50px;
+      }
+
+      .action-bar button::before,
+      .game-controls button::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--primary-color) transparent transparent transparent;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }
+
+      .action-bar button:hover::before,
+      .game-controls button:hover::before {
+        opacity: 1;
+      }
+
+      .search-wrapper {
+        position: sticky;
+        top: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+        z-index: 100;
+        background: linear-gradient(to bottom, #000 70%, transparent);
+      }
+
+      #gxmes-page .search-box {
+        width: 80%;
+        max-width: 800px;
+        height: 60px;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      #gxmes-page .search-box input {
+        font-size: 1rem;
+        letter-spacing: 1px;
+      }
+
+      #gxmes-page .line-driver::before {
+        width: 1000px;
+        height: 1000px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="action-bar">
+      <div class="line-driver"></div>
+      <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
+      <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
+      <button title="Contact" id="contactBtn"><i class="fa-solid fa-address-book"></i></button>
+      <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
+      <button title="Sound Board" id="soundsBtn"><i class="fa-solid fa-volume"></i></button>
+    </div>
+
+    <canvas id="home-canvas"></canvas>
+
+    <section class="home" id="home-page">
+      <h1><span class="g-circle">G</span>X VERSE</h1>
+      <h1 style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX Verse</h1>
+      <div class="search-container">
+        <div class="search-box">
+          <div class="line-driver"></div>
+          <input type="text" placeholder="Search gxmes..." />
+        </div>
+      </div>
+    </section>
+
+    <section class="gxmes" id="gxmes-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <div class="search-wrapper">
+        <div class="search-box">
+          <div class="line-driver"></div>
+          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="grid" id="game-grid"></div>
+
+      <div id="game-overlay" class="game-overlay">
+        <div id="game-frame-container"></div>
+
+        <div class="game-controls">
+          <button id="btn-fullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+          <button id="btn-download" title="Download"><i class="fa-solid fa-download"></i></button>
+          <button id="btn-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+      </div>
+    </section>
+
+    <script>
+      const homePage = document.getElementById("home-page");
+      const gxmesPage = document.getElementById("gxmes-page");
+
+      const homeBtn = document.getElementById("homeBtn");
+      const gxmesBtn = document.getElementById("gxmesBtn");
+
+      homeBtn.addEventListener("click", () => {
+        homePage.style.display = "flex";
+        gxmesPage.style.display = "none";
+      });
+
+      gxmesBtn.addEventListener("click", () => {
+        homePage.style.display = "none";
+        gxmesPage.style.display = "flex";
+      });
+    </script>
+
+    <script>
+      const canvas = document.getElementById("home-canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const constellations = [];
+      const constellationCount = 11;
+      const starsPerConstellation = 6;
+
+      function createConstellation(cx, cy) {
+        const stars = [];
+        const connections = [];
+
+        const vx = (Math.random() - 0.5) * 0.2;
+        const vy = (Math.random() - 0.5) * 0.2;
+
+        for (let i = 0; i < starsPerConstellation; i++) {
+          stars.push({
+            ox: (Math.random() - 0.5) * 150,
+            oy: (Math.random() - 0.5) * 150,
+            twinkle: Math.random() * Math.PI * 5,
+          });
+
+          if (i > 0) {
+            connections.push([i - 1, i]);
+          }
+        }
+
+        return {cx, cy, vx, vy, stars, connections};
+      }
+
+      for (let i = 0; i < constellationCount; i++) {
+        constellations.push(createConstellation(Math.random() * canvas.width, Math.random() * canvas.height));
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        constellations.forEach((c) => {
+          c.cx += c.vx;
+          c.cy += c.vy;
+
+          if (c.cx < 0 || c.cx > canvas.width) c.vx *= -1;
+          if (c.cy < 0 || c.cy > canvas.height) c.vy *= -1;
+
+          c.connections.forEach(([a, b]) => {
+            const s1 = c.stars[a];
+            const s2 = c.stars[b];
+
+            const x1 = c.cx + s1.ox;
+            const y1 = c.cy + s1.oy;
+            const x2 = c.cx + s2.ox;
+            const y2 = c.cy + s2.oy;
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.strokeStyle = "rgba(255,255,255, 0.5)";
+            ctx.lineWidth = 1;
+            ctx.stroke();
+          });
+
+          c.stars.forEach((star) => {
+            star.twinkle += 0.03;
+
+            const x = c.cx + star.ox;
+            const y = c.cy + star.oy;
+            const brightness = 0.6 + Math.sin(star.twinkle) * 0.5;
+
+            ctx.beginPath();
+            ctx.arc(x, y, 2 + brightness, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255,255,255,${brightness})`;
+            ctx.fill();
+          });
+        });
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+    </script>
+
+    <script>
+      const gamesList = [
+        {
+          title: "1v1 Tennis",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/1.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/1v1tennis/1v1tennis.xml",
+        },
+      ];
+
+      const gameGrid = document.getElementById("game-grid");
+      const searchInput = document.getElementById("game-search");
+      const overlay = document.getElementById("game-overlay");
+      const frameContainer = document.getElementById("game-frame-container");
+      const globalActionBar = document.querySelector(".action-bar");
+      let currentGameCDN = "";
+
+      function renderGames(games) {
+        gameGrid.innerHTML = "";
+        games.forEach((game) => {
+          const item = document.createElement("div");
+          item.className = "game-item";
+          item.onclick = () => openGameModal(game.cdn);
+
+          item.innerHTML = `
+            <img src="${game.image}" alt="${game.title}" loading="lazy">
+            <div class="game-title">${game.title}</div>
+        `;
+          gameGrid.appendChild(item);
+        });
+      }
+
+      searchInput.addEventListener("input", (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = gamesList.filter((game) => game.title.toLowerCase().includes(term));
+        renderGames(filtered);
+      });
+
+      function openGameModal(cdnUrl) {
+        currentGameCDN = cdnUrl;
+
+        globalActionBar.style.display = "none";
+
+        overlay.classList.add("active");
+
+        fetch(cdnUrl)
+          .then((res) => res.text())
+          .then((html) => {
+            const blob = new Blob([html], {type: "text/html"});
+            const url = URL.createObjectURL(blob);
+
+            const iframe = document.createElement("iframe");
+            iframe.src = url;
+            iframe.className = "newtab-iframe";
+
+            frameContainer.innerHTML = "";
+            frameContainer.appendChild(iframe);
+          })
+          .catch((err) => {
+            frameContainer.innerHTML = `<div style="padding: 20px; color: #ff0044; font-family: monospace;">Error loading game: ${err.message}</div>`;
+          });
+      }
+
+      document.getElementById("btn-exit").addEventListener("click", () => {
+        overlay.classList.remove("active");
+
+        setTimeout(() => {
+          globalActionBar.style.display = "flex";
+          frameContainer.innerHTML = "";
+          currentGameCDN = "";
+        }, 500);
+      });
+
+      document.getElementById("btn-fullscreen").addEventListener("click", () => {
+        if (!currentGameCDN) return;
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var newWin = window.open("about:blank", "_blank");
+            if (newWin) {
+              newWin.document.open();
+              newWin.document.write(xhr.responseText);
+              newWin.document.close();
+
+              setTimeout(function () {
+                if (newWin.document.documentElement.requestFullscreen) {
+                  newWin.document.documentElement.requestFullscreen();
+                } else if (newWin.document.documentElement.mozRequestFullScreen) {
+                  newWin.document.documentElement.mozRequestFullScreen();
+                } else if (newWin.document.documentElement.webkitRequestFullscreen) {
+                  newWin.document.documentElement.webkitRequestFullscreen();
+                } else if (newWin.document.documentElement.msRequestFullscreen) {
+                  newWin.document.documentElement.msRequestFullscreen();
+                }
+              }, 500);
+            } else {
+              alert("Popup blocked! Please allow popups for this site to enable fullscreen mode.");
+            }
+          }
+        };
+        xhr.open("GET", currentGameCDN);
+        xhr.send();
+      });
+
+      document.getElementById("btn-download").addEventListener("click", () => {
+        if (!currentGameCDN) return;
+
+        fetch(currentGameCDN)
+          .then((response) => {
+            if (!response.ok) throw new Error("Network response was not ok");
+            return response.text();
+          })
+          .then((text) => {
+            const blob = new Blob([text], {type: "text/html"});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            const game = gamesList.find((g) => g.cdn === currentGameCDN);
+            const fileName = game ? game.title.replace(/\s+/g, "_") + ".html" : "gxme_file.html";
+
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+          })
+          .catch((err) => {
+            console.error("Download failed:", err);
+            alert("Failed to download the game file.");
+          });
+      });
+
+      renderGames(gamesList);
+    </script>
+  </body>
+</html>
+
+
+<!-- I need a break -->
+<!-- I need a break -->
+ <!-- I need a break -->
+  <!-- I need a break -->
+   <!-- I need a break -->
+    <!-- I need a break -->
+     <!-- I need a break -->
+      <!-- I need a break -->
+       <!-- I need a break -->
+        <!-- I need a break -->
+         <!-- I need a break -->
+          <!-- I need a break -->
+           <!-- I need a break -->
+            <!-- I need a break -->
+             <!-- I need a break -->
+              <!-- I need a break -->
+               <!-- I need a break -->
+                <!-- I need a break -->
+                 <!-- I need a break -->
+                  <!-- I need a break -->
+                   <!-- I need a break -->
+                    <!-- I need a break -->
+                     <!-- I need a break -->
+                      <!-- I need a break -->
+                       <!-- I need a break -->
+                        <!-- I need a break -->
+                         <!-- I need a break -->
+                          <!-- I need a break -->
