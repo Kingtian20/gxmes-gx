@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,7 +34,7 @@
         position: relative;
       }
 
-      section h1 {
+      .main-title {
         position: absolute;
         top: 30%;
         left: 50%;
@@ -48,24 +48,39 @@
         animation: glitch 2s infinite;
         text-align: center;
         white-space: nowrap;
+        z-index: 5;
       }
 
-      section h1::before,
-      section h1::after {
-        content: "GX GAMES";
+      .main-title::before,
+      .main-title::after {
+        content: "GX VERSE";
         position: absolute;
+        top: 0;
         left: 0;
         right: 0;
         overflow: hidden;
-        clip: rect(0, 900px, 0, 0);
       }
 
-      section h1::before {
+      .sub-title::before,
+      .sub-title::after {
+        content: "Welcome to GX Verse";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      .main-title::before,
+      .sub-title::before {
         color: var(--secondary-color);
+        z-index: -1;
       }
 
-      section h1::after {
+      .main-title::after,
+      .sub-title::after {
         color: var(--primary-color);
+        z-index: -2;
       }
 
       @keyframes glitch {
@@ -298,6 +313,7 @@
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
         gap: 30px;
+        margin-top: 80px;
         padding-bottom: 100px;
       }
 
@@ -360,11 +376,21 @@
         display: flex;
         flex-direction: column;
         transform: translateY(100%);
-        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+          visibility 0.5s;
       }
 
       .game-overlay.active {
         transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      #game-overlay.active ~ .action-bar {
+        display: none !important;
       }
 
       #game-frame-container {
@@ -470,12 +496,13 @@
 
       .search-wrapper {
         position: sticky;
-        top: 0;
+        top: 20px;
         width: 100%;
         display: flex;
         justify-content: center;
         padding: 15px 0;
         z-index: 100;
+        margin-top: 30px;
         background: linear-gradient(to bottom, #000 70%, transparent);
       }
 
@@ -496,6 +523,56 @@
         width: 1000px;
         height: 1000px;
       }
+
+      #gxmes-page {
+        background-color: #000 !important;
+        min-height: 100vh;
+      }
+
+      .version-label {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #ffffffb7;
+        background: transparent;
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0.5;
+      }
+
+      .page-fade {
+        animation: fadeInPage 0.4s ease-out forwards;
+      }
+
+      @keyframes fadeInPage {
+        from {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .game-pop {
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
   <body>
@@ -503,22 +580,22 @@
       <div class="line-driver"></div>
       <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
       <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
-      <button title="Contact" id="contactBtn"><i class="fa-solid fa-address-book"></i></button>
+      <button title="Info" id="contactBtn"><i class="fa-solid fa-address-book"></i></button>
       <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
       <button title="Sound Board" id="soundsBtn"><i class="fa-solid fa-volume"></i></button>
     </div>
-
     <canvas id="home-canvas"></canvas>
 
     <section class="home" id="home-page">
-      <h1><span class="g-circle">G</span>X VERSE</h1>
-      <h1 style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX Verse</h1>
+      <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
+      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX Verse</h1>
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" placeholder="Search gxmes..." />
+          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." />
         </div>
       </div>
+      <label class="version-label">Ver 0.0.1 BETA</label>
     </section>
 
     <section class="gxmes" id="gxmes-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
@@ -530,33 +607,69 @@
       </div>
 
       <div class="grid" id="game-grid"></div>
-
-      <div id="game-overlay" class="game-overlay">
-        <div id="game-frame-container"></div>
-
-        <div class="game-controls">
-          <button id="btn-fullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
-          <button id="btn-download" title="Download"><i class="fa-solid fa-download"></i></button>
-          <button id="btn-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-      </div>
     </section>
+
+    <div id="game-overlay" class="game-overlay">
+      <div id="game-frame-container"></div>
+
+      <div class="game-controls">
+        <button id="btn-fullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+        <button id="btn-download" title="Download"><i class="fa-solid fa-download"></i></button>
+        <button id="btn-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
 
     <script>
       const homePage = document.getElementById("home-page");
       const gxmesPage = document.getElementById("gxmes-page");
-
       const homeBtn = document.getElementById("homeBtn");
       const gxmesBtn = document.getElementById("gxmesBtn");
+      const mainTitle = document.querySelector(".main-title");
+      const subTitle = document.querySelector(".sub-title");
 
       homeBtn.addEventListener("click", () => {
         homePage.style.display = "flex";
         gxmesPage.style.display = "none";
+        homePage.classList.remove("page-fade");
+        void homePage.offsetWidth;
+        homePage.classList.add("page-fade");
+        if (mainTitle) {
+          mainTitle.style.animation = "none";
+          void mainTitle.offsetWidth;
+          mainTitle.style.animation = "glitch 2s infinite";
+        }
+        if (subTitle) {
+          subTitle.style.animation = "none";
+          void subTitle.offsetWidth;
+          subTitle.style.animation = "glitch 2s infinite";
+        }
       });
 
       gxmesBtn.addEventListener("click", () => {
         homePage.style.display = "none";
         gxmesPage.style.display = "flex";
+        gameSearch.focus();
+        gxmesPage.classList.remove("page-fade");
+        void gxmesPage.offsetWidth;
+        gxmesPage.classList.add("page-fade");
+      });
+
+      const homeSearch = document.getElementById("home-search");
+      const gameSearch = document.getElementById("game-search");
+
+      homeSearch.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          gameSearch.value = homeSearch.value;
+          gameSearch.dispatchEvent(new Event("input", {bubbles: true}));
+          homeSearch.value = "";
+
+          homePage.style.display = "none";
+          gxmesPage.style.display = "flex";
+
+          gxmesPage.classList.remove("page-fade");
+          void gxmesPage.offsetWidth;
+          gxmesPage.classList.add("page-fade");
+        }
       });
     </script>
 
@@ -651,26 +764,74 @@
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/1.png",
           cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/1v1tennis/1v1tennis.xml",
         },
+        {
+          title: "Ultrakill",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/132.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/ultrakill/ultrakill.xml",
+        },
+        {
+          title: "Wheelie Bike",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/170.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/wheeliebike/wheeliebike.xml",
+        },
+        {
+          title: "Bacon May Die",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/204.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/baconmaydie/baconmaydie.xml",
+        },
+        {
+          title: "Stickman Kombat",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/111.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/stickmankombat/stickmankombat.xml",
+        },
+        {
+          title: "Tomb Of The Mask",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/176.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/tombofthemask/tombofthemask.xml",
+        },
+        {
+          title: "1v1 Lol",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/147.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/1v1lol/1v1lol.xml",
+        },
+        {
+          title: "Drift Race",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/32.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/driftrace/driftrace.xml",
+        },
+        {
+          title: "Friday Night Funkin - Indie Cross",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/251.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/fridaynightfunkin/indiecross/indiecross.xml",
+        },
       ];
+
+      gamesList.sort((a, b) => {
+        return a.title.localeCompare(b.title, undefined, {
+          numeric: true,
+          sensitivity: "base",
+        });
+      });
 
       const gameGrid = document.getElementById("game-grid");
       const searchInput = document.getElementById("game-search");
       const overlay = document.getElementById("game-overlay");
       const frameContainer = document.getElementById("game-frame-container");
       const globalActionBar = document.querySelector(".action-bar");
+      let barTimeout;
       let currentGameCDN = "";
 
       function renderGames(games) {
         gameGrid.innerHTML = "";
         games.forEach((game) => {
           const item = document.createElement("div");
-          item.className = "game-item";
+          item.className = "game-item game-pop";
           item.onclick = () => openGameModal(game.cdn);
 
           item.innerHTML = `
-            <img src="${game.image}" alt="${game.title}" loading="lazy">
-            <div class="game-title">${game.title}</div>
-        `;
+      <img src="${game.image}" alt="${game.title}" loading="lazy">
+      <div class="game-title">${game.title}</div>
+    `;
           gameGrid.appendChild(item);
         });
       }
@@ -682,11 +843,13 @@
       });
 
       function openGameModal(cdnUrl) {
+        clearTimeout(barTimeout);
+
         currentGameCDN = cdnUrl;
-
         globalActionBar.style.display = "none";
-
         overlay.classList.add("active");
+
+        document.body.style.overflowY = "hidden";
 
         fetch(cdnUrl)
           .then((res) => res.text())
@@ -708,8 +871,9 @@
 
       document.getElementById("btn-exit").addEventListener("click", () => {
         overlay.classList.remove("active");
+        gxmesPage.style.overflowY = "auto";
 
-        setTimeout(() => {
+        barTimeout = setTimeout(() => {
           globalActionBar.style.display = "flex";
           frameContainer.innerHTML = "";
           currentGameCDN = "";
@@ -780,33 +944,3 @@
     </script>
   </body>
 </html>
-
-
-<!-- I need a break -->
-<!-- I need a break -->
- <!-- I need a break -->
-  <!-- I need a break -->
-   <!-- I need a break -->
-    <!-- I need a break -->
-     <!-- I need a break -->
-      <!-- I need a break -->
-       <!-- I need a break -->
-        <!-- I need a break -->
-         <!-- I need a break -->
-          <!-- I need a break -->
-           <!-- I need a break -->
-            <!-- I need a break -->
-             <!-- I need a break -->
-              <!-- I need a break -->
-               <!-- I need a break -->
-                <!-- I need a break -->
-                 <!-- I need a break -->
-                  <!-- I need a break -->
-                   <!-- I need a break -->
-                    <!-- I need a break -->
-                     <!-- I need a break -->
-                      <!-- I need a break -->
-                       <!-- I need a break -->
-                        <!-- I need a break -->
-                         <!-- I need a break -->
-                          <!-- I need a break -->
