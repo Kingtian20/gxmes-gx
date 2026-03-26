@@ -9,6 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta charset="utf-8" />
+
     <title>about:blank</title>
     <meta name="robots" content="noindex,nofollow" />
     <script src="poki-sdk.js"></script>
@@ -236,11 +237,6 @@
             canvas.addEventListener('click', function(){
                 window.focus();
             });           
-
-
-			//document.getElementById("door").style.top= (300 * bgScale) + "px";
-			//document.getElementById("door").style.width = (bgScale * 100) +"%";
-			//document.getElementById("door").style.height = (bgScale * 100) +"%";
 		}
 		
 		window.addEventListener('wheel', ev => ev.preventDefault(), { passive: false });
@@ -250,8 +246,6 @@
 			}
 		});		
             
-                
-        /// smooth things out 
         function loading_lerp (start, end, amt){
             return (1 - amt) * start + amt * end;
         }
