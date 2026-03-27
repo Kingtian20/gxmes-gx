@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -172,9 +172,16 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          var(--primary-color) 10%,
+          var(--secondary-color) 20%,
+          transparent 25%
+        );
         animation: rotate 3s linear infinite;
-        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color))
+          drop-shadow(0 0 50px var(--primary-color));
       }
 
       .search-box input {
@@ -588,17 +595,31 @@
 
     <section class="home" id="home-page">
       <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
-      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">We will soon update the file and you must redownload</h1>
+      <h1
+        class="sub-title main-title"
+        style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+        We will soon update the file and you must redownload
+      </h1>
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." />
+          <input
+            type="text"
+            id="home-search"
+            autocomplete="off"
+            autofocus
+            autocapitalize="off"
+            autocorrect="off"
+            placeholder="Search gxmes..." />
         </div>
       </div>
       <label class="version-label">Ver 0.0.1 BETA</label>
     </section>
 
-    <section class="gxmes" id="gxmes-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+    <section
+      class="gxmes"
+      id="gxmes-page"
+      style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
       <div class="search-wrapper">
         <div class="search-box">
           <div class="line-driver"></div>
@@ -660,7 +681,7 @@
       homeSearch.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
           gameSearch.value = homeSearch.value;
-          gameSearch.dispatchEvent(new Event("input", {bubbles: true}));
+          gameSearch.dispatchEvent(new Event("input", { bubbles: true }));
           homeSearch.value = "";
 
           homePage.style.display = "none";
@@ -695,7 +716,7 @@
           stars.push({
             ox: (Math.random() - 0.5) * 150,
             oy: (Math.random() - 0.5) * 150,
-            twinkle: Math.random() * Math.PI * 5,
+            twinkle: Math.random() * Math.PI * 5
           });
 
           if (i > 0) {
@@ -703,7 +724,7 @@
           }
         }
 
-        return {cx, cy, vx, vy, stars, connections};
+        return { cx, cy, vx, vy, stars, connections };
       }
 
       for (let i = 0; i < constellationCount; i++) {
@@ -762,54 +783,59 @@
         {
           title: "1v1 Tennis",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/1.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/1v1tennis/1v1tennis.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1tennis/1v1tennis.xml"
         },
         {
           title: "Ultrakill",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/132.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/ultrakill/ultrakill.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/ultrakill.xml"
         },
         {
           title: "Wheelie Bike",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/170.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/wheeliebike/wheeliebike.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/wheeliebike/wheeliebike.xml"
         },
         {
           title: "Bacon May Die",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/204.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/baconmaydie/baconmaydie.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/baconmaydie/baconmaydie.xml"
         },
         {
           title: "Stickman Kombat",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/111.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/stickmankombat/stickmankombat.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/stickmankombat/stickmankombat.xml"
         },
         {
           title: "Tomb Of The Mask",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/176.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/tombofthemask/tombofthemask.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/tombofthemask/tombofthemask.xml"
         },
         {
           title: "1v1 Lol",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/147.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/1v1lol/1v1lol.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1lol/1v1lol.xml"
         },
         {
           title: "Drift Race",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/32.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/driftrace/driftrace.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/driftrace/driftrace.xml"
         },
         {
           title: "Friday Night Funkin - Indie Cross",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/251.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/fridaynightfunkin/indiecross/indiecross.xml",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/fridaynightfunkin/indiecross/indiecross.xml"
         },
+        {
+          title: "Tunnel Rush",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/125.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/tunnelrush/tunnelrush.xml"
+        }
       ];
 
       gamesList.sort((a, b) => {
         return a.title.localeCompare(b.title, undefined, {
           numeric: true,
-          sensitivity: "base",
+          sensitivity: "base"
         });
       });
 
@@ -854,7 +880,7 @@
         fetch(cdnUrl)
           .then((res) => res.text())
           .then((html) => {
-            const blob = new Blob([html], {type: "text/html"});
+            const blob = new Blob([html], { type: "text/html" });
             const url = URL.createObjectURL(blob);
 
             const iframe = document.createElement("iframe");
@@ -921,7 +947,7 @@
             return response.text();
           })
           .then((text) => {
-            const blob = new Blob([text], {type: "text/html"});
+            const blob = new Blob([text], { type: "text/html" });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
