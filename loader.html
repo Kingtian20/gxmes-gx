@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>body, html { margin:0; padding:0; height:100%; overflow:hidden; background:black; }</style>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const target = params.get('url');
+
+        if (target) {
+            const baseUrl = target.substring(0, target.lastIndexOf('/') + 1);
+            fetch(target)
+                .then(r => r.text())
+                .then(html => {
+                  // I need a break I have crashed out so many times on this.
+                    let processed = html.replace('<head>', `<head><base href="${baseUrl}">`);
+                    document.open();
+                    document.write(processed);
+                    document.close();
+                });
+        }
+    </script>
+</body>
+</html>
