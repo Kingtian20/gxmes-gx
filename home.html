@@ -63,7 +63,7 @@
 
       .sub-title::before,
       .sub-title::after {
-        content: "Redownload at ";
+        content: "Welcome to GX VERSE";
         position: absolute;
         top: 0;
         left: 0;
@@ -590,7 +590,7 @@
 
     <section class="home" id="home-page">
       <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
-      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">I see you Nathanael Ramirez</h1>
+      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX VERSE</h1>
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
@@ -765,67 +765,37 @@
           title: "1v1 Lol",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/147.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1lol/1v1lol.xml",
-          base64: false,
+          webgl: false,
         },
         {
           title: "1v1 Tennis",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/1.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1tennis/1v1tennis.xml",
-          base64: false,
-        },
-        {
-          title: "Bacon May Die",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/204.png",
-          cdn: "data:text/html;base64,RE9fVEhJU19GT1JfQkFDT05fTUFZX0RJRT==",
-          base64: true,
+          webgl: false,
         },
         {
           title: "Death Run 3D",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/30.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/deathrun3d/deathrun3d.xml",
-          base64: false,
-        },
-        {
-          title: "Friday Night Funkin - Indie Cross",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/251.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/fridaynightfunkin/indiecross/indiecross.xml",
-          base64: false,
-        },
-        {
-          title: "Poly Track",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/91.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/polytrack/polytrack.xml",
-          base64: false,
+          webgl: false,
         },
         {
           title: "Slope",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/113.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/slope/slope1/slope1.xml",
-          base64: false,
+          webgl: false,
         },
         {
-          title: "Slope 3",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/115.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/slope/slope3/slope3.xml",
-          base64: false,
+          title: "Ultrakill",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/132.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/index.html",
+          webgl: true,
         },
         {
-          title: "Stickman Kombat",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/111.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/stickmankombat/stickmankombat.xml",
-          base64: false,
-        },
-        {
-          title: "Tomb Of The Mask",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/176.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/tombofthemask/tombofthemask.xml",
-          base64: false,
-        },
-        {
-          title: "Tunnel Rush",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/125.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/tunnelrush/tunnelrush.xml",
-          base64: false,
+          title: "Bacon May Die",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/204.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/baconmaydie/baconmaydie.xml",
+          webgl: true,
         },
       ];
 
@@ -836,7 +806,9 @@
       const overlay = document.getElementById("game-overlay");
       const frameContainer = document.getElementById("game-frame-container");
       const globalActionBar = document.querySelector(".action-bar");
+
       let currentGameCDN = "";
+      let isCurrentGameWebGL = false;
 
       function renderGames(games) {
         gameGrid.innerHTML = "";
@@ -859,27 +831,36 @@
 
       async function openGameModal(game) {
         currentGameCDN = game.cdn;
+        isCurrentGameWebGL = game.webgl;
+
         overlay.classList.add("active");
         globalActionBar.style.display = "none";
         frameContainer.innerHTML = "";
 
-        const iframe = document.createElement("iframe");
-        iframe.className = "newtab-iframe";
-        iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
-        iframe.allowFullscreen = true;
+        if (game.webgl) {
+          frameContainer.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:white; text-align:center; font-family:sans-serif; padding: 20px; width: 100%;">
+              <h2 style="margin-bottom: 10px;">WebGL Mode</h2>
+              <p style="opacity: 0.8; max-width: 400px; margin-bottom: 20px;">This game requires a new window to run correctly.</p>
+              <p style="opacity: 0.8; max-width: 400px; margin-bottom: 20px;">Blob URLs don't support WebGL, which is our method for rendering fetched files.</p>
+              <button onclick="document.getElementById('btn-fullscreen').click()" style="padding: 15px 15px; background: #3066BE; color: white; border: none; border-radius: 100px; cursor: pointer; font-size: 20px; transition: 0.2s;"><i class="fa-solid fa-expand"></i></button>
+            </div>
+          `;
+        } else {
+          const iframe = document.createElement("iframe");
+          iframe.className = "newtab-iframe";
+          iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
+          iframe.allowFullscreen = true;
 
-        try {
-          if (game.base64) {
-            iframe.src = game.cdn;
-          } else {
+          try {
             const response = await fetch(game.cdn);
             const code = await response.text();
             const blob = new Blob([code], {type: "text/html"});
             iframe.src = URL.createObjectURL(blob);
+            frameContainer.appendChild(iframe);
+          } catch (error) {
+            console.error("Load error:", error);
           }
-          frameContainer.appendChild(iframe);
-        } catch (error) {
-          console.error("Game load failed:", error);
         }
       }
 
@@ -892,12 +873,50 @@
 
       document.getElementById("btn-fullscreen").addEventListener("click", () => {
         if (!currentGameCDN) return;
-        const win = window.open();
-        win.document.body.style.margin = "0";
-        const ifr = win.document.createElement("iframe");
-        ifr.style.cssText = "border:none; width:100%; height:100vh;";
-        ifr.src = currentGameCDN;
-        win.document.body.appendChild(ifr);
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            var newWin = window.open("about:blank", "_blank");
+            if (newWin) {
+              newWin.document.open();
+              newWin.document.write(xhr.responseText);
+              newWin.document.close();
+
+              setTimeout(function () {
+                const docEl = newWin.document.documentElement;
+                const requestFs = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+                if (requestFs) requestFs.call(docEl);
+              }, 500);
+            } else {
+              alert("Popup blocked! Please allow popups to launch the game.");
+            }
+          }
+        };
+        xhr.open("GET", currentGameCDN);
+        xhr.send();
+      });
+
+      document.getElementById("btn-download").addEventListener("click", () => {
+        if (!currentGameCDN) return;
+
+        const game = gamesList.find((g) => g.cdn === currentGameCDN);
+        const fileName = game ? game.title.replace(/\s+/g, "_") + ".html" : "game.html";
+
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState == 4 && xhr.status == 200) {
+            const blob = new Blob([xhr.responseText], {type: "text/html"});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = fileName;
+            a.click();
+            window.URL.revokeObjectURL(url);
+          }
+        };
+        xhr.open("GET", currentGameCDN);
+        xhr.send();
       });
 
       renderGames(gamesList);
