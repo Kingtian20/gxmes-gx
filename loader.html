@@ -14,7 +14,7 @@
             fetch(target)
                 .then(r => r.text())
                 .then(html => {
-                  // I need a break I have crashed out so many times on this.
+                  // I need a break I have crashed out so many times on this (edit: I SPENT 5 HOURS DOING SOMETHING WHICH DIDINt EVEN WORK).
                     let processed = html.replace('<head>', `<head><base href="${baseUrl}">`);
                     document.open();
                     document.write(processed);
