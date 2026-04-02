@@ -4,10 +4,12 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ1S2GS6RP"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-    
-      gtag('config', 'G-VJ1S2GS6RP');
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      gtag("config", "G-VJ1S2GS6RP");
     </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -791,6 +793,7 @@
           title: "Ultrakill",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/132.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/index.html",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/loader.html",
           webgl: true,
         },
         {
@@ -899,8 +902,7 @@
       const frameContainer = document.getElementById("game-frame-container");
       const globalActionBar = document.querySelector(".action-bar");
 
-      let currentGameCDN = "";
-      let isCurrentGameWebGL = false;
+      let currentGame = null;
 
       function renderGames(games) {
         gameGrid.innerHTML = "";
@@ -921,32 +923,55 @@
         renderGames(gamesList.filter((game) => game.title.toLowerCase().includes(term)));
       });
 
-      async function openGameModal(game) {
-        currentGameCDN = game.cdn;
-        isCurrentGameWebGL = game.webgl;
+      async function fetchText(url) {
+        try {
+          const response = await fetch(url);
+          return await response.text();
+        } catch (err) {
+          console.error("Fetch failed:", err);
+          return null;
+        }
+      }
 
+      async function openGameModal(game) {
+        currentGame = game;
         overlay.classList.add("active");
         globalActionBar.style.display = "none";
-        frameContainer.innerHTML = "";
+        frameContainer.innerHTML = '<div style="color:white; text-align:center; margin-top:20%; font-family:Orbitron;">LOADING...</div>';
 
-        if (game.webgl) {
+        if (game.code) {
+          const fetchedCode = await fetchText(game.code);
+          frameContainer.innerHTML = "";
+
+          if (fetchedCode) {
+            const iframe = document.createElement("iframe");
+            iframe.className = "newtab-iframe";
+            iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-forms");
+            iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
+            iframe.allowFullscreen = true;
+            frameContainer.appendChild(iframe);
+
+            const doc = iframe.contentWindow.document;
+            doc.open();
+            doc.write(fetchedCode);
+            doc.close();
+          }
+        } else if (game.webgl) {
           frameContainer.innerHTML = `
             <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; color:white; text-align:center; font-family:sans-serif; padding: 20px; width: 100%;">
               <h2 style="margin-bottom: 10px;">WebGL Mode</h2>
               <p style="opacity: 0.8; max-width: 400px; margin-bottom: 20px;">This game requires a new window to run correctly.</p>
-              <p style="opacity: 0.8; max-width: 400px; margin-bottom: 20px;">Blob URLs don't support Complex WebGL Games, which is our method for rendering fetched files.</p>
               <button onclick="document.getElementById('btn-fullscreen').click()" style="padding: 15px 15px; background: #3066BE; color: white; border: none; border-radius: 100px; cursor: pointer; font-size: 20px; transition: 0.2s;"><i class="fa-solid fa-expand"></i></button>
             </div>
           `;
         } else {
-          const iframe = document.createElement("iframe");
-          iframe.className = "newtab-iframe";
-          iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
-          iframe.allowFullscreen = true;
-
           try {
-            const response = await fetch(game.cdn);
-            const code = await response.text();
+            const code = await fetchText(game.cdn);
+            frameContainer.innerHTML = "";
+            const iframe = document.createElement("iframe");
+            iframe.className = "newtab-iframe";
+            iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
+            iframe.allowFullscreen = true;
             const blob = new Blob([code], {type: "text/html"});
             iframe.src = URL.createObjectURL(blob);
             frameContainer.appendChild(iframe);
@@ -960,55 +985,49 @@
         overlay.classList.remove("active");
         frameContainer.innerHTML = "";
         globalActionBar.style.display = "flex";
-        currentGameCDN = "";
+        currentGame = null;
       });
 
-      document.getElementById("btn-fullscreen").addEventListener("click", () => {
-        if (!currentGameCDN) return;
+      document.getElementById("btn-fullscreen").addEventListener("click", async () => {
+        if (!currentGame) return;
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            var newWin = window.open("about:blank", "_blank");
-            if (newWin) {
-              newWin.document.open();
-              newWin.document.write(xhr.responseText);
-              newWin.document.close();
+        const targetUrl = currentGame.code || currentGame.cdn;
+        const fetchedContent = await fetchText(targetUrl);
 
-              setTimeout(function () {
-                const docEl = newWin.document.documentElement;
-                const requestFs = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
-                if (requestFs) requestFs.call(docEl);
-              }, 500);
-            } else {
-              alert("Popup blocked! Please allow popups to launch the game.");
-            }
+        if (fetchedContent) {
+          const newWin = window.open("about:blank", "_blank");
+          if (newWin) {
+            newWin.document.open();
+            newWin.document.write(fetchedContent);
+            newWin.document.close();
+
+            setTimeout(function () {
+              const docEl = newWin.document.documentElement;
+              const requestFs = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+              if (requestFs) requestFs.call(docEl);
+            }, 500);
+          } else {
+            alert("Popup blocked! Please allow popups to launch the game.");
           }
-        };
-        xhr.open("GET", currentGameCDN);
-        xhr.send();
+        }
       });
 
-      document.getElementById("btn-download").addEventListener("click", () => {
-        if (!currentGameCDN) return;
+      document.getElementById("btn-download").addEventListener("click", async () => {
+        if (!currentGame) return;
 
-        const game = gamesList.find((g) => g.cdn === currentGameCDN);
-        const fileName = game ? game.title.replace(/\s+/g, "_") + ".html" : "game.html";
+        const targetUrl = currentGame.code || currentGame.cdn;
+        const fetchedContent = await fetchText(targetUrl);
 
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function () {
-          if (xhr.readyState == 4 && xhr.status == 200) {
-            const blob = new Blob([xhr.responseText], {type: "text/html"});
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = fileName;
-            a.click();
-            window.URL.revokeObjectURL(url);
-          }
-        };
-        xhr.open("GET", currentGameCDN);
-        xhr.send();
+        if (fetchedContent) {
+          const fileName = currentGame.title.replace(/\s+/g, "_") + ".html";
+          const blob = new Blob([fetchedContent], {type: "text/html"});
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = fileName;
+          a.click();
+          window.URL.revokeObjectURL(url);
+        }
       });
 
       renderGames(gamesList);
