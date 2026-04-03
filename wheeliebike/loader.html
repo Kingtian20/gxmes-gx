@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <base href="https://cdn.jsdelivr.net/gh/bubbls/UGS-Assets@1a8377d87253610bca22dc9dc44f79020b395c1e/wheelie-bike/">
+    <meta charset="UTF-8">
+    <title>about:blank</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        :root {
+            --primary-color: #0000ff;
+            --secondary-color: #00fff7;
+        }
+
+        #loader {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            transition: opacity 0.8s ease;
+        }
+
+        #loading-text {
+            margin-bottom: 20px;
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .progress-container {
+            position: relative;
+            width: 520px;
+            height: 30px;
+            background: #111;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            overflow: hidden;
+        }
+
+        .line-driver {
+            position: absolute; inset: 0; border-radius: 50px;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
+        }
+
+        .line-driver::before {
+            content: ""; position: absolute; width: 400px; height: 400px;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+            animation: rotate 2s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        #progress-bar-bg {
+            width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 15px var(--primary-color);
+            transition: width 0.4s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+        }
+
+        #percent {
+            margin-top: 12px;
+            font-size: 12px;
+            letter-spacing: 1px;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div id="loading-text">Merging Assets</div>
+        <div class="progress-container">
+            <div class="line-driver"></div>
+            <div id="progress-bar-bg">
+                <div id="progress-bar"></div>
+            </div>
+        </div>
+        <div id="percent">0%</div>
+    </div>
+
+    <script>
+        (function() {
+            const bar = document.getElementById("progress-bar");
+            const val = document.getElementById("percent");
+            const loader = document.getElementById("loader");
+            let progress = 0;
+
+            let fakeLoad = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 2.5;
+                    if (progress > 90) progress = 90;
+                    updateUI(progress);
+                }
+            }, 150);
+
+            function updateUI(p) {
+                const rounded = Math.floor(p);
+                bar.style.width = rounded + "%";
+                val.innerText = rounded + "%";
+            }
+
+            window.addEventListener("load", () => {
+                setTimeout(() => {
+                    clearInterval(fakeLoad);
+                    updateUI(100);
+                    setTimeout(() => {
+                        loader.style.opacity = "0";
+                        setTimeout(() => loader.remove(), 800);
+                    }, 500);
+                }, 1500);
+            });
+        })();
+    </script>
+
+    <script src="box2d.wasm.js"></script>
+    <script src="scripts/supportcheck.js"></script>
+    <script src="scripts/offlineclient.js" type="module"></script>
+    <script src="scripts/main.js" type="module"></script>
+    <script src="scripts/register-sw.js" type="module"></script>
+
+</body>
+</html>
