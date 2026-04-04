@@ -4341,6 +4341,7 @@ var UnityLoader = UnityLoader || {
             t.open("GET", n.url, !0),
               (t.responseType = "text"),
               (t.onerror = function () {
+                console.error("Network Error: Could not download", n.url);
                 o.print("Could not download " + n.url),
                   0 == document.URL.indexOf("file:") &&
                     alert(
@@ -4348,8 +4349,9 @@ var UnityLoader = UnityLoader || {
                     );
               }),
               (t.onload = function () {
-                var a = JSON.parse(t.responseText);
-                for (var s in a) "undefined" == typeof o[s] && (o[s] = a[s]);
+                try {
+                  var a = JSON.parse(t.responseText);
+                  for (var s in a) "undefined" == typeof o[s] && (o[s] = a[s]);
                 if (o.unityVersion) {
                   var d = o.unityVersion.match(/(\d+)\.(\d+)\.(\d+)(.+)/);
                   d &&
@@ -4378,6 +4380,13 @@ var UnityLoader = UnityLoader || {
                     },
                     r.onerror
                   );
+                } catch (e) {
+                  console.error("JSON Parse Error: Failed to parse build configuration from", n.url);
+                  console.error("Response received:", t.responseText.substring(0, 200) + "...");
+                  if (r.onerror) {
+                    r.onerror("Failed to load game: Invalid response from server");
+                  }
+                }
               }),
               t.send();
           },
