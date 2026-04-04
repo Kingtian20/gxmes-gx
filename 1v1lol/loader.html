@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity Game | GX Port</title>
+    
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/UnityProgress.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/2.7.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-app.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-auth.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase-firestore.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firebase.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1login.js?v=2"></script>
+    <script src="https://cdn.jsdelivr.net/gh/n-101-1/1@main/1firestore.js"></script>
+    
+    <style>
+        :root {
+            --primary-color: #0000ff;
+            --secondary-color: #00fff7;
+        }
+
+        html, body {
+            margin: 0; padding: 0; overflow: hidden;
+            height: 100%; width: 100%; background: black;
+            font-family: 'Segoe UI', sans-serif;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #gameContainer {
+            width: 100vw !important; height: 100vh !important;
+            position: fixed; top: 0; left: 0; z-index: 1;
+        }
+
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            z-index: 100; transition: opacity 0.8s ease;
+        }
+
+        #loader-content {
+            width: 520px; text-align: center; color: white;
+        }
+
+        #loading-text {
+            margin-bottom: 20px; font-size: 18px;
+            letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        .progress-container {
+            position: relative; width: 100%; height: 30px;
+            background: #000; border-radius: 50px;
+            display: flex; align-items: center; justify-content: center;
+            padding: 4px; overflow: hidden;
+        }
+
+        .line-driver {
+            position: absolute; inset: 0; border-radius: 50px;
+            z-index: 0; overflow: hidden;
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude; padding: 2px;
+        }
+
+        .line-driver::before {
+            content: ""; position: absolute; width: 4000px; height: 4000px;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 20%, var(--secondary-color) 40%, transparent 50%);
+            animation: rotate 2s linear infinite;
+            filter: drop-shadow(0 0 10px var(--primary-color));
+        }
+
+        @keyframes rotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        #progress-bar-bg {
+            width: 100%; height: 100%; background: rgba(255, 255, 255, 0.05);
+            border-radius: 50px; overflow: hidden; z-index: 1;
+        }
+
+        #progress-bar {
+            height: 100%; width: 0%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 0 15px var(--primary-color); transition: width 0.3s ease;
+        }
+
+        #percent { margin-top: 12px; font-size: 12px; letter-spacing: 1px; opacity: 0.6; }
+    </style>
+</head>
+
+<body>
+    <div id="loader">
+        <div id="loader-content">
+            <div id="loading-text">Merging Assets</div>
+            <div class="progress-container">
+                <div class="line-driver"></div>
+                <div id="progress-bar-bg">
+                    <div id="progress-bar"></div>
+                </div>
+            </div>
+            <div id="percent">0%</div>
+        </div>
+    </div>
+
+    <div id="gameContainer"></div>
+
+    <script type="text/javascript">
+        try {
+            initializeFireBase();
+        } catch(e) {
+            console.log("Firebase Init bypassed or failed:", e);
+        }
+
+        var gameInstance;
+        const progressBar = document.querySelector("#progress-bar");
+        const percentText = document.querySelector("#percent");
+        const loaderUI = document.querySelector("#loader");
+
+        function handleProgress(instance, progress) {
+            if (!instance) return;
+            let percent = 0;
+            
+            if (progress === "complete" || progress === 1) {
+                percent = 100;
+            } else {
+                percent = Math.min(Math.floor(progress * 100), 99);
+            }
+            
+            progressBar.style.width = percent + "%";
+            percentText.textContent = percent + "%";
+
+            if (percent === 100) {
+                loaderUI.style.opacity = "0";
+                setTimeout(() => { loaderUI.remove(); }, 800);
+            }
+        }
+
+        window.onload = function () {
+            gameInstance = UnityLoader.instantiate(
+                "gameContainer", 
+                "https://cdn.jsdelivr.net/gh/n-101-1/1@main/2.7.json", 
+                {
+                    onProgress: handleProgress,
+                    Module: {
+                        onRuntimeInitialized: function () {
+                            handleProgress(gameInstance, 1);
+                        },
+                    },
+                }
+            );
+        };
+
+        function showAds() { console.log("Ad requested - skipped."); }
+        function requestNewAd() {
+            try {
+                if (gameInstance) gameInstance.SendMessage("AdsManager", "OnWebCallback");
+            } catch (e) {}
+        }
+    </script>
+</body>
+</html>
