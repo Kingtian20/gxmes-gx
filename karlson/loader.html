@@ -29,13 +29,7 @@
 
       .progress-box { width: 500px; text-align: center; color: white; }
       
-      #msg { 
-        letter-spacing: 3px; 
-        font-weight: bold; 
-        text-transform: uppercase; 
-        margin-bottom: 20px;
-        font-size: 14px;
-      }
+      #msg { letter-spacing: 3px; font-weight: bold; text-transform: uppercase; margin-bottom: 20px; font-size: 14px; }
 
       .bar-container {
         position: relative;
@@ -74,11 +68,10 @@
         background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         border-radius: 50px;
         box-shadow: 0 0 15px var(--primary-color);
-        transition: width 0.4s ease;
+        transition: width 5s linear; 
       }
 
       #percent { margin-top: 12px; opacity: 0.5; font-size: 12px; }
-
       @keyframes rotate { to { transform: rotate(360deg); } }
     </style>
 
@@ -92,50 +85,38 @@
       async function loadZip(url) {
         const response = await fetch(url);
         const arrayBuffer = await response.arrayBuffer();
-        const jszip = new JSZip();
-        const zip = await jszip.loadAsync(arrayBuffer);
-
-        if (zip.files["tyj.wasm.code.unityweb"]) {
-          const content = await zip.file("tyj.wasm.code.unityweb").async("blob");
-          return URL.createObjectURL(content);
-        }
-        throw new Error("WASM not found in Zip");
+        const zip = await new JSZip().loadAsync(arrayBuffer);
+        const content = await zip.file("tyj.wasm.code.unityweb").async("blob");
+        return URL.createObjectURL(content);
       }
 
       async function startUnity() {
         const bar = document.getElementById('bar');
         const pct = document.getElementById('percent');
-        const msg = document.getElementById('msg');
         const loader = document.getElementById('loader-overlay');
+
+        setTimeout(() => { 
+            bar.style.width = "100%"; 
+            let count = 0;
+            let interval = setInterval(() => {
+                count++;
+                pct.innerText = count + "%";
+                if(count >= 100) clearInterval(interval);
+            }, 50); 
+        }, 100);
 
         try {
           const wasmurl = await loadZip("Build/tyj.wasm.code.unityweb.zip");
           
-          bar.style.width = "30%";
-          pct.innerText = "30%";
-
           const json = {
-            companyName: "Dani",
-            productName: "Karlson",
-            productVersion: "0.1",
             dataUrl: "Build/tyj.data.unityweb",
             wasmCodeUrl: wasmurl,
             wasmFrameworkUrl: "Build/tyj.wasm.framework.js",
             graphicsAPI: ["WebGL 2.0"],
-            webglContextAttributes: {preserveDrawingBuffer: false},
-            splashScreenStyle: "Dark",
             backgroundColor: "#231F20",
-            developmentBuild: false,
-            multithreading: false,
-            unityVersion: "2019.2.6f1",
           };
 
           UnityLoader.instantiate("unityContainer", json, {
-            onProgress: (inst, prog) => {
-              let total = Math.floor(30 + (prog * 70));
-              bar.style.width = total + "%";
-              pct.innerText = total + "%";
-            },
             Module: {
               onRuntimeInitialized: function () {
                 resizeUnityContainer();
@@ -145,7 +126,6 @@
             },
           });
         } catch (e) {
-          msg.innerText = "Check da console, oh wait ur on a chromebook D:";
           console.error(e);
         }
       }
@@ -157,7 +137,7 @@
   <body>
     <div id="loader-overlay">
       <div class="progress-box">
-          <div id="msg">Merging Assets</div>
+          <div id="msg">Booting Karlson.exe</div>
           <div class="bar-container">
               <div class="glow-line"></div>
               <div id="bar"></div>
