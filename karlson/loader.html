@@ -1,195 +1,126 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en-us">
-  <head>
-    <base href="https://cdn.jsdelivr.net/gh/genizy/web-port@main/karlson/" />
-    <meta charset="utf-8" />
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Unity WebGL Player | Karlson</title>
-    <script src="Build/UnityLoader.js"></script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        border: 0;
-        overflow: hidden;
-      }
-      body {
-        background: #000;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        font-family: sans-serif;
-      }
-      #unityContainer {
-        position: absolute;
-        width: 100%;
-        height: 100%;
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title>Unity WebGL Player | Karlson</title>
+
+  <!-- Unity Loader -->
+  <script src="https://cdn.jsdelivr.net/gh/genizy/web-port@main/karlson/Build/UnityLoader.js"></script>
+
+  <!-- JSZip -->
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      overflow: hidden;
+    }
+
+    body {
+      background: #000;
+      position: fixed;
+      width: 100%;
+      height: 100%;
+    }
+
+    #unityContainer {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    #sidebarad1, #sidebarad2 {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 160px;
+      height: 600px;
+      z-index: 999999;
+    }
+
+    #sidebarad1 { left: 0; }
+    #sidebarad2 { right: 0; }
+
+    .sidebar-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 22px;
+      height: 22px;
+      line-height: 22px;
+      text-align: center;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+
+  <script>
+    function resizeUnityContainer() {
+      const container = document.getElementById("unityContainer");
+      container.style.width = window.innerWidth + "px";
+      container.style.height = window.innerHeight + "px";
+    }
+
+    async function loadZip(url) {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+
+      const zip = await JSZip.loadAsync(arrayBuffer);
+
+      if (zip.files["tyj.wasm.code.unityweb"]) {
+        const content = await zip.file("tyj.wasm.code.unityweb").async("blob");
+        return URL.createObjectURL(content);
       }
 
-      :root {
-        --primary-color: #0000ff;
-        --secondary-color: #00fff7;
-      }
+      throw new Error("WASM file not found in zip");
+    }
 
-      #loader-overlay {
-        position: fixed;
-        inset: 0;
-        background: #000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        z-index: 100;
-        transition: opacity 0.8s ease;
-      }
-      .progress-box {
-        width: 500px;
-        text-align: center;
-        color: white;
-      }
-      .bar-container {
-        position: relative;
-        height: 30px;
-        background: #111;
-        border-radius: 50px;
-        padding: 3px;
-        display: flex;
-        align-items: center;
-        overflow: hidden;
-        margin-top: 20px;
-      }
-      .glow-line {
-        position: absolute;
-        inset: 0;
-        border-radius: 50px;
-        padding: 2px;
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-      }
-      .glow-line::before {
-        content: "";
-        position: absolute;
-        width: 200%;
-        height: 200%;
-        top: -50%;
-        left: -50%;
-        background: conic-gradient(from 0deg, transparent, var(--primary-color), var(--secondary-color), transparent);
-        animation: rotate 2s linear infinite;
-      }
-      #bar {
-        height: 100%;
-        width: 0%;
-        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-        border-radius: 50px;
-        box-shadow: 0 0 15px var(--primary-color);
-        transition: width 5s linear;
-      }
-      .loading-text {
-        margin-bottom: 10px;
-        font-size: 18px;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-      }
-      #pct-text {
-        font-size: 14px;
-        margin-top: 15px;
-        opacity: 0.7;
-        letter-spacing: 1px;
-      }
+    async function startUnity() {
+      const wasmurl = await loadZip("https://cdn.jsdelivr.net/gh/genizy/web-port@main/karlson/Build/tyj.wasm.code.unityweb.zip");
 
-      @keyframes rotate {
-        to {
-          transform: rotate(360deg);
+      const config = {
+        companyName: "Dani",
+        productName: "Karlson",
+        productVersion: "0.1",
+        dataUrl: "https://cdn.jsdelivr.net/gh/genizy/web-port@main/karlson/tyj.data.unityweb",
+        wasmCodeUrl: wasmurl,
+        wasmFrameworkUrl: "https://cdn.jsdelivr.net/gh/genizy/web-port@main/karlson/tyj.wasm.framework.js",
+        graphicsAPI: ["WebGL 2.0"],
+        webglContextAttributes: { preserveDrawingBuffer: false },
+        splashScreenStyle: "Dark",
+        backgroundColor: "#231F20",
+        developmentBuild: false,
+        multithreading: false,
+        unityVersion: "2019.2.6f1"
+      };
+
+      window.addEventListener("resize", resizeUnityContainer);
+
+      UnityLoader.instantiate("unityContainer", config, {
+        Module: {
+          onRuntimeInitialized: function () {
+            resizeUnityContainer();
+            const loading = document.getElementById("loading-text");
+            if (loading) loading.remove();
+          }
         }
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
-    <script>
-      function resizeUnityContainer() {
-        var container = document.getElementById("unityContainer");
-        container.style.width = window.innerWidth + "px";
-        container.style.height = window.innerHeight + "px";
-      }
-      async function loadZip(url) {
-        const response = await fetch(url);
-        const arrayBuffer = await response.arrayBuffer();
-        const jszip = new JSZip();
-        const zip = await jszip.loadAsync(arrayBuffer);
-        if (zip.files["tyj.wasm.code.unityweb"]) {
-          const content = await zip.file("tyj.wasm.code.unityweb").async("blob");
-          return URL.createObjectURL(content);
-        }
-        throw new Error("tyj.wasm.code.unityweb not found in " + url);
-      }
+      });
+    }
 
-      async function startUnity() {
-        const bar = document.getElementById("bar");
-        const overlay = document.getElementById("loader-overlay");
-        const pctText = document.getElementById("pct-text");
+    window.addEventListener("load", startUnity);
+  </script>
+</head>
 
-        let count = 0;
-        const counter = setInterval(() => {
-          count++;
-          pctText.innerText = count + "%";
-          if (count >= 100) clearInterval(counter);
-        }, 48);
+<body>
+  <div id="loading-text" style="color:white;font-size:48px;font-family:cursive;text-align:center;margin-top:20px;">
+    LOADING...
+  </div>
 
-        setTimeout(() => {
-          bar.style.width = "100%";
-        }, 50);
-
-        setTimeout(() => {
-          overlay.style.opacity = "0";
-          setTimeout(() => overlay.remove(), 800);
-        }, 5000);
-
-        const wasmurl = await loadZip("Build/tyj.wasm.code.unityweb.zip");
-        window.wasmBinaryFilee = wasmurl;
-        const json = {
-          companyName: "Dani",
-          productName: "Karlson",
-          productVersion: "0.1",
-          dataUrl: "tyj.data.unityweb",
-          wasmCodeUrl: wasmurl,
-          wasmFrameworkUrl: "tyj.wasm.framework.js",
-          graphicsAPI: ["WebGL 2.0"],
-          webglContextAttributes: {preserveDrawingBuffer: false},
-          splashScreenStyle: "Dark",
-          backgroundColor: "#231F20",
-          developmentBuild: false,
-          multithreading: false,
-          unityVersion: "2019.2.6f1",
-        };
-
-        let blob = new Blob([JSON.stringify(json)], {type: "application/json"});
-        blobUrl = URL.createObjectURL(blob);
-
-        window.addEventListener("resize", resizeUnityContainer);
-        UnityLoader.instantiate("unityContainer", json, {
-          url: blobUrl,
-          Module: {
-            onRuntimeInitialized: function () {
-              resizeUnityContainer();
-            },
-          },
-        });
-      }
-      window.addEventListener("load", startUnity);
-    </script>
-  </head>
-  <body>
-    <div id="loader-overlay">
-      <div class="progress-box">
-        <div class="loading-text">Merging Assets</div>
-        <div class="bar-container">
-          <div class="glow-line"></div>
-          <div id="bar"></div>
-        </div>
-        <div id="pct-text">0%</div>
-      </div>
-    </div>
-    <div id="unityContainer"></div>
-  </body>
+  <div id="unityContainer"></div>
+</body>
 </html>
