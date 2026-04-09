@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <script src="//www.google.com/jsapi"></script>
+    <script>
+        window.parent.maeExportApis_();
+    </script>
+
+    <style>
+        body {
+            overflow: hidden;
+            background: #000000;
+            margin: 0;
+            color: #000000;
+        }
+    </style>
+
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div style="width:100vw;height:100vh;max-width:100%">
+        <div id="game"></div>
+    </div>
+
+    <script>
+        function startGame() {
+            document.getElementById("game").style.display = "block";
+
+            EJS_player = "#game";
+            EJS_core = "nds";
+            EJS_color = "#000000";
+            EJS_startOnLoaded = true;
+            EJS_pathtodata =
+                "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data";
+            EJS_gameUrl =
+                "https://bbcdn.githack.com/jnfdk/redpalmer/raw/7e1539c9f6303905e09e7b52fd1780790223b8fd/pmb.nds";
+
+            loadGame();
+        }
+
+        function loadGame() {
+            const loader = document.createElement("script");
+            loader.src =
+                "https://cdn.jsdelivr.net/gh/a456pur/seraph@81f551ca0aa8e3d6018d32d8ac5904ac9bc78f76/storage/emulatorjs/data/loader.js";
+            document.body.appendChild(loader);
+
+            const cloak = document.createElement("script");
+            cloak.src =
+                "https://cdn.jsdelivr.net/gh/a456pur/seraph@ae2fcc6d6a9cd051654fcc0519080db1f79cf2a7/storage/js/cloak.js";
+            document.body.appendChild(cloak);
+        }
+
+        window.addEventListener("load", startGame);
+    </script>
+</body>
+</html>
