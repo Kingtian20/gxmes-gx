@@ -475,11 +475,13 @@
         white-space: nowrap;
         opacity: 0;
         pointer-events: none;
-        transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
       .action-bar button:hover::after,
-      .game-controls button:hover::after {
+      .game-controls button:hover::after,
+      .action-bar button.show-tooltip::after,
+      .game-controls button.show-tooltip::after {
         opacity: 1;
         transform: translateX(-50%) scale(1);
         top: -50px;
@@ -496,11 +498,13 @@
         border-style: solid;
         border-color: var(--primary-color) transparent transparent transparent;
         opacity: 0;
-        transition: opacity 0.2s;
+        transition: opacity 0.3s;
       }
 
       .action-bar button:hover::before,
-      .game-controls button:hover::before {
+      .game-controls button:hover::before,
+      .action-bar button.show-tooltip::before,
+      .game-controls button.show-tooltip::before {
         opacity: 1;
       }
 
@@ -592,7 +596,7 @@
       <div class="line-driver"></div>
       <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
       <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
-      <button title="Info" id="contactBtn"><i class="fa-solid fa-address-book"></i></button>
+      <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book"></i></button>
       <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
       <button title="Sound Board" id="soundsBtn"><i class="fa-solid fa-volume"></i></button>
     </div>
@@ -621,6 +625,51 @@
       <div class="grid" id="game-grid"></div>
     </section>
 
+    <section class="info" id="info-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+      <h1
+        id="info-title"
+        style="
+          position: absolute;
+          top: 30%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: clamp(2.5rem, 8vw, 5rem);
+          font-weight: bold;
+          font-family: &quot;Orbitron&quot;, sans-serif;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: clamp(2px, 1vw, 4px);
+          animation: glitch 2s infinite;
+          text-align: center;
+          white-space: nowrap;
+          z-index: 5;
+        "
+      >
+        Whoops!
+      </h1>
+      <h1
+        id="info-subtitle"
+        style="
+          position: absolute;
+          top: 40%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 1rem;
+          font-weight: bold;
+          font-family: &quot;Orbitron&quot;, sans-serif;
+          color: #fff;
+          text-transform: uppercase;
+          letter-spacing: clamp(2px, 1vw, 4px);
+          animation: glitch 2s infinite;
+          text-align: center;
+          white-space: nowrap;
+          z-index: 5;
+        "
+      >
+        This page is not ready yet!
+      </h1>
+    </section>
+
     <div id="game-overlay" class="game-overlay">
       <div id="game-frame-container"></div>
 
@@ -632,39 +681,115 @@
     </div>
 
     <script>
+      // Pages, (Intentional Comment)
       const homePage = document.getElementById("home-page");
       const gxmesPage = document.getElementById("gxmes-page");
+      const infoPage = document.getElementById("info-page");
+
+      // Buttons, (Intentional Comment)
       const homeBtn = document.getElementById("homeBtn");
       const gxmesBtn = document.getElementById("gxmesBtn");
+      const infoBtn = document.getElementById("infoBtn");
+      const buttons = [homeBtn, gxmesBtn, infoBtn];
+
+      // Extra, (Intentional Comment)
       const mainTitle = document.querySelector(".main-title");
       const subTitle = document.querySelector(".sub-title");
+      const infoTitle = document.getElementById("info-title");
+      const infoSubtitle = document.getElementById("info-subtitle");
+
+      let currentPage = "home";
+
+      const pageMap = {
+        home: {page: homePage, btn: homeBtn},
+        gxmes: {page: gxmesPage, btn: gxmesBtn},
+        info: {page: infoPage, btn: infoBtn},
+      };
+
+      function updateButtons() {
+        Object.keys(pageMap).forEach((pageName) => {
+          const btn = pageMap[pageName].btn;
+          if (pageName === currentPage) {
+            btn.disabled = true;
+            btn.style.cursor = "pointer";
+            btn.style.pointerEvents = "none";
+            btn.style.color = "var(--primary-color)";
+            btn.style.transform = "translateY(-5px) scale(1.2)";
+            btn.style.filter = "drop-shadow(0 0 10px var(--primary-color))";
+          } else {
+            btn.disabled = false;
+            btn.style.cursor = "";
+            btn.style.pointerEvents = "";
+            btn.style.color = "";
+            btn.style.transform = "";
+            btn.style.filter = "";
+          }
+        });
+      }
+
+      function switchPage(targetPage) {
+        if (targetPage === currentPage) return;
+
+        const prevPage = pageMap[currentPage].page;
+        const nextPage = pageMap[targetPage].page;
+
+        prevPage.style.display = "none";
+        nextPage.style.display = "flex";
+        nextPage.classList.remove("page-fade");
+        void nextPage.offsetWidth;
+        nextPage.classList.add("page-fade");
+
+        currentPage = targetPage;
+        updateButtons();
+
+        if (targetPage === "home") {
+          if (mainTitle) {
+            mainTitle.style.animation = "none";
+            void mainTitle.offsetWidth;
+            mainTitle.style.animation = "glitch 2s infinite";
+          }
+          if (subTitle) {
+            subTitle.style.animation = "none";
+            void subTitle.offsetWidth;
+            subTitle.style.animation = "glitch 2s infinite";
+          }
+        } else if (targetPage === "gxmes") {
+          gameSearch.focus();
+        } else if (targetPage === "info") {
+          if (infoTitle) {
+            infoTitle.style.animation = "none";
+            void infoTitle.offsetWidth;
+            infoTitle.style.animation = "glitch 2s infinite";
+          }
+          if (infoSubtitle) {
+            infoSubtitle.style.animation = "none";
+            void infoSubtitle.offsetWidth;
+            infoSubtitle.style.animation = "glitch 2s infinite";
+          }
+        }
+      }
+
+      function showDelayedTooltip(btn) {
+        btn.classList.add("show-tooltip");
+        setTimeout(() => {
+          btn.classList.remove("show-tooltip");
+        }, 300);
+      }
 
       homeBtn.addEventListener("click", () => {
-        homePage.style.display = "flex";
-        gxmesPage.style.display = "none";
-        homePage.classList.remove("page-fade");
-        void homePage.offsetWidth;
-        homePage.classList.add("page-fade");
-        if (mainTitle) {
-          mainTitle.style.animation = "none";
-          void mainTitle.offsetWidth;
-          mainTitle.style.animation = "glitch 2s infinite";
-        }
-        if (subTitle) {
-          subTitle.style.animation = "none";
-          void subTitle.offsetWidth;
-          subTitle.style.animation = "glitch 2s infinite";
-        }
+        showDelayedTooltip(homeBtn);
+        switchPage("home");
+      });
+      gxmesBtn.addEventListener("click", () => {
+        showDelayedTooltip(gxmesBtn);
+        switchPage("gxmes");
+      });
+      infoBtn.addEventListener("click", () => {
+        showDelayedTooltip(infoBtn);
+        switchPage("info");
       });
 
-      gxmesBtn.addEventListener("click", () => {
-        homePage.style.display = "none";
-        gxmesPage.style.display = "flex";
-        gameSearch.focus();
-        gxmesPage.classList.remove("page-fade");
-        void gxmesPage.offsetWidth;
-        gxmesPage.classList.add("page-fade");
-      });
+      updateButtons();
 
       const homeSearch = document.getElementById("home-search");
       const gameSearch = document.getElementById("game-search");
@@ -674,13 +799,7 @@
           gameSearch.value = homeSearch.value;
           gameSearch.dispatchEvent(new Event("input", {bubbles: true}));
           homeSearch.value = "";
-
-          homePage.style.display = "none";
-          gxmesPage.style.display = "flex";
-
-          gxmesPage.classList.remove("page-fade");
-          void gxmesPage.offsetWidth;
-          gxmesPage.classList.add("page-fade");
+          switchPage("gxmes");
         }
       });
     </script>
@@ -918,7 +1037,7 @@
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketrandom/basketrandom.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketrandom/loader.html",
           webgl: true,
-        },  
+        },
         {
           title: "Animation Vs Friday Night Funkin",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/237.png",
@@ -932,6 +1051,34 @@
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/escaperoad/loader.html",
           webgl: true,
         },
+        {
+          title: "Pokemon White",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/181.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonwhite/pokemonwhite.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonwhite/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Pokemon Emerald",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/183.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonemerald/pokemonemerald.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonemerald/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Pokemon Black",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/182.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonblack/pokemonblack.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonblack/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Undertale Yellow",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/131.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/undertaleyellow/undertaleyellow.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/undertaleyellow/loader.html",
+          webgl: true,
+        }
       ];
 
       gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, {numeric: true, sensitivity: "base"}));
@@ -958,9 +1105,13 @@
         });
       }
 
+      let searchDebounce;
       searchInput.addEventListener("input", (e) => {
-        const term = e.target.value.toLowerCase();
-        renderGames(gamesList.filter((game) => game.title.toLowerCase().includes(term)));
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(() => {
+          const term = e.target.value.toLowerCase();
+          renderGames(gamesList.filter((game) => game.title.toLowerCase().includes(term)));
+        }, 250);
       });
 
       async function fetchText(url) {
