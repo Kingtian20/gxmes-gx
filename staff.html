@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" />
+    <title>Staff - GX Verse</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --primary-color: #0000ff;
+        --secondary-color: #00fff7;
+      }
+
+      body {
+        width: 100vw;
+        min-height: 100vh;
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section {
+        width: 100vw;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        position: relative;
+        padding-bottom: 100px;
+      }
+
+      #info-title {
+        position: absolute;
+        top: 950px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+        text-align: center;
+        white-space: nowrap;
+        z-index: 5;
+      }
+
+      #info-subtitle {
+        position: absolute;
+        top: 1030px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1rem;
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+        text-align: center;
+        white-space: nowrap;
+        z-index: 5;
+      }
+
+      .site-info {
+        width: 90%;
+        max-width: 800px;
+        margin-top: 220px;
+        padding: 30px;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 20px;
+        z-index: 5;
+      }
+
+      .site-info h2 {
+        font-family: "Orbitron", sans-serif;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        color: #fff;
+        text-align: center;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 15px;
+        text-shadow: 0 0 10px var(--primary-color);
+      }
+
+      .site-info .tagline {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1rem;
+        color: white;
+        text-align: center;
+        margin-bottom: 25px;
+        text-shadow: 0 0 5px white;
+      }
+
+      .site-info ul {
+        list-style: none;
+        padding: 0;
+        margin: 20px 0;
+      }
+
+      .site-info li {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.95rem;
+        color: rgba(255, 255, 255, 0.9);
+        padding: 12px 0;
+        line-height: 1.5;
+        border-bottom: 1px solid rgba(0, 0, 255, 0.2);
+      }
+
+      .site-info li:last-child {
+        border-bottom: none;
+      }
+
+      .site-info .moto {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.1rem;
+        color: #fff;
+        text-align: center;
+        margin-top: 25px;
+        padding: 15px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+        background-size: 200% 100%;
+        border-radius: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        animation: backgroundShift 3s ease-in-out infinite;
+      }
+
+      .line-driver {
+        position: absolute;
+        inset: 0;
+        border-radius: 100px;
+        z-index: -1;
+        overflow: hidden;
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+      }
+
+      .line-driver::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+        animation: rotate 3s linear infinite;
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .staff-grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+        gap: 30px;
+        margin: 0 auto;
+        margin-top: 250px;
+        align-content: center;
+        justify-content: center;
+        padding: 10%;
+      }
+
+      .staff-card {
+        width: 90%;
+        height: 450px;
+        position: relative;
+        background: transparent;
+        border-radius: 40px;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .staff-card:hover {
+        transform: translateY(-10px) scale(1.02);
+      }
+
+      .staff-card:hover .staff-box .line-driver {
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .staff-rank {
+        font-family: "Orbitron";
+        margin: 20px;
+        font-size: 40px;
+        transform: translateY(20px);
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+      }
+
+      .staff-name {
+        font-family: "Orbitron";
+        font-size: 30px;
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+      }
+
+      .staff-img-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 10px auto;
+        border-radius: 100%;
+        padding: 4px;
+      }
+
+      .staff-img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: -1;
+      }
+
+      .staff-img-wrapper .line-driver {
+        border-radius: 50% !important;
+      }
+
+      .staff-card:hover .staff-img-wrapper .line-driver {
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .staff-info ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 15px;
+        justify-content: left;
+      }
+
+      .staff-info li {
+        font-family: "Orbitron", sans-serif;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 1);
+        padding: 5px 0;
+        text-shadow: 0 0 5px rgba(0, 255, 247, 0.3);
+      }
+
+      .staff-box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 40px;
+        z-index: 1;
+      }
+
+      .staff-box .line-driver {
+        z-index: 2;
+        border-radius: 40px;
+        padding: 4px;
+      }
+
+      .staff-box .line-driver::before {
+        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 5%, var(--secondary-color) 8%, transparent 12%, transparent 50%, var(--primary-color) 55%, var(--secondary-color) 58%, transparent 62%);
+      }
+
+      @keyframes rotate {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      .moto {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.1rem;
+        color: #fff;
+        text-align: center;
+        margin-top: 25px;
+        padding: 15px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+        background-size: 200% 100%;
+        border-radius: 10px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        animation: backgroundShift 3s ease-in-out infinite;
+      }
+
+      @keyframes backgroundShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="info" id="info-page">
+
+      <div class="site-info">
+        <h1 id="info-title" style="position: absolute; top: 100px; left: 50%; margin-top: 0px; transform: translate(-50%, -50%); font-size: clamp(2.5rem, 8vw, 5rem); font-weight: bold; font-family: &quot;Orbitron&quot;, sans-serif; color: #fff; text-transform: uppercase; letter-spacing: clamp(2px, 1vw, 4px); text-shadow: 0 0 2px #fff, 0 0 10px var(--primary-color); text-align: center; white-space: nowrap; z-index: 5;">Site Info</h1>
+        <h1 id="info-subtitle" style="position: absolute; top: 170px; left: 50%; margin-top: 0px; transform: translate(-50%, -50%); font-size: 1rem; font-weight: bold; font-family: &quot;Orbitron&quot;, sans-serif; color: #fff; text-transform: uppercase; letter-spacing: clamp(2px, 1vw, 4px); text-shadow: 0 0 2px #fff, 0 0 10px var(--primary-color); text-align: center; white-space: nowrap; z-index: 5;">Welcome to GX Verse</h1>
+        <h2>Welcome to the next evolution of browser gaming: GX Verse</h2>
+        <p class="tagline">We've taken everything you loved about GX Games and accelerated it, creating a more powerful, polished, and premium experience. GX Verse is not just an update—it's a massive upgrade designed to deliver the ultimate performance for gamers.</p>
+        <ul>
+          <li><strong>Over 350+ Games & Growing:</strong> Dive into a vastly expanded library featuring over 350 titles. From action-packed shooters to engaging indie adventures, GX Verse offers more variety, more challenge, and more fun instantly at your fingertips.</li>
+          <li><strong>Smoother Gameplay:</strong> Experience true, uninterrupted gaming. Our improved architecture ensures buttery-smooth performance. No more stuttering or choppy visuals—just pure, high-speed gaming action.</li>
+          <li><strong>Always Improving:</strong> The "Verse" never stops evolving. Our team (Owner and Co-owner) is constantly pushing updates, polishing performance, and adding new content to make your experience better every single day.</li>
+        </ul>
+        <p class="moto">Upgrade your game. Step into GX Verse</p>
+      </div>
+
+      <h1 id="info-title">Staff Info</h1>
+      <h1 id="info-subtitle" style="font-size: 1rem;">Meet the Creators, Programmers, and Designers!</h1>
+
+      <div class="staff-grid" style="margin-top: 90px;">
+        <div class="staff-card">
+          <div class="staff-box">
+            <div class="line-driver"></div>
+            <h1 class="staff-rank">Owner</h1>
+            <div class="staff-img-wrapper">
+              <div class="line-driver"></div>
+              <img class="staff-img" src="https://raw.githubusercontent.com/Kingtian20/additional-search/main/dorito.png" />
+            </div>
+            <h1 class="staff-name">Doritos</h1>
+            <div class="staff-info">
+              <ul>
+                <li>Brainstormer</li>
+                <li>Designer</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card">
+          <div class="staff-box">
+            <div class="line-driver"></div>
+            <h1 class="staff-rank">Co-Owner</h1>
+            <div class="staff-img-wrapper">
+              <div class="line-driver"></div>
+              <img class="staff-img" src="https://raw.githubusercontent.com/Kingtian20/additional-search/main/Kingtian20.png" />
+            </div>
+            <h1 class="staff-name">Kingtian20</h1>
+            <div class="staff-info">
+              <ul>
+                <li>Main Programmer</li>
+                <li>Game Modifier</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <h1 id="info-title" style="position: absolute; top: 100px; left: 50%; margin-top: 1590px; transform: translate(-50%, -50%); font-size: clamp(2.5rem, 8vw, 5rem); font-weight: bold; font-family: &quot;Orbitron&quot;, sans-serif; color: #fff; text-transform: uppercase; letter-spacing: clamp(2px, 1vw, 4px); text-shadow: 0 0 2px #fff, 0 0 10px var(--primary-color); text-align: center; white-space: nowrap; z-index: 5;">Special Thanks</h1>
+      <h1 id="info-subtitle" style="position: absolute; top: 170px; left: 50%; margin-top: 1610px; transform: translate(-50%, -50%); font-size: 1rem; font-weight: bold; font-family: &quot;Orbitron&quot;, sans-serif; color: #fff; text-transform: uppercase; letter-spacing: clamp(2px, 1vw, 4px); text-shadow: 0 0 2px #fff, 0 0 10px var(--primary-color); text-align: center; white-space: nowrap; z-index: 5;">Users who have made a difference!</h1>
+
+      <div class="staff-grid" style="transform: translateY(-190px);">
+        <div class="staff-card">
+          <div class="staff-box">
+            <div class="line-driver"></div>
+            <h1 class="staff-rank">Game Creator</h1>
+            <div class="staff-img-wrapper">
+              <div class="line-driver"></div>
+              <img class="staff-img" src="https://avatars.githubusercontent.com/u/185154684?v=4" />
+            </div>
+            <h1 class="staff-name">Genizy</h1>
+            <div class="staff-info">
+              <ul>
+                <li>This guy is crazy</li>
+                <li>Game creator</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="staff-card">
+          <div class="staff-box">
+            <div class="line-driver"></div>
+            <h1 class="staff-rank">Game Creator</h1>
+            <div class="staff-img-wrapper">
+              <div class="line-driver"></div>
+              <img class="staff-img" src="https://avatars.githubusercontent.com/u/132022772?v=4" />
+            </div>
+            <h1 class="staff-name">Bubbls</h1>
+            <div class="staff-info">
+              <ul>
+                <li>He is a legend</li>
+                <li>Game Creator</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>
