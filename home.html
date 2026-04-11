@@ -719,7 +719,7 @@
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." />
+          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false"/>
         </div>
       </div>
       <label class="version-label">Ver 0.0.2 BETA</label>
@@ -729,7 +729,7 @@
       <div class="search-wrapper">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" />
+          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"/>
         </div>
       </div>
 
@@ -737,175 +737,7 @@
     </section>
 
     <section class="info" id="info-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
-      <h1
-        id="info-title"
-        style="
-          position: absolute;
-          top: 30%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: clamp(2.5rem, 8vw, 5rem);
-          font-weight: bold;
-          font-family: &quot;Orbitron&quot;, sans-serif;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: clamp(2px, 1vw, 4px);
-          text-shadow:
-            0 0 2px #fff,
-            0 0 10px var(--primary-color);
-          text-align: center;
-          white-space: nowrap;
-          z-index: 5;
-        "
-      >
-        Staff Info
-      </h1>
-      <h1
-        id="info-subtitle"
-        style="
-          position: absolute;
-          top: 40%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 1rem;
-          font-weight: bold;
-          font-family: &quot;Orbitron&quot;, sans-serif;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: clamp(2px, 1vw, 4px);
-          text-shadow:
-            0 0 2px #fff,
-            0 0 10px var(--primary-color);
-          text-align: center;
-          white-space: nowrap;
-          z-index: 5;
-        "
-      >
-        Meet the Creators, Programmers, and Designers!
-      </h1>
-
-      <div class="staff-grid">
-        <div class="staff-card">
-          <div class="staff-box">
-            <div class="line-driver"></div>
-            <h1 class="staff-rank">Owner</h1>
-            <div class="staff-img-wrapper">
-              <div class="line-driver"></div>
-              <img class="staff-img" src="https://raw.githubusercontent.com/Kingtian20/additional-search/main/dorito.png" />
-            </div>
-            <h1 class="staff-name">Doritos</h1>
-            <div class="staff-info">
-              <ul>
-                <li>Brainstormer</li>
-                <li>Designer</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-box">
-            <div class="line-driver"></div>
-            <h1 class="staff-rank">Co-Owner</h1>
-            <div class="staff-img-wrapper">
-              <div class="line-driver"></div>
-              <img class="staff-img" src="https://raw.githubusercontent.com/Kingtian20/additional-search/main/Kingtian20.png" />
-            </div>
-            <h1 class="staff-name">Kingtian20</h1>
-            <div class="staff-info">
-              <ul>
-                <li>Main Programmer</li>
-                <li>Game Modifier</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <h1
-        id="info-title"
-        style="
-          position: absolute;
-          top: 30%;
-          left: 50%;
-          margin-top: 700px;
-          transform: translate(-50%, -50%);
-          font-size: clamp(2.5rem, 8vw, 5rem);
-          font-weight: bold;
-          font-family: &quot;Orbitron&quot;, sans-serif;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: clamp(2px, 1vw, 4px);
-          text-shadow:
-            0 0 2px #fff,
-            0 0 10px var(--primary-color);
-          text-align: center;
-          white-space: nowrap;
-          z-index: 5;
-        "
-      >
-        Special Thanks
-      </h1>
-      <h1
-        id="info-subtitle"
-        style="
-          position: absolute;
-          top: 40%;
-          left: 50%;
-          margin-top: 700px;
-          transform: translate(-50%, -50%);
-          font-size: 1rem;
-          font-weight: bold;
-          font-family: &quot;Orbitron&quot;, sans-serif;
-          color: #fff;
-          text-transform: uppercase;
-          letter-spacing: clamp(2px, 1vw, 4px);
-          text-shadow:
-            0 0 2px #fff,
-            0 0 10px var(--primary-color);
-          text-align: center;
-          white-space: nowrap;
-          z-index: 5;
-        "
-      >
-        Users who have made a difference!
-      </h1>
-
-      <div class="staff-grid" style="transform: translateY(-15px);">
-        <div class="staff-card">
-          <div class="staff-box">
-            <div class="line-driver"></div>
-            <h1 class="staff-rank">Game Creator</h1>
-            <div class="staff-img-wrapper">
-              <div class="line-driver"></div>
-              <img class="staff-img" src="https://avatars.githubusercontent.com/u/185154684?v=4" />
-            </div>
-            <h1 class="staff-name">Genizy</h1>
-            <div class="staff-info">
-              <ul>
-                <li>This guy is crazy</li>
-                <li>Game creator</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div class="staff-card">
-          <div class="staff-box">
-            <div class="line-driver"></div>
-            <h1 class="staff-rank">Game Creator</h1>
-            <div class="staff-img-wrapper">
-              <div class="line-driver"></div>
-              <img class="staff-img" src="https://avatars.githubusercontent.com/u/132022772?v=4" />
-            </div>
-            <h1 class="staff-name">Bubbls</h1>
-            <div class="staff-info">
-              <ul>
-                <li>He is a legend</li>
-                <li>Game Creator</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+      <iframe id="info-frame" style="width: 100%; height: 100%; border: none"></iframe>
     </section>
 
     <div id="game-overlay" class="game-overlay">
@@ -933,8 +765,6 @@
       // Extra, (Intentional Comment)
       const mainTitle = document.querySelector(".main-title");
       const subTitle = document.querySelector(".sub-title");
-      const infoTitle = document.getElementById("info-title");
-      const infoSubtitle = document.getElementById("info-subtitle");
 
       let currentPage = "home";
 
@@ -994,12 +824,7 @@
         } else if (targetPage === "gxmes") {
           gameSearch.focus();
         } else if (targetPage === "info") {
-          if (infoTitle) {
-            void infoTitle.offsetWidth;
-          }
-          if (infoSubtitle) {
-            void infoSubtitle.offsetWidth;
-          }
+          loadInfoPage();
         }
       }
 
@@ -1034,6 +859,8 @@
           gameSearch.dispatchEvent(new Event("input", {bubbles: true}));
           homeSearch.value = "";
           switchPage("gxmes");
+        } else if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+          e.preventDefault();
         }
       });
     </script>
@@ -1305,9 +1132,114 @@
           title: "Ragdoll Archers",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/98.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ragdollarchers/ragdollarchers.xml",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ragdollarchers/loader.html",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ragdollarchers/loader.html",
           webgl: true,
-        }
+        },
+        {
+          title: "1v1 Soccer",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/2.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/1v1soccer.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/loader.html",
+          webgl: true,
+        },
+        {
+          title: "99 Nights In The Forest",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/3.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/99nightsintheforest.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/loader.html",
+          webgl: true,
+        },
+        {
+          title: "8 Ball Pool",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/4.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/8ballpool.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Angry Birds",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/5.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/angrybirds/angrybirds.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/angrybirds/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Among Us",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/6.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/amongus.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/loader.html",
+          webgl: true,
+        },
+        {
+          title: "ADOFAI",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/7.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/adofai/adofai.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/adofai/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Ahoy Survival",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/8.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ahoysurvival/ahoysurvival.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ahoysurvival/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Bitlife",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/10.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bitlife/bitlife.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bitlife/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Backrooms 24",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/11.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/backrooms24.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Blackjack",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/12.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/blackjack.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Basket Bros",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/13.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/basketbros.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Brawl Stars",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/14.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/brawlstars/brawlstars.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/brawlstars/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Bloxorz",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/15.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/bloxorz.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Bio Evil 4",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/16.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bioevil4/bioevil4.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bioevil4/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Boxing Random",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/17.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/boxingrandom.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/loader.html",
+          webgl: true,
+        },
       ];
 
       gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, {numeric: true, sensitivity: "base"}));
@@ -1334,13 +1266,23 @@
         });
       }
 
+      function normalizeForSearch(str) {
+        return str.toLowerCase().replace(/[^a-z0-9]/g, "");
+      }
+
       let searchDebounce;
       searchInput.addEventListener("input", (e) => {
         clearTimeout(searchDebounce);
         searchDebounce = setTimeout(() => {
-          const term = e.target.value.toLowerCase();
-          renderGames(gamesList.filter((game) => game.title.toLowerCase().includes(term)));
+          const term = normalizeForSearch(e.target.value);
+          renderGames(gamesList.filter((game) => normalizeForSearch(game.title).includes(term)));
         }, 250);
+      });
+
+      searchInput.addEventListener("keypress", (e) => {
+        if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+          e.preventDefault();
+        }
       });
 
       async function fetchText(url) {
@@ -1449,8 +1391,26 @@
           window.URL.revokeObjectURL(url);
         }
       });
-
       renderGames(gamesList);
+    </script>
+    <script>
+      async function loadInfoPage() {
+        const infoFrame = document.getElementById("info-frame");
+        const cdnUrl = "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/staff.html";
+
+        try {
+          const response = await fetch(cdnUrl);
+          if (!response.ok) throw new Error("Failed to fetch staff.html");
+          const htmlContent = await response.text();
+
+          const blob = new Blob([htmlContent], {type: "text/html"});
+          const blobUrl = URL.createObjectURL(blob);
+          infoFrame.src = blobUrl;
+        } catch (error) {
+          console.error("Error loading info page:", error);
+          infoFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS</p>";
+        }
+      }
     </script>
   </body>
 </html>
