@@ -1,0 +1,985 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <base href="https://cdn.jsdelivr.net/gh/genizy/soundboard@latest/" />
+    <meta charset="UTF-8" />
+    <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"></script>
+    <title>Soundboard</title>
+    <script src="sounds.js" type="module"></script>
+    <script type="module">
+      import {sounds} from "./sounds.js";
+      let allowOverlap = false;
+      let showFavorites = false;
+      let currentAudios = [];
+      const toggleButton = document.getElementById("toggleButton");
+      const stopButton = document.getElementById("stopButton");
+      const searchInput = document.getElementById("searchInput");
+      const favoriteButton = document.getElementById("toggleFavorites");
+      const soundBoard = document.getElementById("soundboard");
+      toggleButton.onclick = () => {
+        allowOverlap = !allowOverlap;
+        const icon = toggleButton.querySelector("i");
+        if (allowOverlap) {
+          icon.className = "fa-solid fa-volume-high";
+          toggleButton.classList.add("overlap-on");
+        } else {
+          icon.className = "fa-solid fa-volume-xmark";
+          toggleButton.classList.remove("overlap-on");
+        }
+      };
+      stopButton.onclick = () => {
+        currentAudios.forEach((a) => a.pause());
+        currentAudios = [];
+      };
+      favoriteButton.onclick = () => {
+        showFavorites = !showFavorites;
+        const icon = favoriteButton.querySelector("i");
+        if (showFavorites) {
+          icon.className = "fa-solid fa-star";
+          favoriteButton.classList.add("favorites-on");
+        } else {
+          icon.className = "fa-regular fa-star";
+          favoriteButton.classList.remove("favorites-on");
+        }
+        renderSounds(showFavorites ? "filter:favorite " + searchInput.value : searchInput.value);
+      };
+
+      function renderSounds(filter = "") {
+        soundBoard.innerHTML = "";
+        let finalSound;
+        if (filter.startsWith("filter:favorite ")) {
+          finalSound = (localStorage.getItem("favorites") ? JSON.parse(localStorage.getItem("favorites")) : []).filter((s) => s.name.toLowerCase().includes(filter.toLowerCase().replace("filter:favorite ", "")));
+        } else {
+          finalSound = sounds.filter((s) => s.name.toLowerCase().includes(filter.toLowerCase()));
+        }
+        finalSound.forEach((sound) => {
+          const wrapper = document.createElement("div");
+          wrapper.className = "sound-wrapper";
+          const button = document.createElement("button");
+          wrapper.addEventListener("contextmenu", (e) => {
+            rightClickPanel(e, wrapper, sound);
+          });
+          button.className = "sound-button-img";
+          button.style.setProperty("--btn-color", sound.color);
+          const image = document.createElement("div");
+          image.className = "sound-image";
+          button.appendChild(image);
+          button.onclick = () => {
+            if (!allowOverlap) {
+              currentAudios.forEach((a) => a.pause());
+              currentAudios = [];
+            }
+            const audio = new Audio("https://cdn.jsdelivr.net/gh/genizy/soundboard@main/" + sound.mp3);
+            audio.play();
+            currentAudios.push(audio);
+            image.classList.add("pressed");
+            setTimeout(() => image.classList.remove("pressed"), 150);
+          };
+          const label = document.createElement("div");
+          label.className = "sound-label";
+          label.textContent = sound.name;
+          wrapper.appendChild(button);
+          wrapper.appendChild(label);
+          soundBoard.appendChild(wrapper);
+        });
+      }
+      renderSounds();
+      searchInput.addEventListener("input", () => {
+        renderSounds((showFavorites ? "filter:favorite " : "") + searchInput.value);
+      });
+
+      function rightClickPanel(event, button, sound) {
+        document.querySelectorAll(".right-click-panel").forEach((p) => p.remove());
+
+        const panel = document.createElement("div");
+        panel.className = "right-click-panel";
+        panel.style.setProperty("--btn-color", button.style.getPropertyValue("--btn-color"));
+        panel.style.position = "absolute";
+        panel.style.left = `${event.pageX}px`;
+        panel.style.top = `${event.pageY}px`;
+
+        let favoriteJson = localStorage.getItem("favorites") ? JSON.parse(localStorage.getItem("favorites")) : [];
+        const favorite = document.createElement("button");
+        favorite.className = "right-click-panel-button";
+        const isFavorite = favoriteJson.some((item) => item.name === sound.name);
+        favorite.textContent = isFavorite ? "⭐ Unfavorite" : "🌟 Favorite";
+
+        favorite.onclick = () => {
+          const isFavorite = favoriteJson.some((item) => item.name === sound.name);
+          if (isFavorite) {
+            favoriteJson = favoriteJson.filter((item) => item.name !== sound.name);
+            if (showFavorites) {
+              renderSounds("filter:favorite " + searchInput.value);
+            }
+          } else {
+            favoriteJson.push(sound);
+          }
+          localStorage.setItem("favorites", JSON.stringify(favoriteJson));
+          panel.remove();
+        };
+
+        const download = document.createElement("button");
+        download.className = "right-click-panel-button";
+        download.textContent = "💾 Download";
+
+        download.onclick = () => {
+          const link = document.createElement("a");
+          link.href = "https://cdn.jsdelivr.net/gh/genizy/soundboard@main/" + sound.mp3;
+          link.download = sound.mp3.split("/").pop();
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+
+        panel.appendChild(favorite);
+        panel.appendChild(download);
+        document.body.appendChild(panel);
+
+        event.preventDefault();
+
+        setTimeout(() => {
+          const handleOutsideClick = (e) => {
+            if (!panel.contains(e.target)) {
+              panel.remove();
+              document.removeEventListener("click", handleOutsideClick);
+            }
+          };
+          document.addEventListener("click", handleOutsideClick);
+        }, 0);
+      }
+
+      const ttsToggle = document.getElementById("ttsToggle");
+      const ttsPanel = document.getElementById("ttsPanel");
+      const ttsClose = document.getElementById("ttsClose");
+      const ttsText = document.getElementById("ttsText");
+      const ttsVoice = document.getElementById("ttsVoice");
+      const ttsLangFilter = document.getElementById("ttsLangFilter");
+      const ttsVolume = document.getElementById("ttsVolume");
+      const ttsRate = document.getElementById("ttsRate");
+      const ttsPitch = document.getElementById("ttsPitch");
+      const ttsVolumeVal = document.getElementById("ttsVolumeVal");
+      const ttsRateVal = document.getElementById("ttsRateVal");
+      const ttsPitchVal = document.getElementById("ttsPitchVal");
+      const ttsSpeak = document.getElementById("ttsSpeak");
+      const ttsPauseBtn = document.getElementById("ttsPause");
+      const ttsResumeBtn = document.getElementById("ttsResume");
+      const ttsStopBtn = document.getElementById("ttsStop");
+      const ttsResetBtn = document.getElementById("ttsReset");
+      const ttsStatus = document.getElementById("ttsStatus");
+      const ttsSpeaking = document.getElementById("ttsSpeaking");
+      const ttsCurrentWord = document.getElementById("ttsCurrentWord");
+
+      const synth = window.speechSynthesis;
+      let allVoices = [];
+      let currentUtterance = null;
+
+      ttsToggle.onclick = () => {
+        ttsPanel.classList.toggle("hidden");
+        ttsToggle.classList.toggle("tts-toggle-active");
+      };
+      ttsClose.onclick = () => {
+        ttsPanel.classList.add("hidden");
+        ttsToggle.classList.remove("tts-toggle-active");
+      };
+
+      function loadVoices() {
+        allVoices = synth.getVoices();
+        if (!allVoices.length) return;
+
+        const langs = [...new Set(allVoices.map((v) => v.lang))].sort();
+        ttsLangFilter.innerHTML = '<option value="">All Languages</option>';
+        langs.forEach((lang) => {
+          const opt = document.createElement("option");
+          opt.value = lang;
+          opt.textContent = lang;
+          ttsLangFilter.appendChild(opt);
+        });
+
+        populateVoiceList("");
+      }
+
+      function populateVoiceList(langFilter) {
+        const filtered = langFilter ? allVoices.filter((v) => v.lang === langFilter) : allVoices;
+
+        ttsVoice.innerHTML = "";
+        filtered.forEach((voice, i) => {
+          const opt = document.createElement("option");
+          opt.value = i;
+          opt.dataset.voiceName = voice.name;
+          opt.textContent = `${voice.name} (${voice.lang})${voice.default ? " ★" : ""}`;
+          ttsVoice.appendChild(opt);
+        });
+
+        const defIdx = filtered.findIndex((v) => v.default);
+        if (defIdx >= 0) ttsVoice.selectedIndex = defIdx;
+      }
+
+      function getSelectedVoice() {
+        const langFilter = ttsLangFilter.value;
+        const filtered = langFilter ? allVoices.filter((v) => v.lang === langFilter) : allVoices;
+        return filtered[ttsVoice.selectedIndex] || null;
+      }
+
+      loadVoices();
+      if (synth.onvoiceschanged !== undefined) {
+        synth.onvoiceschanged = loadVoices;
+      }
+
+      ttsLangFilter.addEventListener("change", () => {
+        populateVoiceList(ttsLangFilter.value);
+      });
+
+      ttsVolume.addEventListener("input", () => {
+        ttsVolumeVal.textContent = parseFloat(ttsVolume.value).toFixed(2);
+      });
+      ttsRate.addEventListener("input", () => {
+        ttsRateVal.textContent = parseFloat(ttsRate.value).toFixed(1);
+      });
+      ttsPitch.addEventListener("input", () => {
+        ttsPitchVal.textContent = parseFloat(ttsPitch.value).toFixed(2);
+      });
+
+      ttsSpeak.onclick = () => {
+        const text = ttsText.value.trim();
+        if (!text) {
+          setStatus("", "warn");
+          document.getElementById("ttsStatus").innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Please enter some text first.';
+          return;
+        }
+        synth.cancel();
+
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        currentUtterance.voice = getSelectedVoice();
+        currentUtterance.volume = parseFloat(ttsVolume.value);
+        currentUtterance.rate = parseFloat(ttsRate.value);
+        currentUtterance.pitch = parseFloat(ttsPitch.value);
+
+        currentUtterance.onstart = () => {
+          setStatus("", "speaking");
+          document.getElementById("ttsStatus").innerHTML = '<i class="fa-solid fa-volume-high"></i> Speaking';
+          setBtns(true);
+          ttsSpeaking.classList.remove("hidden");
+        };
+
+        currentUtterance.onboundary = (e) => {
+          if (e.name === "word") {
+            const word = text.substr(e.charIndex, e.charLength);
+            ttsCurrentWord.textContent = word;
+            ttsCurrentWord.classList.remove("word-pop");
+            void ttsCurrentWord.offsetWidth; 
+            ttsCurrentWord.classList.add("word-pop");
+          }
+        };
+
+        currentUtterance.onpause = () => {
+          setStatus("⏸ Paused", "paused");
+        };
+
+        currentUtterance.onresume = () => {
+          setStatus("🔊 Resumed…", "speaking");
+        };
+
+        currentUtterance.onend = () => {
+          setStatus("", "done");
+          document.getElementById("ttsStatus").innerHTML = '<i class="fa-solid fa-circle-check"></i> Done';
+          setBtns(false);
+          ttsSpeaking.classList.add("hidden");
+          ttsCurrentWord.textContent = "";
+        };
+
+        currentUtterance.onerror = (e) => {
+          setStatus(``, "error");
+          document.getElementById("ttsStatus").innerHTML = `<i class="fa-solid fa-circle-exclamation"></i> Error: ${e.error}`;
+          setBtns(false);
+          ttsSpeaking.classList.add("hidden");
+        };
+
+        synth.speak(currentUtterance);
+      };
+
+      ttsPauseBtn.onclick = () => {
+        if (synth.speaking && !synth.paused) synth.pause();
+        ttsPauseBtn.disabled = true;
+        ttsResumeBtn.disabled = false;
+      };
+
+      ttsResumeBtn.onclick = () => {
+        if (synth.paused) synth.resume();
+        ttsPauseBtn.disabled = false;
+        ttsResumeBtn.disabled = true;
+      };
+
+      ttsStopBtn.onclick = () => {
+        synth.cancel();
+        setBtns(false);
+        ttsSpeaking.classList.add("hidden");
+        ttsCurrentWord.textContent = "";
+        setStatus("", "idle");
+        document.getElementById("ttsStatus").innerHTML = '<i class="fa-solid fa-stop"></i> Stopped';
+      };
+
+      ttsResetBtn.onclick = () => {
+        ttsVolume.value = 1;
+        ttsVolumeVal.textContent = "1.00";
+        ttsRate.value = 1;
+        ttsRateVal.textContent = "1.0";
+        ttsPitch.value = 1;
+        ttsPitchVal.textContent = "1.00";
+        ttsLangFilter.value = "";
+        populateVoiceList("");
+        setStatus("", "idle");
+        document.getElementById("ttsStatus").innerHTML = '<i class="fa-solid fa-arrow-rotate-left"></i> Settings reset';
+      };
+
+      function setBtns(active) {
+        ttsSpeak.disabled = active;
+        ttsPauseBtn.disabled = !active;
+        ttsStopBtn.disabled = !active;
+        ttsResumeBtn.disabled = true;
+      }
+
+      function setStatus(msg, state) {
+        ttsStatus.textContent = msg;
+        ttsStatus.className = `tts-status tts-status--${state}`;
+      }
+
+      stopButton.addEventListener("click", function () {
+        stopButton.style.backgroundColor = "#ff0000";
+        stopButton.style.color = "#ffffff";
+        setTimeout(() => {
+          stopButton.style.backgroundColor = "#444";
+          stopButton.style.color = "#888";
+        }, 300);
+      });
+    </script>
+    <style>
+      body {
+        font-family: sans-serif;
+        background: black;
+        color: white;
+        margin: 0;
+      }
+
+      #controls {
+        z-index: 1000;
+        display: flex;
+        background: rgba(2, 31, 52, 0.6);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(0, 255, 247, 0.743);
+        flex-wrap: wrap;
+        gap: 10px;
+        position: fixed;
+        top: 0;
+        box-shadow: 0 15px 20px rgba(0, 0, 0, 0.6);
+        width: 100%;
+        justify-content: center;
+        padding: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+      }
+
+      .control-button {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 1.1rem;
+        transition:
+          background 0.3s ease,
+          filter 0.15s,
+          transform 0.1s;
+      }
+      .control-button:hover {
+        filter: brightness(1.2);
+        transform: scale(1.04);
+      }
+
+      .favorites-toggle {
+        background: #444;
+        color: #888;
+      }
+      .favorites-toggle i {
+        transition:
+          color 0.3s ease,
+          filter 0.3s ease;
+      }
+      .favorites-toggle.favorites-on {
+        background: #ffee00;
+      }
+      .favorites-toggle.favorites-on i {
+        color: #444;
+        filter: drop-shadow(0 0 8px #ffee00);
+      }
+      .overlap-toggle {
+        background: #444;
+        color: #888;
+      }
+      .overlap-toggle i {
+        transition:
+          color 0.3s ease,
+          filter 0.3s ease;
+      }
+      .overlap-toggle.overlap-on {
+        background: #22c55e;
+      }
+      .overlap-toggle.overlap-on i {
+        color: white;
+        filter: drop-shadow(0 0 8px #22c55e);
+      }
+      .stop-button {
+        background: #444;
+        color: #888;
+        transition:
+          background 0.3s ease,
+          color 0.3s ease;
+      }
+
+      .stop-button:hover {
+        transform: scale(1.05);
+      }
+
+      .stop-button i {
+        transition: color 0.3s ease;
+      }
+
+      .tts-toggle {
+        background: linear-gradient(135deg, #1a6b8a, #0f3d52);
+        color: #7ee8ff;
+        border: 1px solid #7ee8ff55;
+        letter-spacing: 0.02em;
+      }
+      .tts-toggle-active {
+        background: linear-gradient(135deg, #7ee8ff, #3bc6f0);
+        color: #0a2430;
+        border-color: transparent;
+      }
+
+      #search-input {
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        border: 1px solid #444;
+        background: #222;
+        color: white;
+        flex: 1;
+        min-width: 150px;
+      }
+      #search-input:focus {
+        outline: none;
+        border-color: #7ee8ff;
+      }
+
+      #soundboard {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin-top: 100px;
+        padding: 2rem;
+      }
+
+      .sound-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 120px;
+      }
+
+      .sound-wrapper:hover {
+        transform: scale(1.05);
+        filter: brightness(1.2);
+        transition: 10ms;
+      }
+
+      .sound-wrapper:hover .sound-button-img {
+        box-shadow:
+          0 0 25px var(--btn-color),
+          inset 0 0 15px var(--btn-color);
+      }
+
+      .sound-button-img {
+        all: unset;
+        cursor: pointer;
+        width: 100px;
+        height: 100px;
+        position: relative;
+        border-radius: 50%;
+        box-shadow:
+          0 0 15px var(--btn-color),
+          inset 0 0 10px var(--btn-color);
+        transition: all 0.2s ease;
+      }
+
+      .sound-image {
+        width: 100%;
+        height: 100%;
+        background-color: var(--btn-color);
+        background-image: url("https://cdn.jsdelivr.net/gh/genizy/soundboard@155ea6666132bde6f7f14c413431e0fd7eaeaba9/button.png");
+        background-size: cover;
+        background-position: center;
+        background-blend-mode: multiply;
+        border-radius: 50%;
+        transition:
+          transform 0.1s,
+          filter 0.2s;
+        box-shadow: 0 0 8px var(--btn-color);
+      }
+
+      .sound-image.pressed {
+        background-image: url("https://cdn.jsdelivr.net/gh/genizy/soundboard@155ea6666132bde6f7f14c413431e0fd7eaeaba9/button_pressed.png");
+        transform: scale(0.95);
+      }
+
+      .sound-label {
+        margin-top: 0.5rem;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #eee;
+        font-weight: bold;
+        word-break: break-word;
+      }
+
+      .right-click-panel {
+        background: white;
+        border: 1px solid #ccc;
+        padding: 8px;
+        z-index: 1000;
+        border-radius: 4px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      }
+      .right-click-panel-label {
+        font-weight: bold;
+        margin-bottom: 5px;
+      }
+      .right-click-panel-button {
+        padding: 5px;
+      }
+
+      #ttsPanel {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        width: 380px;
+        max-width: calc(100vw - 40px);
+        z-index: 999;
+        background: rgba(10, 15, 25, 0.85);
+        border: 1px solid cyan;
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow:
+          0 8px 40px rgba(0, 0, 0, 0.7),
+          0 0 0 1px #7ee8ff22;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        font-family: sans-serif;
+        animation: tts-slide-in 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+        backdrop-filter: blur(10px);
+      }
+      #ttsPanel.hidden {
+        display: none;
+      }
+
+      @keyframes tts-slide-in {
+        from {
+          opacity: 0;
+          transform: translateY(-12px) scale(0.97);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      .tts-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .tts-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #7ee8ff;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+      .tts-close {
+        background: none;
+        border: none;
+        color: #7ee8ff88;
+        cursor: pointer;
+        font-size: 1.1rem;
+        line-height: 1;
+        padding: 4px 3px;
+        border-radius: 6px;
+        transition:
+          color 0.15s,
+          background 0.15s;
+      }
+      .tts-close:hover {
+        color: #7ee8ff;
+      }
+
+      .tts-textarea {
+        width: 100%;
+        min-height: 90px;
+        background: #081420;
+        color: #e0f4ff;
+        border: 1px solid #1e4a65;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 0.9rem;
+        font-weight: 600;
+        resize: vertical;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+        font-family: inherit;
+      }
+      .tts-textarea:focus {
+        outline: none;
+        font-weight: 600;
+        border-color: #7ee8ff;
+      }
+      .tts-textarea::placeholder {
+        font-weight: 600;
+        color: #456;
+      }
+
+      .tts-controls-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .tts-control-group {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .tts-control-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      .tts-label {
+        font-size: 0.72rem;
+        font-weight: bold;
+        color: #7ee8ff;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .tts-val {
+        font-size: 0.8rem;
+        color: #7ee8ff;
+        font-variant-numeric: tabular-nums;
+        background: #0a2233;
+        padding: 1px 6px;
+        border-radius: 4px;
+      }
+
+      .tts-select {
+        background: #081420;
+        color: #e0f4ff;
+        border: 1px solid #1e4a65;
+        border-radius: 8px;
+        padding: 6px 8px;
+        font-size: 0.82rem;
+        cursor: pointer;
+        width: 100%;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237ee8ff' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        padding-right: 28px;
+      }
+      .tts-select:focus {
+        outline: none;
+        border-color: #7ee8ff;
+      }
+      .tts-select option {
+        background: #0d1f2d;
+      }
+
+      .tts-slider {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 5px;
+        border-radius: 3px;
+        background: #1e4a65;
+        cursor: pointer;
+        outline: none;
+      }
+      .tts-slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #7ee8ff;
+        cursor: pointer;
+        box-shadow: 0 0 6px #7ee8ff88;
+        transition: transform 0.1s;
+      }
+      .tts-slider::-webkit-slider-thumb:hover {
+        transform: scale(1.3);
+      }
+      .tts-slider::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: #7ee8ff;
+        border: none;
+        cursor: pointer;
+      }
+
+      .tts-status {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+        border-radius: 7px;
+        background: #081420;
+        border: 1px solid #1e4a6544;
+        color: #7ee8ffaa;
+        transition:
+          background 0.3s,
+          color 0.3s,
+          border-color 0.3s;
+      }
+      .tts-status--speaking {
+        background: #0a2d1a;
+        border-color: #22c55e55;
+        color: #22c55e;
+      }
+      .tts-status--paused {
+        background: #2d1f0a;
+        border-color: #f59e0b55;
+        color: #f59e0b;
+      }
+      .tts-status--done {
+        background: #0a2233;
+        border-color: #7ee8ff55;
+        color: #7ee8ff;
+      }
+      .tts-status--error {
+        background: #2d0a0a;
+        border-color: #ef444455;
+        color: #ef4444;
+      }
+      .tts-status--warn {
+        background: #2d1a0a;
+        border-color: #f59e0b55;
+        color: #f59e0b;
+      }
+      .tts-status--idle {
+        background: #081420;
+        border-color: #1e4a6544;
+        color: #7ee8ffaa;
+      }
+
+      .tts-actions {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+      .tts-btn {
+        flex: 1;
+        min-width: 60px;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        font-size: 1rem;
+        cursor: pointer;
+        transition:
+          filter 0.15s,
+          transform 0.1s,
+          opacity 0.2s;
+        white-space: nowrap;
+      }
+      .tts-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+        transform: none !important;
+        filter: none !important;
+      }
+      .tts-btn:not(:disabled):hover {
+        filter: brightness(1.2);
+        transform: scale(1.05);
+      }
+
+      .tts-btn-speak {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+      }
+      .tts-btn-pause {
+        background: #f59e0b;
+        color: #1a0e00;
+      }
+      .tts-btn-resume {
+        background: #3b82f6;
+        color: white;
+      }
+      .tts-btn-stop {
+        background: #ef4444;
+        color: white;
+      }
+      .tts-btn-reset {
+        background: #334155;
+        color: #94a3b8;
+      }
+
+      .tts-speaking-display {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: #081420;
+        border: 1px solid #1e4a65;
+        border-radius: 8px;
+        padding: 8px 12px;
+      }
+      .tts-speaking-display.hidden {
+        display: none;
+      }
+      .tts-speaking-label {
+        font-size: 0.72rem;
+        color: #7ee8ff88;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        white-space: nowrap;
+      }
+      .tts-current-word {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #7ee8ff;
+        letter-spacing: 0.03em;
+        transition: color 0.1s;
+      }
+      @keyframes word-pop-anim {
+        0% {
+          transform: scale(1);
+          color: #fff;
+        }
+        40% {
+          transform: scale(1.25);
+          color: #7ee8ff;
+        }
+        100% {
+          transform: scale(1);
+          color: #7ee8ff;
+        }
+      }
+      .tts-current-word.word-pop {
+        animation: word-pop-anim 0.25s ease-out forwards;
+      }
+
+      @media (max-width: 500px) {
+        #ttsPanel {
+          top: 70px;
+          right: 10px;
+          left: 10px;
+          width: auto;
+        }
+        .tts-controls-grid {
+          grid-template-columns: 1fr;
+        }
+        .tts-control-group.full-width {
+          grid-column: 1;
+        }
+      }
+
+      .search-input {
+        width: 200px;
+        border: 1px solid rgba(0, 255, 247, 0.743);
+        border-radius: 10px;
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.5);
+        color: #e2e8f0;
+        font-size: 0.9rem;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="controls">
+      <button id="toggleFavorites" class="control-button favorites-toggle" title="Favorites"><i class="fa-regular fa-star"></i></button>
+      <button id="toggleButton" class="control-button overlap-toggle" title="Overlap"><i class="fa-solid fa-volume-xmark"></i></button>
+      <button id="stopButton" class="control-button stop-button" title="Stop All"><i class="fa-solid fa-stop"></i></button>
+      <input id="searchInput" class="search-input" type="text" placeholder="Search sounds..." />
+      <button id="ttsToggle" class="control-button tts-toggle" title="Text-to-Speech"><i class="fa-solid fa-microphone"></i></button>
+    </div>
+    <div id="ttsPanel" class="tts-panel hidden">
+      <div class="tts-panel-header" id="ttsHeader">
+        <span class="tts-title"><i class="fa-solid fa-microphone"></i> Text-to-Speech</span>
+        <button id="ttsClose" class="tts-close"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <textarea id="ttsText" class="tts-textarea" placeholder="Type something to speak..."></textarea>
+      <div class="tts-controls-grid">
+        <div class="tts-control-group full-width">
+          <label class="tts-label">Voice</label>
+          <select id="ttsVoice" class="tts-select"></select>
+        </div>
+        <div class="tts-control-group">
+          <label class="tts-label">Volume <span id="ttsVolumeVal" class="tts-val">1.0</span></label>
+          <input type="range" id="ttsVolume" class="tts-slider" min="0" max="1" step="0.05" value="1" />
+        </div>
+        <div class="tts-control-group">
+          <label class="tts-label">Rate <span id="ttsRateVal" class="tts-val">1.0</span></label>
+          <input type="range" id="ttsRate" class="tts-slider" min="0.1" max="10" step="0.1" value="1" />
+        </div>
+        <div class="tts-control-group">
+          <label class="tts-label">Pitch <span id="ttsPitchVal" class="tts-val">1.0</span></label>
+          <input type="range" id="ttsPitch" class="tts-slider" min="0" max="2" step="0.05" value="1" />
+        </div>
+        <div class="tts-control-group">
+          <label class="tts-label">Filter by Lang</label>
+          <select id="ttsLangFilter" class="tts-select"></select>
+        </div>
+      </div>
+
+      <div id="ttsStatus" class="tts-status"><i class="fa-solid fa-check"></i> Ready</div>
+
+      <div class="tts-actions">
+        <button title="Speak" id="ttsSpeak" class="tts-btn tts-btn-speak"><i class="fa-solid fa-play"></i></button>
+        <button title="Pause" id="ttsPause" class="tts-btn tts-btn-pause" disabled><i class="fa-solid fa-pause"></i></button>
+        <button title="Resume" id="ttsResume" class="tts-btn tts-btn-resume" disabled><i class="fa-solid fa-circle-play"></i></button>
+        <button title="Stop" id="ttsStop" class="tts-btn tts-btn-stop" disabled><i class="fa-solid fa-stop"></i></button>
+        <button title="Reset" id="ttsReset" class="tts-btn tts-btn-reset"><i class="fa-solid fa-rotate-left"></i></button>
+      </div>
+
+      <div id="ttsSpeaking" class="tts-speaking-display hidden">
+        <span class="tts-speaking-label">Now speaking:</span>
+        <span id="ttsCurrentWord" class="tts-current-word"></span>
+      </div>
+    </div>
+
+    <div id="soundboard"></div>
+  </body>
+  <script>
+    const windowEl = document.getElementById("ttsPanel");
+    const header = document.getElementById("ttsHeader");
+
+    let isDragging = false;
+    let offsetX, offsetY;
+
+    header.addEventListener("mousedown", (e) => {
+      isDragging = true;
+
+      offsetX = e.clientX - windowEl.offsetLeft;
+      offsetY = e.clientY - windowEl.offsetTop;
+
+      header.style.cursor = "grabbing";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+
+      windowEl.style.left = e.clientX - offsetX + "px";
+      windowEl.style.top = e.clientY - offsetY + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      header.style.cursor = "grab";
+    });
+  </script>
+</html>
