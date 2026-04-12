@@ -709,7 +709,7 @@
       <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
       <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book"></i></button>
       <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
-      <button title="Sound Board" id="soundsBtn"><i class="fa-solid fa-volume"></i></button>
+      <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume"></i></button>
     </div>
     <canvas id="home-canvas"></canvas>
 
@@ -719,7 +719,7 @@
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false"/>
+          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false" />
         </div>
       </div>
       <label class="version-label">Ver 0.0.2 BETA</label>
@@ -729,7 +729,7 @@
       <div class="search-wrapper">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"/>
+          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
         </div>
       </div>
 
@@ -738,6 +738,10 @@
 
     <section class="info" id="info-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
       <iframe id="info-frame" style="width: 100%; height: 100%; border: none"></iframe>
+    </section>
+
+    <section class="soundboard" id="soundboard-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+      <iframe id="soundboard-frame" style="width: 100%; height: 100%; border: none"></iframe>
     </section>
 
     <div id="game-overlay" class="game-overlay">
@@ -755,12 +759,14 @@
       const homePage = document.getElementById("home-page");
       const gxmesPage = document.getElementById("gxmes-page");
       const infoPage = document.getElementById("info-page");
+      const soundboardPage = document.getElementById("soundboard-page");
 
       // Buttons, (Intentional Comment)
       const homeBtn = document.getElementById("homeBtn");
       const gxmesBtn = document.getElementById("gxmesBtn");
       const infoBtn = document.getElementById("infoBtn");
-      const buttons = [homeBtn, gxmesBtn, infoBtn];
+      const soundboardBtn = document.getElementById("soundboardBtn");
+      const buttons = [homeBtn, gxmesBtn, infoBtn, soundboardBtn];
 
       // Extra, (Intentional Comment)
       const mainTitle = document.querySelector(".main-title");
@@ -772,6 +778,7 @@
         home: {page: homePage, btn: homeBtn},
         gxmes: {page: gxmesPage, btn: gxmesBtn},
         info: {page: infoPage, btn: infoBtn},
+        soundboard: {page: soundboardPage, btn: soundboardBtn},
       };
 
       function updateButtons() {
@@ -825,6 +832,8 @@
           gameSearch.focus();
         } else if (targetPage === "info") {
           loadInfoPage();
+        } else if (targetPage === "soundboard") {
+          loadSoundboard();
         }
       }
 
@@ -846,6 +855,10 @@
       infoBtn.addEventListener("click", () => {
         showDelayedTooltip(infoBtn);
         switchPage("info");
+      });
+      soundboardBtn.addEventListener("click", () => {
+        showDelayedTooltip(soundboardBtn);
+        switchPage("soundboard");
       });
 
       updateButtons();
@@ -1408,7 +1421,25 @@
           infoFrame.src = blobUrl;
         } catch (error) {
           console.error("Error loading info page:", error);
-          infoFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS</p>";
+          infoFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
+        }
+      }
+
+      async function loadSoundboard() {
+        const soundboardFrame = document.getElementById("soundboard-frame");
+        const cdnUrl = "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/soundboard.html";
+
+        try {
+          const response = await fetch(cdnUrl);
+          if (!response.ok) throw new Error("Failed to fetch soundboard.html");
+          const htmlContent = await response.text();
+
+          const blob = new Blob([htmlContent], {type: "text/html"});
+          const blobUrl = URL.createObjectURL(blob);
+          soundboardFrame.src = blobUrl;
+        } catch (error) {
+          console.error("Error loading soundboard page:", error);
+          soundboardFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
         }
       }
     </script>
