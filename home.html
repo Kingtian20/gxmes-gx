@@ -831,9 +831,7 @@
         } else if (targetPage === "gxmes") {
           gameSearch.focus();
         } else if (targetPage === "info") {
-          loadInfoPage();
         } else if (targetPage === "soundboard") {
-          loadSoundboard();
         }
       }
 
@@ -1434,6 +1432,11 @@
           console.error("Error loading soundboard page:", error);
           soundboardFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
         }
+      }
+      
+      window.onload = () => {
+        loadInfoPage();
+        loadSoundboard();
       }
     </script>
   </body>
