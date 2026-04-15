@@ -505,6 +505,73 @@
         opacity: 0.5;
       }
 
+      .visitors-container {
+        position: absolute;
+        top: 65%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 60px;
+        justify-content: center;
+        align-items: center;
+        z-index: 5;
+      }
+
+      .visitors-stat {
+        text-align: center;
+      }
+
+      .visitors-label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      #home-live {
+        font-size: 36px;
+        color: #2ecc71;
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+      }
+
+      #home-all {
+        font-size: 36px;
+        color: #3498db;
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+      }
+
+      .visitors-gradient-bar {
+        position: absolute;
+        top: calc(65% + 80px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+        background-size: 200% 100%;
+        border-radius: 100px;
+        animation: backgroundShift 3s ease-in-out infinite;
+        z-index: 5;
+      }
+
+      @keyframes backgroundShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
       .page-fade {
         animation: fadeInPage 0.4s ease-out forwards;
       }
@@ -722,6 +789,17 @@
           <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false" />
         </div>
       </div>
+      <div class="visitors-container">
+        <div class="visitors-stat">
+          <div class="visitors-label">Live Users</div>
+          <div id="home-live">...</div>
+        </div>
+        <div class="visitors-stat">
+          <div class="visitors-label">AllTime Visits</div>
+          <div id="home-all">...</div>
+        </div>
+      </div>
+      <div class="visitors-gradient-bar"></div>
       <label class="version-label">Ver 0.0.3 BETA</label>
     </section>
 
@@ -1456,6 +1534,88 @@
       window.onload = () => {
         loadInfoPage();
         loadSoundboard();
+      }
+
+      function abbreviateNumber(num) {
+        if (num === 0) return "0";
+        const suffixes = ["", "k", "M", "B", "T"];
+        const suffixIndex = Math.floor(Math.log10(Math.abs(num)) / 3);
+        if (suffixIndex === 0) return num.toString();
+        const shortValue = num / Math.pow(1000, suffixIndex);
+        const formatted = shortValue % 1 === 0
+          ? shortValue.toFixed(0)
+          : shortValue.toFixed(1).replace(/\.0$/, "");
+        return formatted + suffixes[suffixIndex];
+      }
+    </script>
+
+    <script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        onDisconnect,
+        onValue,
+        runTransaction
+      } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyCIw3qrDRGRZiHVZuPjTcbYoQ-mmZC1ebU",
+        authDomain: "gx-gxmes.firebaseapp.com",
+        databaseURL: "https://gx-gxmes-default-rtdb.firebaseio.com",
+        projectId: "gx-gxmes",
+        storageBucket: "gx-gxmes.firebasestorage.app",
+        messagingSenderId: "599432055709",
+        appId: "1:599432055709:web:9c5910a40ea78c0e1fbd74"
+      };
+
+      function showFirebaseError() {
+        const liveEl = document.getElementById("home-live");
+        const allEl = document.getElementById("home-all");
+        if (liveEl) {
+          liveEl.textContent = "404";
+          liveEl.style.color = "#ff0000";
+        }
+        if (allEl) {
+          allEl.textContent = "404";
+          allEl.style.color = "#ff0000";
+        }
+      }
+
+      try {
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const userId = crypto.randomUUID();
+        const userRef = ref(db, "onlineUsers/" + userId);
+
+        set(userRef, true).catch(showFirebaseError);
+        onDisconnect(userRef).remove().catch(showFirebaseError);
+
+        onValue(ref(db, "onlineUsers"), (snap) => {
+          const data = snap.val();
+          const count = data ? Object.keys(data).length : 0;
+          document.getElementById("home-live").textContent = abbreviateNumber(count);
+        }, showFirebaseError);
+
+        let sessionId = localStorage.getItem("sessionId");
+
+        if (!sessionId) {
+          sessionId = crypto.randomUUID();
+          localStorage.setItem("sessionId", sessionId);
+
+          runTransaction(ref(db, "stats/allTime"), (current) => {
+            return (current || 0) + 1;
+          }).catch(showFirebaseError);
+        }
+
+        onValue(ref(db, "stats/allTime"), (snap) => {
+          const count = snap.val() || 0;
+          document.getElementById("home-all").textContent = abbreviateNumber(count);
+        }, showFirebaseError);
+      } catch (error) {
+        showFirebaseError();
       }
     </script>
   </body>
