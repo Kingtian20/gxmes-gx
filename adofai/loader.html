@@ -1,47 +1,60 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/paigerodeghero/academicwebsite@897c910c65e6c68b04c44a6b6eba0b99d0f2f2cf/TemplateData/style.css">
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=2.0" />
+    </head>
+    <body>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/gh/paigerodeghero/academicwebsite@897c910c65e6c68b04c44a6b6eba0b99d0f2f2cf/TemplateData/style.css" />
 
-<script src="https://cdn.jsdelivr.net/gh/paigerodeghero/academicwebsite@897c910c65e6c68b04c44a6b6eba0b99d0f2f2cf/TemplateData/UnityProgress.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/udbsite/adofai@f170efcb1b532312817e69f26ce3f84c99940238/Build/UnityLoader.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/paigerodeghero/academicwebsite@897c910c65e6c68b04c44a6b6eba0b99d0f2f2cf/TemplateData/UnityProgress.js"></script>
+        <script src="https://cdn.jsdelivr.net/gh/udbsite/adofai@f170efcb1b532312817e69f26ce3f84c99940238/Build/UnityLoader.js"></script>
 
-<style>
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
+        <style>
+            html,
+            body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+            }
 
-.webgl-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
+            .webgl-content {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
 
-#gameContainer {
-  width: 100%;
-  height: 100%;
-  transform: translate(50%, 50%);
-}
-</style>
+            #gameContainer {
+                width: 100%;
+                height: 100%;
+                transform: translate(50%, 50%);
+            }
+        </style>
 
-<div class="webgl-content">
-  <div id="gameContainer"></div>
-</div>
+        <div class="webgl-content">
+            <div id="gameContainer"></div>
+        </div>
 
-<script>
-var gameInstance = UnityLoader.instantiate(
-  "gameContainer",
-  "https://cdn.jsdelivr.net/gh/udbsite/adofai@f170efcb1b532312817e69f26ce3f84c99940238/Build/adofaiii4.json",
-  {
-    onProgress: UnityProgress,
-    Module: {
-      onRuntimeInitialized: function() {
-        UnityProgress(gameInstance, "complete");
-      }
-    }
-  }
-);
-</script>
+        <script>
+            var gameInstance = UnityLoader.instantiate(
+                "gameContainer",
+                "https://cdn.jsdelivr.net/gh/udbsite/adofai@f170efcb1b532312817e69f26ce3f84c99940238/Build/adofaiii4.json",
+                {
+                    onProgress: UnityProgress,
+                    Module: {
+                        onRuntimeInitialized: function () {
+                            UnityProgress(gameInstance, "complete");
+                        }
+                    }
+                }
+            );
+        </script>
+    </body>
+</html>
