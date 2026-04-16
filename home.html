@@ -1028,6 +1028,14 @@
       const constellationCount = 11;
       const starsPerConstellation = 6;
 
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+
       function createConstellation(cx, cy) {
         const stars = [];
         const connections = [];
