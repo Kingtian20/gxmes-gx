@@ -224,6 +224,13 @@
         width: 100%;
         height: 100%;
         z-index: -1;
+        opacity: 1;
+        transition: opacity 0.5s ease-out;
+        pointer-events: none;
+      }
+
+      #home-canvas.hidden {
+        opacity: 0;
       }
 
       .g-circle {
@@ -885,12 +892,19 @@
 
         const prevPage = pageMap[currentPage].page;
         const nextPage = pageMap[targetPage].page;
+        const canvas = document.getElementById("home-canvas");
 
         prevPage.style.display = "none";
         nextPage.style.display = "flex";
         nextPage.classList.remove("page-fade");
         void nextPage.offsetWidth;
         nextPage.classList.add("page-fade");
+
+        if (targetPage === "home") {
+          canvas.classList.remove("hidden");
+        } else {
+          canvas.classList.add("hidden");
+        }
 
         currentPage = targetPage;
         updateButtons();
