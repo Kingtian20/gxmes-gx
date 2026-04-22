@@ -953,6 +953,30 @@
 
       updateButtons();
 
+      document.addEventListener("keydown", (e) => {
+        const overlay = document.getElementById("game-overlay");
+
+        if (e.key === "Escape" && overlay.classList.contains("active")) {
+          e.preventDefault();
+          document.getElementById("btn-exit").click();
+          return;
+        }
+
+        if (e.target.tagName === "INPUT") return;
+
+        if (e.key === "/") {
+          e.preventDefault();
+          if (currentPage === "home") {
+            document.getElementById("home-search").focus();
+          } else if (currentPage === "gxmes") {
+            gameSearch.focus();
+          } else {
+            switchPage("gxmes");
+            setTimeout(() => gameSearch.focus(), 100);
+          }
+        }
+      });
+
       const homeSearch = document.getElementById("home-search");
       const gameSearch = document.getElementById("game-search");
 
@@ -1486,17 +1510,44 @@
           frameContainer.innerHTML = "";
 
           if (fetchedCode) {
-            const iframe = document.createElement("iframe");
-            iframe.className = "newtab-iframe";
-            iframe.setAttribute("sandbox", "allow-scripts allow-same-origin allow-popups allow-forms");
-            iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
-            iframe.allowFullscreen = true;
-            frameContainer.appendChild(iframe);
+            const wrapper = document.createElement("div");
+            wrapper.id = "game-content-wrapper";
+            wrapper.style.cssText = "width:100%; height:100%; overflow:auto; background:#000;";
+            frameContainer.appendChild(wrapper);
 
-            const doc = iframe.contentWindow.document;
-            doc.open();
-            doc.write(fetchedCode);
-            doc.close();
+            const baseUrl = game.code.substring(0, game.code.lastIndexOf("/") + 1);
+            const patchedCode = fetchedCode.replace(
+              /(src|href)=(["'])(?!https?:\/\/|data:|\/\/)([^"']+)\2/gi,
+              `$1=$2${baseUrl}$3$2`
+            );
+
+            const parser = new DOMParser();
+            const parsedDoc = parser.parseFromString(patchedCode, "text/html");
+
+            parsedDoc.head.querySelectorAll("style").forEach((style) => {
+              wrapper.appendChild(style.cloneNode(true));
+            });
+
+            parsedDoc.head.querySelectorAll("link[rel='stylesheet']").forEach((link) => {
+              const newLink = document.createElement("link");
+              newLink.rel = "stylesheet";
+              newLink.href = link.href;
+              wrapper.appendChild(newLink);
+            });
+
+            const bodyContent = document.createElement("div");
+            bodyContent.innerHTML = parsedDoc.body.innerHTML;
+            wrapper.appendChild(bodyContent);
+
+            parsedDoc.body.querySelectorAll("script").forEach((script) => {
+              const newScript = document.createElement("script");
+              if (script.src) {
+                newScript.src = script.src;
+              } else {
+                newScript.textContent = script.textContent;
+              }
+              wrapper.appendChild(newScript);
+            });
           }
         } else if (game.webgl) {
           frameContainer.innerHTML = `
