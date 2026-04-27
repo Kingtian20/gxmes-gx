@@ -355,7 +355,17 @@
         display: none !important;
       }
 
+      #proxy-overlay.active ~ .action-bar {
+        display: none !important;
+      }
+
       #game-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      #proxy-frame-container {
         flex: 1;
         width: 100%;
         background: #111;
@@ -365,6 +375,7 @@
         width: 100%;
         height: 100%;
         border: none;
+        display: block;
       }
 
       .game-controls {
@@ -386,6 +397,14 @@
           0 10px 30px rgba(0, 0, 0, 0.5),
           0 0 20px rgba(0, 255, 247, 0.1);
         z-index: 10000;
+      }
+
+      #proxy-overlay .game-controls {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        padding: 0;
+        justify-content: center;
       }
 
       .game-controls button {
@@ -495,6 +514,89 @@
       #gxmes-page {
         background-color: #000 !important;
         min-height: 100vh;
+      }
+
+      #proxy-page .search-box {
+        width: 80%;
+        max-width: 800px;
+        height: 60px;
+        pointer-events: all;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      #proxy-page .search-box input {
+        font-size: 1rem;
+        pointer-events: all;
+        letter-spacing: 1px;
+      }
+
+      #proxy-page .line-driver::before {
+        width: 1000px;
+        height: 1000px;
+      }
+
+      #proxy-page {
+        background-color: #000 !important;
+        min-height: 100vh;
+      }
+
+      .proxy-grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 80px;
+        padding-bottom: 100px;
+      }
+
+      .proxy-item {
+        aspect-ratio: 32/9;
+        background: #111;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
+      }
+
+      .proxy-item:hover {
+        transform: translateY(-10px) scale(1.05);
+        border-color: white;
+        box-shadow: 0 0 20px var(--primary-color);
+        z-index: 2;
+      }
+
+      .proxy-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .proxy-item:hover img {
+        transform: scale(1.1);
+        opacity: 0.5;
+      }
+
+      .proxy-title {
+        position: absolute;
+        bottom: -60px;
+        width: 100%;
+        padding: 15px 10px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        color: white;
+        font-weight: bold;
+        transition: bottom 0.3s ease-out;
+      }
+
+      .proxy-item:hover .proxy-title {
+        bottom: 0;
       }
 
       .version-label {
@@ -829,6 +931,17 @@
       <iframe id="soundboard-frame" style="width: 100%; height: 100%; border: none"></iframe>
     </section>
 
+    <section class="proxies" id="proxy-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <div class="search-wrapper">
+        <div class="search-box">
+          <div class="line-driver"></div>
+          <input type="text" id="proxy-search" placeholder="Search proxies..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+        </div>
+      </div>
+
+      <div class="proxy-grid" id="proxy-grid"></div>
+    </section>
+
     <div id="game-overlay" class="game-overlay">
       <div id="game-frame-container"></div>
 
@@ -839,19 +952,29 @@
       </div>
     </div>
 
+    <div id="proxy-overlay" class="game-overlay">
+      <div id="proxy-frame-container"></div>
+
+      <div class="game-controls">
+        <button id="btn-proxy-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
     <script>
       // Pages, (Intentional Comment)
       const homePage = document.getElementById("home-page");
       const gxmesPage = document.getElementById("gxmes-page");
       const infoPage = document.getElementById("info-page");
       const soundboardPage = document.getElementById("soundboard-page");
+      const proxyPage = document.getElementById("proxy-page");
 
       // Buttons, (Intentional Comment)
       const homeBtn = document.getElementById("homeBtn");
       const gxmesBtn = document.getElementById("gxmesBtn");
       const infoBtn = document.getElementById("infoBtn");
       const soundboardBtn = document.getElementById("soundboardBtn");
-      const buttons = [homeBtn, gxmesBtn, infoBtn, soundboardBtn];
+      const proxyBtn = document.getElementById("proxyBtn");
+      const buttons = [homeBtn, gxmesBtn, infoBtn, soundboardBtn, proxyBtn];
 
       // Extra, (Intentional Comment)
       const mainTitle = document.querySelector(".main-title");
@@ -864,6 +987,7 @@
         gxmes: {page: gxmesPage, btn: gxmesBtn},
         info: {page: infoPage, btn: infoBtn},
         soundboard: {page: soundboardPage, btn: soundboardBtn},
+        proxy: {page: proxyPage, btn: proxyBtn},
       };
 
       function updateButtons() {
@@ -924,6 +1048,8 @@
           gameSearch.focus();
         } else if (targetPage === "info") {
         } else if (targetPage === "soundboard") {
+        } else if (targetPage === "proxy") {
+          document.getElementById("proxy-search").focus();
         }
       }
 
@@ -950,15 +1076,26 @@
         showDelayedTooltip(soundboardBtn);
         switchPage("soundboard");
       });
+      proxyBtn.addEventListener("click", () => {
+        showDelayedTooltip(proxyBtn);
+        switchPage("proxy");
+      });
 
       updateButtons();
 
       document.addEventListener("keydown", (e) => {
         const overlay = document.getElementById("game-overlay");
+        const proxyOverlay = document.getElementById("proxy-overlay");
 
         if (e.key === "Escape" && overlay.classList.contains("active")) {
           e.preventDefault();
           document.getElementById("btn-exit").click();
+          return;
+        }
+
+        if (e.key === "Escape" && proxyOverlay.classList.contains("active")) {
+          e.preventDefault();
+          document.getElementById("btn-proxy-exit").click();
           return;
         }
 
@@ -970,6 +1107,8 @@
             document.getElementById("home-search").focus();
           } else if (currentPage === "gxmes") {
             gameSearch.focus();
+          } else if (currentPage === "proxy") {
+            document.getElementById("proxy-search").focus();
           } else {
             switchPage("gxmes");
             setTimeout(() => gameSearch.focus(), 100);
@@ -1623,6 +1762,85 @@
         }
       });
       renderGames(gamesList);
+    </script>
+
+    <script>
+      const proxiesList = [
+        {
+          Proxy_name: "Fern",
+          proxyimgurl: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pxy/fern/fern.png",
+          proxyurl: "https://s3.amazonaws.com/fernlinks/index.html",
+        }
+      ];
+
+      proxiesList.sort((a, b) => a.Proxy_name.localeCompare(b.Proxy_name, undefined, {numeric: true, sensitivity: "base"}));
+
+      const proxyGrid = document.getElementById("proxy-grid");
+      const proxySearchInput = document.getElementById("proxy-search");
+      const proxyOverlay = document.getElementById("proxy-overlay");
+      const proxyFrameContainer = document.getElementById("proxy-frame-container");
+
+      let currentProxy = null;
+
+      function renderProxies(proxies) {
+        proxyGrid.innerHTML = "";
+        proxies.forEach((proxy) => {
+          const item = document.createElement("div");
+          item.className = "proxy-item game-pop";
+          item.onclick = () => openProxyModal(proxy);
+          item.innerHTML = `
+            <img src="${proxy.proxyimgurl}" alt="${proxy.Proxy_name}" loading="lazy">
+            <div class="proxy-title">${proxy.Proxy_name}</div>
+          `;
+          proxyGrid.appendChild(item);
+        });
+      }
+
+      function normalizeForSearch(str) {
+        return str.toLowerCase().replace(/[^a-z0-9]/g, "");
+      }
+
+      let proxySearchDebounce;
+      proxySearchInput.addEventListener("input", (e) => {
+        clearTimeout(proxySearchDebounce);
+        proxySearchDebounce = setTimeout(() => {
+          const term = normalizeForSearch(e.target.value);
+          renderProxies(proxiesList.filter((proxy) => normalizeForSearch(proxy.Proxy_name).includes(term)));
+        }, 250);
+      });
+
+      proxySearchInput.addEventListener("keypress", (e) => {
+        if (!/[a-zA-Z0-9 ]/.test(e.key)) {
+          e.preventDefault();
+        }
+      });
+
+      function openProxyModal(proxy) {
+        currentProxy = proxy;
+        proxyOverlay.classList.add("active");
+        document.querySelector(".action-bar").style.display = "none";
+        proxyFrameContainer.innerHTML = "";
+
+        const iframe = document.createElement("iframe");
+        iframe.className = "newtab-iframe";
+        iframe.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture");
+        iframe.allowFullscreen = true;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.display = "block";
+        iframe.style.border = "none";
+        iframe.src = proxy.proxyurl;
+        proxyFrameContainer.appendChild(iframe);
+      }
+
+      document.getElementById("btn-proxy-exit").addEventListener("click", () => {
+        proxyOverlay.classList.remove("active");
+        proxyFrameContainer.innerHTML = "";
+        document.querySelector(".action-bar").style.display = "flex";
+        currentProxy = null;
+      });
+
+      renderProxies(proxiesList);
     </script>
     <script>
       async function loadInfoPage() {
