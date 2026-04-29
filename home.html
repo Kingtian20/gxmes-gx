@@ -751,6 +751,136 @@
         opacity: 0.5;
       }
 
+      .settings-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        background: #000;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 10;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .settings-btn:hover {
+        transform: translateY(-5px) scale(1.2);
+      }
+
+      .settings-btn:hover i {
+        color: var(--primary-color);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .settings-btn .line-driver {
+        border-radius: 50%;
+        padding: 2px;
+      }
+
+      .settings-btn i {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        z-index: 2;
+      }
+
+      .settings-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .settings-modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .settings-content {
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 0 30px rgba(0, 0, 255, 0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .settings-modal.active .settings-content {
+        transform: scale(1);
+      }
+
+      .settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+      }
+
+      .settings-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        color: #fff;
+        text-shadow: 0 0 10px var(--primary-color);
+        margin: 0;
+      }
+
+      .settings-close {
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition: color 0.3s, transform 0.3s;
+      }
+
+      .settings-close:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+      }
+
+      .settings-item {
+        margin-bottom: 20px;
+      }
+
+      .settings-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      .settings-value {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9rem;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        word-break: break-all;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-shadow: 0 0 5px var(--primary-color);
+      }
+
       .visitors-container {
         position: absolute;
         top: 70%;
@@ -1042,6 +1172,10 @@
     <canvas id="home-canvas"></canvas>
 
     <section class="home" id="home-page">
+      <div class="settings-btn" id="settingsBtn" title="Settings">
+        <div class="line-driver"></div>
+        <i class="fa-solid fa-gear"></i>
+      </div>
       <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
       <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX VERSE</h1>
       <div class="search-container">
@@ -1104,6 +1238,19 @@
 
       <div class="proxy-controls">
         <button id="btn-proxy-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div id="settings-modal" class="settings-modal">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h2 class="settings-title">Settings</h2>
+          <button class="settings-close" id="settingsClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="settings-item">
+          <span class="settings-label">User UUID</span>
+          <div class="settings-value" id="settings-uuid">Loading...</div>
+        </div>
       </div>
     </div>
 
@@ -1227,6 +1374,32 @@
         switchPage("proxy");
       });
 
+      const settingsBtn = document.getElementById("settingsBtn");
+      const settingsModal = document.getElementById("settings-modal");
+      const settingsClose = document.getElementById("settingsClose");
+      const settingsUuid = document.getElementById("settings-uuid");
+
+      let userUUID = localStorage.getItem("userUUID");
+      if (!userUUID) {
+        userUUID = crypto.randomUUID();
+        localStorage.setItem("userUUID", userUUID);
+      }
+      settingsUuid.textContent = userUUID;
+
+      settingsBtn.addEventListener("click", () => {
+        settingsModal.classList.add("active");
+      });
+
+      settingsClose.addEventListener("click", () => {
+        settingsModal.classList.remove("active");
+      });
+
+      settingsModal.addEventListener("click", (e) => {
+        if (e.target === settingsModal) {
+          settingsModal.classList.remove("active");
+        }
+      });
+
       updateButtons();
 
       document.addEventListener("keydown", (e) => {
@@ -1242,6 +1415,12 @@
         if (e.key === "Escape" && proxyOverlay.classList.contains("active")) {
           e.preventDefault();
           document.getElementById("btn-proxy-exit").click();
+          return;
+        }
+
+        if (e.key === "Escape" && settingsModal.classList.contains("active")) {
+          e.preventDefault();
+          settingsModal.classList.remove("active");
           return;
         }
 
@@ -2051,8 +2230,12 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        const userId = crypto.randomUUID();
-        const userRef = ref(db, "onlineUsers/" + userId);
+        let firebaseUserId = localStorage.getItem("userUUID");
+        if (!firebaseUserId) {
+          firebaseUserId = crypto.randomUUID();
+          localStorage.setItem("userUUID", firebaseUserId);
+        }
+        const userRef = ref(db, "onlineUsers/" + firebaseUserId);
 
         set(userRef, true).catch(showFirebaseError);
         onDisconnect(userRef).remove().catch(showFirebaseError);
