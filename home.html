@@ -172,9 +172,16 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          var(--primary-color) 10%,
+          var(--secondary-color) 20%,
+          transparent 25%
+        );
         animation: rotate 3s linear infinite;
-        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color))
+          drop-shadow(0 0 50px var(--primary-color));
       }
 
       .action-bar {
@@ -801,7 +808,9 @@
         justify-content: center;
         opacity: 0;
         visibility: hidden;
-        transition: opacity 0.3s ease, visibility 0.3s ease;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
       }
 
       .settings-modal.active {
@@ -847,7 +856,9 @@
         color: rgba(255, 255, 255, 0.6);
         font-size: 1.5rem;
         cursor: pointer;
-        transition: color 0.3s, transform 0.3s;
+        transition:
+          color 0.3s,
+          transform 0.3s;
       }
 
       .settings-close:hover {
@@ -1042,7 +1053,8 @@
       }
 
       .staff-card:hover .staff-box .line-driver {
-        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color))
+          drop-shadow(0 0 50px var(--primary-color));
       }
 
       .staff-rank {
@@ -1086,7 +1098,8 @@
       }
 
       .staff-card:hover .staff-img-wrapper .line-driver {
-        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color))
+          drop-shadow(0 0 50px var(--primary-color));
       }
 
       .staff-info ul {
@@ -1120,7 +1133,17 @@
       }
 
       .staff-box .line-driver::before {
-        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 5%, var(--secondary-color) 8%, transparent 12%, transparent 50%, var(--primary-color) 55%, var(--secondary-color) 58%, transparent 62%);
+        background: conic-gradient(
+          from 0deg,
+          transparent 0%,
+          var(--primary-color) 5%,
+          var(--secondary-color) 8%,
+          transparent 12%,
+          transparent 50%,
+          var(--primary-color) 55%,
+          var(--secondary-color) 58%,
+          transparent 62%
+        );
       }
 
       @keyframes glitch {
@@ -1229,11 +1252,23 @@
         <i class="fa-solid fa-gear"></i>
       </div>
       <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
-      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX VERSE</h1>
+      <h1
+        class="sub-title main-title"
+        style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">
+        Welcome to GX VERSE
+      </h1>
       <div class="search-container">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false" />
+          <input
+            type="text"
+            id="home-search"
+            autocomplete="off"
+            autofocus
+            autocapitalize="off"
+            autocorrect="off"
+            placeholder="Search gxmes..."
+            spellcheck="false" />
         </div>
       </div>
       <div class="visitors-container">
@@ -1250,26 +1285,61 @@
       <label class="version-label">Ver 0.0.3 BETA</label>
     </section>
 
-    <section class="gxmes" id="gxmes-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+    <section
+      class="gxmes"
+      id="gxmes-page"
+      style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
       <div class="search-wrapper">
         <div class="search-box">
           <div class="line-driver"></div>
-          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+          <input
+            type="text"
+            id="game-search"
+            placeholder="Search gxmes..."
+            autocomplete="off"
+            autocapitalize="off"
+            autocorrect="off"
+            spellcheck="false" />
         </div>
       </div>
 
       <div class="grid" id="game-grid"></div>
     </section>
 
-    <section class="info" id="info-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+    <section
+      class="info"
+      id="info-page"
+      style="
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        position: relative;
+      ">
       <iframe id="info-frame" style="width: 100%; height: 100%; border: none"></iframe>
     </section>
 
-    <section class="soundboard" id="soundboard-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+    <section
+      class="soundboard"
+      id="soundboard-page"
+      style="
+        display: none;
+        width: 100vw;
+        height: 100vh;
+        flex-direction: column;
+        align-items: center;
+        overflow-y: auto;
+        position: relative;
+      ">
       <iframe id="soundboard-frame" style="width: 100%; height: 100%; border: none"></iframe>
     </section>
 
-    <section class="proxies" id="proxy-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+    <section
+      class="proxies"
+      id="proxy-page"
+      style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
       <h1 id="proxy-page-heading">Pr0xys</h1>
 
       <div class="proxy-grid" id="proxy-grid"></div>
@@ -1334,11 +1404,11 @@
       let currentPage = "home";
 
       const pageMap = {
-        home: {page: homePage, btn: homeBtn},
-        gxmes: {page: gxmesPage, btn: gxmesBtn},
-        info: {page: infoPage, btn: infoBtn},
-        soundboard: {page: soundboardPage, btn: soundboardBtn},
-        proxy: {page: proxyPage, btn: proxyBtn},
+        home: { page: homePage, btn: homeBtn },
+        gxmes: { page: gxmesPage, btn: gxmesBtn },
+        info: { page: infoPage, btn: infoBtn },
+        soundboard: { page: soundboardPage, btn: soundboardBtn },
+        proxy: { page: proxyPage, btn: proxyBtn }
       };
 
       function updateButtons() {
@@ -1520,7 +1590,7 @@
       homeSearch.addEventListener("keypress", (e) => {
         if (e.key === "Enter") {
           gameSearch.value = homeSearch.value;
-          gameSearch.dispatchEvent(new Event("input", {bubbles: true}));
+          gameSearch.dispatchEvent(new Event("input", { bubbles: true }));
           homeSearch.value = "";
           switchPage("gxmes");
         } else if (!/[a-zA-Z0-9 ]/.test(e.key)) {
@@ -1546,13 +1616,13 @@
       }
 
       function createStars() {
-        stars = Array.from({length: 200}, () => ({
+        stars = Array.from({ length: 200 }, () => ({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           size: Math.random() * 1.5 + 0.5,
           opacity: Math.random() * 0.9,
           speed: Math.random() * 0.02 + 0.005,
-          phase: Math.random() * Math.PI * 2,
+          phase: Math.random() * Math.PI * 2
         }));
       }
 
@@ -1574,7 +1644,7 @@
 
             points.push({
               x: cx + Math.cos(angle) * dist,
-              y: cy + Math.sin(angle) * dist,
+              y: cy + Math.sin(angle) * dist
             });
           }
 
@@ -1587,7 +1657,7 @@
             }
           }
 
-          constellations.push({points, connections});
+          constellations.push({ points, connections });
         }
       }
 
@@ -1598,7 +1668,7 @@
           length: Math.random() * 80 + 60,
           speed: Math.random() * 3 + 2,
           angle: Math.PI / 4,
-          opacity: 0.8,
+          opacity: 0.8
         };
       }
 
@@ -1651,7 +1721,12 @@
         shootingStars = shootingStars.filter((s) => {
           if (s.opacity <= 0) return false;
 
-          const grad = ctx.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+          const grad = ctx.createLinearGradient(
+            s.x,
+            s.y,
+            s.x - Math.cos(s.angle) * s.length,
+            s.y - Math.sin(s.angle) * s.length
+          );
 
           grad.addColorStop(0, `rgba(255,255,255,${s.opacity})`);
           grad.addColorStop(1, "rgba(255,255,255,0)");
@@ -1685,305 +1760,179 @@
           title: "1v1 Lol",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/147.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1lol/1v1lol.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "1v1 Tennis",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/1.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1tennis/1v1tennis.xml",
-          webgl: false,
+          webgl: false
         },
         {
           title: "Death Run 3D",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/30.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/deathrun3d/deathrun3d.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Ultrakill",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/132.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/index.html",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ultrakill/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Bacon May Die",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/204.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/baconmaydie/baconmaydie.xml",
-          webgl: true,
-        },
-        {
-          title: "Drift Race",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/32.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/driftrace/driftrace.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/driftrace/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Only Up",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/78.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/onlyup/onlyup.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Extreme Run 3D",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/40.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/extremerun3d/extremerun3d.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Stickman Kombat",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/111.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/stickmankombat/stickmankombat.xml",
-          webgl: false,
+          webgl: false
         },
         {
           title: "Marble Quest",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/75.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/marblequest/marblequest.xml",
-          webgl: false,
+          webgl: false
         },
         {
           title: "Chicken War",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/26.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/chickenwar/chickenwar.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/chickenwar/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Megachess",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/171.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/megachess/megachess.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Football Bros",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/48.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/footballbros/footballbros.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Friday Night Funkin - Indie Cross",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/251.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/fridaynightfunkin/indiecross/indiecross.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Wrestle Bros",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/139.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/wrestlebros/wrestlebros.xml",
-          webgl: false,
+          webgl: false
         },
         {
           title: "Tomb Of The Mask",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/176.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/tombofthemask/tombofthemask.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Schoolboy Runaway",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/314.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/schoolboyrunaway/schoolboyrunaway.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/schoolboyrunaway/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Retro Bowl",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/97.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/retrobowl/retrobowl.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Buckshot Roulette",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/296.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/buckshotroulette/buckshotroulette.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/buckshotroulette/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Block Blast",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/9.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blockblast/blockblast.xml",
-          webgl: true,
-        },
-        {
-          title: "Basket Random",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/18.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketrandom/basketrandom.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Animation Vs Friday Night Funkin",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/237.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/fridaynightfunkin/animationvsfnf/animationvsfnf.xml",
-          webgl: true,
-        },
-        {
-          title: "Escape Road",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/41.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/escaperoad/escaperoad.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/escaperoad/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Pokemon White",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/181.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonwhite/pokemonwhite.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Pokemon Emerald",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/183.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonemerald/pokemonemerald.xml",
-          webgl: true,
-        },
-        {
-          title: "Pokemon Black",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/182.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonblack/pokemonblack.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Undertale Yellow",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/131.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/undertaleyellow/undertaleyellow.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Ragdoll Archers",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/98.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ragdollarchers/ragdollarchers.xml",
-          webgl: true,
-        },
-        {
-          title: "1v1 Soccer",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/2.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/1v1soccer.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/loader.html",
-          webgl: true,
-        },
-        {
-          title: "99 Nights In The Forest",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/3.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/99nightsintheforest.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/loader.html",
-          webgl: true,
-        },
-        {
-          title: "8 Ball Pool",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/4.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/8ballpool.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Angry Birds",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/5.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/angrybirds/angrybirds.xml",
-          webgl: true,
-        },
-        {
-          title: "Among Us",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/6.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/amongus.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "ADOFAI",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/7.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/adofai/adofai.xml",
-          webgl: true,
-        },
-        {
-          title: "Ahoy Survival",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/8.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ahoysurvival/ahoysurvival.xml",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Bitlife",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/10.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bitlife/bitlife.xml",
-          webgl: true,
-        },
-        {
-          title: "Backrooms 24",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/11.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/backrooms24.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Blackjack",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/12.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/blackjack.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Basket Bros",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/13.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/basketbros.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Brawl Stars",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/14.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/brawlstars/brawlstars.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/brawlstars/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Bloxorz",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/15.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/bloxorz.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Bio Evil 4",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/16.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bioevil4/bioevil4.xml",
-          webgl: true,
-        },
-        {
-          title: "Boxing Random",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/17.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/boxingrandom.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Basketball Stars",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/19.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketballstars/basketballstars.xml",
           code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketballstars/loader.html",
-          webgl: true,
-        },
-        {
-          title: "Bad Parenting",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/20.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/badparenting/badparenting.xml",
-          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/badparenting/loader.html",
-          webgl: true,
+          webgl: true
         },
         {
           title: "Baseball Bros",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/21.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/baseballbros/baseballbros.xml",
-          webgl: true,
-        },
-        {
-          title: "Choppy Orc",
-          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/23.png",
-          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/choppyorc/choppyorc.xml",
-          webgl: true,
-        },
+          webgl: true
+        }
       ];
 
-      gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, {numeric: true, sensitivity: "base"}));
+      gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, { numeric: true, sensitivity: "base" }));
 
       const gameGrid = document.getElementById("game-grid");
       const searchInput = document.getElementById("game-search");
@@ -2040,7 +1989,8 @@
         currentGame = game;
         overlay.classList.add("active");
         globalActionBar.style.display = "none";
-        frameContainer.innerHTML = '<div style="color:white; text-align:center; margin-top:20%; font-family:Orbitron;">LOADING...</div>';
+        frameContainer.innerHTML =
+          '<div style="color:white; text-align:center; margin-top:20%; font-family:Orbitron;">LOADING...</div>';
 
         if (game.code) {
           const fetchedCode = await fetchText(game.code);
@@ -2102,7 +2052,7 @@
             iframe.className = "newtab-iframe";
             iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
             iframe.allowFullscreen = true;
-            const blob = new Blob([code], {type: "text/html"});
+            const blob = new Blob([code], { type: "text/html" });
             iframe.src = URL.createObjectURL(blob);
             frameContainer.appendChild(iframe);
           } catch (error) {
@@ -2133,7 +2083,11 @@
 
             setTimeout(function () {
               const docEl = newWin.document.documentElement;
-              const requestFs = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullscreen || docEl.msRequestFullscreen;
+              const requestFs =
+                docEl.requestFullscreen ||
+                docEl.mozRequestFullScreen ||
+                docEl.webkitRequestFullscreen ||
+                docEl.msRequestFullscreen;
               if (requestFs) requestFs.call(docEl);
             }, 500);
           } else {
@@ -2150,7 +2104,7 @@
 
         if (fetchedContent) {
           const fileName = currentGame.title.replace(/\s+/g, "_") + ".html";
-          const blob = new Blob([fetchedContent], {type: "text/html"});
+          const blob = new Blob([fetchedContent], { type: "text/html" });
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
@@ -2167,11 +2121,13 @@
         {
           Proxy_name: "Fern",
           proxyimgurl: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pxy/fern/fern.png",
-          proxyurl: "https://s3.amazonaws.com/fernlinks/index.html",
+          proxyurl: "https://s3.amazonaws.com/fernlinks/index.html"
         }
       ];
 
-      proxiesList.sort((a, b) => a.Proxy_name.localeCompare(b.Proxy_name, undefined, {numeric: true, sensitivity: "base"}));
+      proxiesList.sort((a, b) =>
+        a.Proxy_name.localeCompare(b.Proxy_name, undefined, { numeric: true, sensitivity: "base" })
+      );
 
       const proxyGrid = document.getElementById("proxy-grid");
       const proxyOverlay = document.getElementById("proxy-overlay");
@@ -2231,12 +2187,13 @@
           if (!response.ok) throw new Error("Failed to fetch staff.html");
           const htmlContent = await response.text();
 
-          const blob = new Blob([htmlContent], {type: "text/html"});
+          const blob = new Blob([htmlContent], { type: "text/html" });
           const blobUrl = URL.createObjectURL(blob);
           infoFrame.src = blobUrl;
         } catch (error) {
           console.error("Error loading info page:", error);
-          infoFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
+          infoFrame.srcdoc =
+            "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
         }
       }
 
@@ -2249,12 +2206,13 @@
           if (!response.ok) throw new Error("Failed to fetch soundboard.html");
           const htmlContent = await response.text();
 
-          const blob = new Blob([htmlContent], {type: "text/html"});
+          const blob = new Blob([htmlContent], { type: "text/html" });
           const blobUrl = URL.createObjectURL(blob);
           soundboardFrame.src = blobUrl;
         } catch (error) {
           console.error("Error loading soundboard page:", error);
-          soundboardFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
+          soundboardFrame.srcdoc =
+            "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
         }
       }
 
@@ -2275,8 +2233,15 @@
     </script>
 
     <script type="module">
-      import {initializeApp} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-      import {getDatabase, ref, set, onDisconnect, onValue, runTransaction} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+      import {
+        getDatabase,
+        ref,
+        set,
+        onDisconnect,
+        onValue,
+        runTransaction
+      } from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCIw3qrDRGRZiHVZuPjTcbYoQ-mmZC1ebU",
@@ -2285,7 +2250,7 @@
         projectId: "gx-gxmes",
         storageBucket: "gx-gxmes.firebasestorage.app",
         messagingSenderId: "599432055709",
-        appId: "1:599432055709:web:9c5910a40ea78c0e1fbd74",
+        appId: "1:599432055709:web:9c5910a40ea78c0e1fbd74"
       };
 
       function showFirebaseError() {
@@ -2322,7 +2287,7 @@
             const count = data ? Object.keys(data).length : 0;
             document.getElementById("home-live").textContent = abbreviateNumber(count);
           },
-          showFirebaseError,
+          showFirebaseError
         );
 
         let sessionId = localStorage.getItem("sessionId");
@@ -2342,7 +2307,7 @@
             const count = snap.val() || 0;
             document.getElementById("home-all").textContent = abbreviateNumber(count);
           },
-          showFirebaseError,
+          showFirebaseError
         );
       } catch (error) {
         showFirebaseError();
