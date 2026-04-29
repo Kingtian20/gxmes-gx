@@ -359,6 +359,143 @@
         display: none !important;
       }
 
+      .proxy-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(100%);
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+          visibility 0.5s;
+      }
+
+      .proxy-overlay.active {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      #proxy-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      .proxy-controls {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 65px;
+        height: 65px;
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(0, 255, 247, 0.1);
+        z-index: 10000;
+      }
+
+      .proxy-controls button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .proxy-controls button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .action-bar button::after,
+      .proxy-controls button::after {
+        content: attr(title);
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #000;
+        background: var(--primary-color);
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .action-bar button:hover::after,
+      .proxy-controls button:hover::after,
+      .action-bar button.show-tooltip::after,
+      .proxy-controls button.show-tooltip::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+        top: -50px;
+      }
+
+      .action-bar button::before,
+      .proxy-controls button::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--primary-color) transparent transparent transparent;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .action-bar button:hover::before,
+      .proxy-controls button:hover::before,
+      .action-bar button.show-tooltip::before,
+      .proxy-controls button.show-tooltip::before {
+        opacity: 1;
+      }
+
+      .proxy-pop {
+        animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes proxyPopIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
       #game-frame-container {
         flex: 1;
         width: 100%;
@@ -516,29 +653,29 @@
         min-height: 100vh;
       }
 
-      #proxy-page .search-box {
-        width: 80%;
-        max-width: 800px;
-        height: 60px;
-        pointer-events: all;
-        background: rgba(0, 0, 0, 0.8);
-        backdrop-filter: blur(10px);
-      }
-
-      #proxy-page .search-box input {
-        font-size: 1rem;
-        pointer-events: all;
-        letter-spacing: 1px;
-      }
-
-      #proxy-page .line-driver::before {
-        width: 1000px;
-        height: 1000px;
-      }
-
       #proxy-page {
         background-color: #000 !important;
         min-height: 100vh;
+        position: relative;
+      }
+
+      #proxy-page-heading {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+        text-align: center;
+        white-space: nowrap;
+        z-index: 5;
       }
 
       .proxy-grid {
@@ -547,7 +684,7 @@
         display: grid;
         grid-template-columns: 1fr;
         gap: 30px;
-        margin-top: 80px;
+        margin-top: 160px;
         padding-bottom: 100px;
       }
 
@@ -687,6 +824,10 @@
 
       .game-pop {
         animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .proxy-pop {
+        animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
       }
 
       .staff-grid {
@@ -875,6 +1016,17 @@
           transform: scale(1);
         }
       }
+
+      @keyframes proxyPopIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
     </style>
   </head>
 
@@ -932,12 +1084,7 @@
     </section>
 
     <section class="proxies" id="proxy-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
-      <div class="search-wrapper">
-        <div class="search-box">
-          <div class="line-driver"></div>
-          <input type="text" id="proxy-search" placeholder="Search proxies..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-        </div>
-      </div>
+      <h1 id="proxy-page-heading">Pr0xys</h1>
 
       <div class="proxy-grid" id="proxy-grid"></div>
     </section>
@@ -952,10 +1099,10 @@
       </div>
     </div>
 
-    <div id="proxy-overlay" class="game-overlay">
+    <div id="proxy-overlay" class="proxy-overlay">
       <div id="proxy-frame-container"></div>
 
-      <div class="game-controls">
+      <div class="proxy-controls">
         <button id="btn-proxy-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
       </div>
     </div>
@@ -1049,7 +1196,6 @@
         } else if (targetPage === "info") {
         } else if (targetPage === "soundboard") {
         } else if (targetPage === "proxy") {
-          document.getElementById("proxy-search").focus();
         }
       }
 
@@ -1107,8 +1253,6 @@
             document.getElementById("home-search").focus();
           } else if (currentPage === "gxmes") {
             gameSearch.focus();
-          } else if (currentPage === "proxy") {
-            document.getElementById("proxy-search").focus();
           } else {
             switchPage("gxmes");
             setTimeout(() => gameSearch.focus(), 100);
@@ -1315,6 +1459,13 @@
           webgl: true,
         },
         {
+          title: "Drift Race",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/32.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/driftrace/driftrace.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/driftrace/loader.html",
+          webgl: true,
+        },
+        {
           title: "Only Up",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/78.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/onlyup/onlyup.xml",
@@ -1383,6 +1534,12 @@
           webgl: true,
         },
         {
+          title: "Retro Bowl",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/97.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/retrobowl/retrobowl.xml",
+          webgl: true,
+        },
+        {
           title: "Buckshot Roulette",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/296.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/buckshotroulette/buckshotroulette.xml",
@@ -1396,9 +1553,22 @@
           webgl: true,
         },
         {
+          title: "Basket Random",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/18.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketrandom/basketrandom.xml",
+          webgl: true,
+        },
+        {
           title: "Animation Vs Friday Night Funkin",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/237.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/fridaynightfunkin/animationvsfnf/animationvsfnf.xml",
+          webgl: true,
+        },
+        {
+          title: "Escape Road",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/41.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/escaperoad/escaperoad.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/escaperoad/loader.html",
           webgl: true,
         },
         {
@@ -1414,6 +1584,12 @@
           webgl: true,
         },
         {
+          title: "Pokemon Black",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/182.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/pokemonblack/pokemonblack.xml",
+          webgl: true,
+        },
+        {
           title: "Undertale Yellow",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/131.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/undertaleyellow/undertaleyellow.xml",
@@ -1426,15 +1602,76 @@
           webgl: true,
         },
         {
+          title: "1v1 Soccer",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/2.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/1v1soccer.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/1v1soccer/loader.html",
+          webgl: true,
+        },
+        {
+          title: "99 Nights In The Forest",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/3.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/99nightsintheforest.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/99nightsintheforest/loader.html",
+          webgl: true,
+        },
+        {
+          title: "8 Ball Pool",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/4.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/8ballpool.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/8ballpool/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Angry Birds",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/5.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/angrybirds/angrybirds.xml",
+          webgl: true,
+        },
+        {
+          title: "Among Us",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/6.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/amongus.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/amongus/loader.html",
+          webgl: true,
+        },
+        {
           title: "ADOFAI",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/7.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/adofai/adofai.xml",
           webgl: true,
         },
         {
+          title: "Ahoy Survival",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/8.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/ahoysurvival/ahoysurvival.xml",
+          webgl: true,
+        },
+        {
           title: "Bitlife",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/10.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bitlife/bitlife.xml",
+          webgl: true,
+        },
+        {
+          title: "Backrooms 24",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/11.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/backrooms24.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/backrooms24/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Blackjack",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/12.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/blackjack.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/blackjack/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Basket Bros",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/13.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/basketbros.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketbros/loader.html",
           webgl: true,
         },
         {
@@ -1445,6 +1682,26 @@
           webgl: true,
         },
         {
+          title: "Bloxorz",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/15.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/bloxorz.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bloxorz/loader.html",
+          webgl: true,
+        },
+        {
+          title: "Bio Evil 4",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/16.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/bioevil4/bioevil4.xml",
+          webgl: true,
+        },
+        {
+          title: "Boxing Random",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/17.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/boxingrandom.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/boxingrandom/loader.html",
+          webgl: true,
+        },
+        {
           title: "Basketball Stars",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/19.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/basketballstars/basketballstars.xml",
@@ -1452,9 +1709,22 @@
           webgl: true,
         },
         {
+          title: "Bad Parenting",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/20.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/badparenting/badparenting.xml",
+          code: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/badparenting/loader.html",
+          webgl: true,
+        },
+        {
           title: "Baseball Bros",
           image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/21.png",
           cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/baseballbros/baseballbros.xml",
+          webgl: true,
+        },
+        {
+          title: "Choppy Orc",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/23.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/choppyorc/choppyorc.xml",
           webgl: true,
         },
       ];
@@ -1650,18 +1920,17 @@
       proxiesList.sort((a, b) => a.Proxy_name.localeCompare(b.Proxy_name, undefined, {numeric: true, sensitivity: "base"}));
 
       const proxyGrid = document.getElementById("proxy-grid");
-      const proxySearchInput = document.getElementById("proxy-search");
       const proxyOverlay = document.getElementById("proxy-overlay");
       const proxyFrameContainer = document.getElementById("proxy-frame-container");
 
       let currentProxy = null;
 
-      function renderProxies(proxies) {
+      function renderProxyList(proxies) {
         proxyGrid.innerHTML = "";
         proxies.forEach((proxy) => {
           const item = document.createElement("div");
-          item.className = "proxy-item game-pop";
-          item.onclick = () => openProxyModal(proxy);
+          item.className = "proxy-item proxy-pop";
+          item.onclick = () => openProxyOverlay(proxy);
           item.innerHTML = `
             <img src="${proxy.proxyimgurl}" alt="${proxy.Proxy_name}" loading="lazy">
             <div class="proxy-title">${proxy.Proxy_name}</div>
@@ -1670,51 +1939,33 @@
         });
       }
 
-      function normalizeForSearch(str) {
-        return str.toLowerCase().replace(/[^a-z0-9]/g, "");
-      }
-
-      let proxySearchDebounce;
-      proxySearchInput.addEventListener("input", (e) => {
-        clearTimeout(proxySearchDebounce);
-        proxySearchDebounce = setTimeout(() => {
-          const term = normalizeForSearch(e.target.value);
-          renderProxies(proxiesList.filter((proxy) => normalizeForSearch(proxy.Proxy_name).includes(term)));
-        }, 250);
-      });
-
-      proxySearchInput.addEventListener("keypress", (e) => {
-        if (!/[a-zA-Z0-9 ]/.test(e.key)) {
-          e.preventDefault();
-        }
-      });
-
-      function openProxyModal(proxy) {
+      function openProxyOverlay(proxy) {
         currentProxy = proxy;
         proxyOverlay.classList.add("active");
-        document.querySelector(".action-bar").style.display = "none";
+        proxyGlobalActionBar.style.display = "none";
         proxyFrameContainer.innerHTML = "";
 
-        const iframe = document.createElement("iframe");
-        iframe.className = "newtab-iframe";
-        iframe.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture");
-        iframe.allowFullscreen = true;
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
-        iframe.style.display = "block";
-        iframe.style.border = "none";
-        iframe.src = proxy.proxyurl;
-        proxyFrameContainer.appendChild(iframe);
+        const proxyIframe = document.createElement("iframe");
+        proxyIframe.className = "newtab-iframe";
+        proxyIframe.setAttribute("allow", "autoplay; fullscreen; encrypted-media; picture-in-picture");
+        proxyIframe.allowFullscreen = true;
+        proxyIframe.style.width = "100%";
+        proxyIframe.style.height = "100%";
+        proxyIframe.style.display = "block";
+        proxyIframe.style.border = "none";
+        proxyIframe.src = proxy.proxyurl;
+        proxyFrameContainer.appendChild(proxyIframe);
       }
 
       document.getElementById("btn-proxy-exit").addEventListener("click", () => {
         proxyOverlay.classList.remove("active");
         proxyFrameContainer.innerHTML = "";
-        document.querySelector(".action-bar").style.display = "flex";
+        proxyGlobalActionBar.style.display = "flex";
         currentProxy = null;
       });
 
-      renderProxies(proxiesList);
+      const proxyGlobalActionBar = document.querySelector(".action-bar");
+      renderProxyList(proxiesList);
     </script>
     <script>
       async function loadInfoPage() {
