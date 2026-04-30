@@ -1,1 +1,114 @@
-.gitkeep
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>your banned bud</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: url('https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/utils/bans/background.png') center/cover no-repeat;
+      font-family: 'Orbitron', sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+      background: rgba(0, 0, 0, 0.4);
+      position: relative;
+    }
+
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(220, 38, 38, 0.3) 70%, rgba(185, 28, 28, 0.6) 100%);
+      pointer-events: none;
+    }
+
+    .vignette-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(239, 68, 68, 0.1) 60%, rgba(153, 27, 27, 0.6) 100%);
+      pointer-events: none;
+      animation: pulseVignette 3s ease-in-out infinite;
+    }
+
+    @keyframes pulseVignette {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+
+    .text {
+      text-align: center;
+      color: white;
+      margin-bottom: 10%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .title {
+      font-size: 4rem;
+      font-weight: 900;
+      margin-bottom: 1.5rem;
+      color: #ef4444;
+      text-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 40px rgba(239, 68, 68, 0.3), 0 0 80px rgba(220, 38, 38, 0.2);
+      letter-spacing: 4px;
+      text-transform: uppercase;
+    }
+
+    .reason-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 0.75rem;
+    }
+
+    .reason {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+      padding: 1rem 2rem;
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      border-radius: 8px;
+      display: inline-block;
+      max-width: 80%;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="vignette-overlay"></div>
+    <div class="text">
+      <h1 class="title">You Have Been Banned</h1>
+      <div class="reason-label">Reason</div>
+      <p class="reason" id="ban-message">{{BAN_MESSAGE}}</p>
+    </div>
+  </div>
+</body>
+</html>
