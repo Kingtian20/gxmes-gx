@@ -2244,7 +2244,7 @@
 
     <script type="module">
       import {initializeApp} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
-      import {getDatabase, ref, set, onDisconnect, onValue, runTransaction} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
+      import {getDatabase, ref, set, onDisconnect, onValue, runTransaction, get} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
 
       const firebaseConfig = {
         apiKey: "AIzaSyCIw3qrDRGRZiHVZuPjTcbYoQ-mmZC1ebU",
@@ -2280,38 +2280,139 @@
         }
         const userRef = ref(db, "onlineUsers/" + firebaseUserId);
 
-        set(userRef, true).catch(showFirebaseError);
-        onDisconnect(userRef).remove().catch(showFirebaseError);
+        let banOverlayShown = false;
+        let originalContent = '';
 
-        onValue(
-          ref(db, "onlineUsers"),
-          (snap) => {
-            const data = snap.val();
-            const count = data ? Object.keys(data).length : 0;
-            document.getElementById("home-live").textContent = abbreviateNumber(count);
-          },
-          showFirebaseError,
-        );
+        function showBanOverlay(banMessage) {
+          if (banOverlayShown) return;
+          banOverlayShown = true;
 
-        let sessionId = localStorage.getItem("sessionId");
+          const originalElements = Array.from(document.body.children);
+          const hiddenWrapper = document.createElement('div');
+          hiddenWrapper.id = 'original-content-wrapper';
+          hiddenWrapper.style.cssText = 'display:none;';
 
-        if (!sessionId) {
-          sessionId = crypto.randomUUID();
-          localStorage.setItem("sessionId", sessionId);
+          originalElements.forEach(el => {
+            if (el.id !== 'ban-overlay') {
+              hiddenWrapper.appendChild(el);
+            }
+          });
+          document.body.appendChild(hiddenWrapper);
 
-          runTransaction(ref(db, "stats/allTime"), (current) => {
-            return (current || 0) + 1;
-          }).catch(showFirebaseError);
+          const placeholderCdnUrl = "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/refs/heads/main/utils/bans/banned.html";
+
+          fetch(placeholderCdnUrl)
+            .then(response => response.text())
+            .then(banContent => {
+              const processedContent = banContent
+                .replace(/{{BAN_MESSAGE}}/g, banMessage)
+                .replace(/{{USER_UUID}}/g, firebaseUserId);
+
+              const banWrapper = document.createElement('div');
+              banWrapper.id = 'ban-overlay';
+              banWrapper.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;';
+              banWrapper.innerHTML = processedContent;
+              document.body.appendChild(banWrapper);
+
+              const scripts = banWrapper.querySelectorAll('script');
+              scripts.forEach(script => {
+                const newScript = document.createElement('script');
+                if (script.src) {
+                  newScript.src = script.src;
+                } else {
+                  newScript.textContent = script.textContent;
+                }
+                document.body.appendChild(newScript);
+                script.remove();
+              });
+            })
+            .catch(() => {
+              const banWrapper = document.createElement('div');
+              banWrapper.id = 'ban-overlay';
+              banWrapper.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99999;';
+              banWrapper.innerHTML = `
+                <div style="position:fixed;top:0;left:0;right:0;bottom:0;background:#000;display:flex;align-items:center;justify-content:center;">
+                  <div style="text-align:center;color:#fff;font-family:sans-serif;">
+                    <h1 style="color:#ff4444;text-shadow:0 0 20px #ff4444;font-size:3rem;margin-bottom:1rem;">BANNED</h1>
+                    <p style="color:#888;font-size:1.2rem;margin-bottom:0.5rem;">${banMessage}</p>
+                    <p style="color:#555;font-size:0.875rem;">UUID: ${firebaseUserId}</p>
+                  </div>
+                </div>
+              `;
+              document.body.appendChild(banWrapper);
+            });
         }
 
-        onValue(
-          ref(db, "stats/allTime"),
-          (snap) => {
-            const count = snap.val() || 0;
-            document.getElementById("home-all").textContent = abbreviateNumber(count);
-          },
-          showFirebaseError,
-        );
+        function removeBanOverlay() {
+          if (!banOverlayShown) return;
+          banOverlayShown = false;
+
+          const overlay = document.getElementById('ban-overlay');
+          if (overlay) {
+            overlay.remove();
+          }
+
+          const hiddenWrapper = document.getElementById('original-content-wrapper');
+          if (hiddenWrapper) {
+            const originalElements = Array.from(hiddenWrapper.children);
+            originalElements.forEach(el => {
+              document.body.appendChild(el);
+            });
+            hiddenWrapper.remove();
+          }
+        }
+
+        function initBanListener() {
+          const bannedUserRef = ref(db, "bannedUsers/" + firebaseUserId);
+          onValue(bannedUserRef, (snapshot) => {
+            if (snapshot.exists()) {
+              const banData = snapshot.val();
+              const banMessage = banData.banMessage || "You have been banned.";
+              showBanOverlay(banMessage);
+            } else {
+              removeBanOverlay();
+            }
+          });
+        }
+
+        async function initUser() {
+          initBanListener();
+
+          set(userRef, true).catch(showFirebaseError);
+          onDisconnect(userRef).remove().catch(showFirebaseError);
+
+          onValue(
+            ref(db, "onlineUsers"),
+            (snap) => {
+              const data = snap.val();
+              const count = data ? Object.keys(data).length : 0;
+              document.getElementById("home-live").textContent = abbreviateNumber(count);
+            },
+            showFirebaseError,
+          );
+
+          let sessionId = localStorage.getItem("sessionId");
+
+          if (!sessionId) {
+            sessionId = crypto.randomUUID();
+            localStorage.setItem("sessionId", sessionId);
+
+            runTransaction(ref(db, "stats/allTime"), (current) => {
+              return (current || 0) + 1;
+            }).catch(showFirebaseError);
+          }
+
+          onValue(
+            ref(db, "stats/allTime"),
+            (snap) => {
+              const count = snap.val() || 0;
+              document.getElementById("home-all").textContent = abbreviateNumber(count);
+            },
+            showFirebaseError,
+          );
+        }
+
+        initUser();
       } catch (error) {
         showFirebaseError();
       }
