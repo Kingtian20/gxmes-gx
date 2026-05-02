@@ -1,0 +1,2104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        color: #e4e4e7;
+        font-family:
+          system-ui,
+          -apple-system,
+          sans-serif;
+      }
+      body {
+        display: grid;
+        place-items: center;
+      }
+      .wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+        width: 320px;
+      }
+      #launch-btn {
+        width: 100%;
+        padding: 14px 28px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        color: #fff;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: opacity 0.15s;
+      }
+      #launch-btn:hover {
+        opacity: 0.9;
+      }
+      p {
+        color: #52525b;
+        font-size: 12px;
+        text-align: center;
+        margin: 0;
+      }
+      details {
+        width: 100%;
+      }
+      summary {
+        color: #52525b;
+        font-size: 12px;
+        cursor: pointer;
+        user-select: none;
+        text-align: center;
+      }
+      summary:hover {
+        color: #a1a1aa;
+      }
+      #server-input {
+        width: 100%;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #27272a;
+        background: #18181b;
+        color: #e4e4e7;
+        font-size: 12px;
+        font-family: monospace;
+        margin-top: 8px;
+        box-sizing: border-box;
+      }
+      #server-input:focus {
+        outline: none;
+        border-color: #6366f1;
+      }
+
+      #canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <div class="wrap">
+      <button id="launch-btn">Launch GX AI</button>
+      <p><strong>ALL CREDITS TO EDWARD</strong></p>
+      <details>
+        <summary>server settings</summary>
+        <input id="server-input" type="text" placeholder="https://zyrx-ai.replit.app" spellcheck="false" />
+      </details>
+    </div>
+    <script>
+      const SERVER = "https://zyrx-ai.replit.app";
+
+      function getApp(server) {
+        return (
+          `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+    <title>GX AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Outfit:wght@600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/marked@12.0.0/marked.min.js"><\/script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"><\/script>
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [['$', '$'], ['\\(', '\\)']],
+          displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' },
+        startup: { typeset: false }
+      };
+    <\/script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"><\/script>
+    <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"><\/script>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      :root {
+        --bg: #08080f;
+        --card: #0f0f17;
+        --secondary: #161620;
+        --border: #1e1e2e;
+        --fg: #fafafa;
+        --muted: #9090aa;
+        --primary: #3b82f6;
+        --accent: #a855f7;
+        --radius: 0.75rem;
+      }
+      html,
+      body {
+        height: 100%;
+        background: var(--bg);
+        color: var(--fg);
+        font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+        font-size: 14px;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* ── Auth ── */
+      #auth-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        padding: 16px;
+      }
+      .auth-logo-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 32px;
+      }
+      .auth-logo-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 20px 40px rgba(59, 130, 246, 0.25);
+      }
+      .auth-logo-icon svg {
+        color: #fff;
+      }
+      .auth-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--fg);
+        letter-spacing: 0.04em;
+      }
+      .auth-sub {
+        font-size: 13px;
+        color: var(--muted);
+      }
+      #auth-box {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 16px;
+        padding: 24px;
+        width: 100%;
+        max-width: 360px;
+        backdrop-filter: blur(20px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+      }
+      .tabs {
+        display: flex;
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        margin-bottom: 24px;
+      }
+      .tab-btn {
+        flex: 1;
+        padding: 10px;
+        border: 0;
+        background: transparent;
+        color: var(--muted);
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: inherit;
+        transition: all 0.2s;
+      }
+      .tab-btn.active {
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        color: #fff;
+      }
+      .tab-btn:not(.active):hover {
+        color: var(--fg);
+      }
+      .field {
+        margin-bottom: 16px;
+      }
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 6px;
+      }
+      .input-wrap {
+        position: relative;
+      }
+      .input-wrap svg {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--muted);
+        pointer-events: none;
+        width: 16px;
+        height: 16px;
+      }
+      .input-wrap input {
+        width: 100%;
+        padding: 10px 14px 10px 36px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        color: var(--fg);
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
+        transition: all 0.2s;
+      }
+      .input-wrap input:focus {
+        border-color: rgba(59, 130, 246, 0.5);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+      }
+      .input-wrap input::placeholder {
+        color: rgba(144, 144, 170, 0.5);
+      }
+      .btn-primary {
+        width: 100%;
+        padding: 12px;
+        border: 0;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+      }
+      .btn-primary:hover {
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        transform: translateY(-2px);
+      }
+      .btn-primary:active {
+        transform: scale(0.98);
+      }
+      .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      #auth-error {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+        border-radius: 12px;
+        padding: 10px 12px;
+        color: #f87171;
+        font-size: 13px;
+        margin-top: 12px;
+        min-height: 0;
+      }
+      #auth-error:empty {
+        display: none;
+      }
+
+      /* ── App shell ── */
+      #app {
+        display: none;
+        height: 100vh;
+        flex-direction: row;
+      }
+      #app.visible {
+        display: flex;
+      }
+
+      /* ── Sidebar ── */
+      #sidebar {
+        width: 288px;
+        min-width: 288px;
+        background: var(--card);
+        border-right: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        z-index: 2;
+      }
+      #sidebar-header {
+        padding: 16px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .logo-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        display: flex;
+        align-items: center;
+        font-weight: bolder;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 255, 0.3);
+      }
+      .logo-icon i {
+        color: #fff;
+      }
+      .logo-text {
+        font-family: "Outfit", sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--fg);
+        letter-spacing: 0.04em;
+      }
+      #new-chat-area {
+        padding: 16px;
+      }
+      #new-chat-btn {
+        width: 100%;
+        padding: 12px 16px;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 255, 247, 0.3);
+        background: rgba(0, 0, 255, 0.1);
+        color: #00fff7;
+        font-size: 14px;
+        height: 50px;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background-size: 1000% 1000%;
+        transition: all 0.2s;
+      }
+      #new-chat-btn:hover {
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        color: #fff;
+        border: none;
+        height: 50px;
+        box-shadow: 0 4px 15px rgba(0, 255, 247, 0.3);
+      }
+      .conv-section-label {
+        padding: 4px 12px 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      #conv-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 12px 16px;
+      }
+      .conv-item {
+        padding: 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        color: #ffffff;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        transition: all 0.2s;
+        border: 1px solid rgba(0, 255, 247, 0.3);
+        background: rgba(0, 0, 255, 0.1);
+        margin-bottom: 6px;
+      }
+      .conv-item:hover,
+      .conv-item.active {
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        color: #fff;
+        box-shadow: 0 4px 15px rgba(0, 255, 247, 0.3);
+        border: none;
+      }
+
+      .conv-info {
+        flex: 1;
+        overflow: hidden;
+      }
+      .conv-title {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 500;
+      }
+      .conv-time {
+        font-size: 10px;
+        color: #ffffff;
+        opacity: 0.6;
+        margin-top: 2px;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .conv-delete {
+        opacity: 0;
+        flex-shrink: 0;
+        background: rgba(0, 0, 0, 0.5);
+        border: none;
+        color: #ffffff;
+        cursor: pointer;
+        padding: 4px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      .conv-item:hover .conv-delete,
+      .conv-item.active .conv-delete {
+        opacity: 1;
+      }
+      .conv-delete:hover {
+        color: #f87171;
+      }
+      #sidebar-footer {
+        padding: 16px;
+        border-top: 1px solid rgba(255, 255, 255, 0.06);
+      }
+      .user-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 8px;
+      }
+      .user-avatar {
+        width: 32px;
+        height: 32px;
+        border-radius: 100px;
+        background: linear-gradient(135deg, #0000ff9f, #00fff789);
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+      .user-avatar svg {
+        color: white;
+      }
+      #user-label {
+        flex: 1;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--fg);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      #logout-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 6px;
+        border-radius: 8px;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s;
+      }
+      #logout-btn:hover {
+        background: rgba(239, 68, 68, 0.1);
+        color: #f87171;
+      }
+
+      /* ── Chat area ── */
+      #chat-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #messages {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+      }
+      #messages-inner {
+        max-width: 896px;
+        width: 100%;
+        margin: 0 auto;
+        padding: 32px 32px 16px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+      }
+      #empty-state {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 24px;
+        padding-bottom: 80px;
+      }
+      .empty-icon {
+        width: 80px;
+        height: 80px;
+        border-radius: 24px;
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      }
+      .empty-icon svg {
+        color: white;
+      }
+      .empty-title {
+        font-family: "Outfit", sans-serif;
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--fg);
+      }
+      .empty-sub {
+        font-size: 14px;
+        color: var(--muted);
+        text-align: center;
+        max-width: 400px;
+      }
+
+      /* ── Messages ── */
+      .msg-row {
+        display: flex;
+        width: 100%;
+        margin-bottom: 24px;
+      }
+      .msg-row.user {
+        justify-content: flex-end;
+      }
+      .msg-row.assistant {
+        justify-content: flex-start;
+      }
+      .msg-inner {
+        display: flex;
+        gap: 16px;
+        max-width: 85%;
+      }
+      .msg-row.user .msg-inner {
+        flex-direction: row-reverse;
+      }
+      .msg-avatar {
+        flex-shrink: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+      .msg-avatar.user {
+        background: linear-gradient(45deg, #0000ff, #00fff7);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+      }
+      .msg-avatar.user svg {
+        color: #fff;
+      }
+      .msg-avatar.assistant {
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+      }
+      .msg-avatar.assistant svg {
+        color: #fff;
+      }
+      .msg-body {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .msg-bubble {
+        padding: 16px 20px;
+        border-radius: 16px;
+        line-height: 1.65;
+        word-break: break-word;
+      }
+      .msg-row.user .msg-bubble {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        border-top-right-radius: 4px;
+        color: #fff;
+      }
+      .msg-row.assistant .msg-bubble {
+        background: var(--card);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(20px);
+        border-top-left-radius: 4px;
+        color: var(--fg);
+      }
+      .msg-bubble img {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-top: 8px;
+        border: 1px solid var(--border);
+      }
+      .msg-bubble p {
+        margin: 0 0 10px;
+      }
+      .msg-bubble p:last-child {
+        margin-bottom: 0;
+      }
+      .msg-bubble pre {
+        background: #06060c;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 14px;
+        overflow-x: auto;
+        margin: 10px 0;
+      }
+      .msg-bubble code {
+        font-family: "JetBrains Mono", monospace;
+        font-size: 12.5px;
+      }
+      .msg-bubble :not(pre) > code {
+        background: #0000ff;
+        padding: 2px 6px;
+        border-radius: 5px;
+        font-size: 12px;
+      }
+      .msg-bubble pre {
+        background: #282c34;
+        border-radius: 8px;
+        padding: 16px;
+        margin: 12px 0;
+        overflow-x: auto;
+      }
+      .msg-bubble pre code {
+        background: #282c34;
+        padding: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #fff;
+      }
+      
+      .hljs-punctuation,
+      .hljs-operator,
+      .hljs-tag > .hljs-punctuation,
+      span.hljs-punctuation {
+        color: #89dceb !important;
+      }
+      
+      .msg-bubble pre code .hljs {
+        color: #fff;
+      }
+      .msg-bubble pre code .hljs-tag {
+        color: #89dceb;
+      }
+      .msg-bubble pre code .hljs-name {
+        color: #89b4fa;
+      }
+
+      .msg-bubble pre code .hljs-symbol {
+        color: #f38ba8;
+      }
+
+      .msg-bubble pre code .hljs-attr {
+        color: #f9e2af;
+      }
+      .msg-bubble pre code .hljs-string {
+        color: #c3e88d;
+      }
+      .msg-bubble pre code .hljs-keyword {
+        color: #c792ea;
+      }
+      .msg-bubble pre code .hljs-function {
+        color: #82aaff;
+      }
+      .msg-bubble pre code .hljs-number {
+        color: #f78c6c;
+      }
+      .msg-bubble pre code .hljs-comment {
+        color: #676e95;
+      }
+      .msg-bubble pre code .hljs-selector,
+      .msg-bubble pre code .hljs-selector-class,
+      .msg-bubble pre code .hljs-selector-tag {
+        color: #f9e2af;
+      }
+      .msg-bubble pre code .hljs-property,
+      .msg-bubble pre code .hljs-attribute {
+        color: #89b4fa;
+      }
+      .msg-bubble ul,
+      .msg-bubble ol {
+        padding-left: 22px;
+        margin: 8px 0;
+      }
+      .msg-bubble li {
+        margin: 4px 0;
+      }
+      .msg-bubble h1,
+      .msg-bubble h2,
+      .msg-bubble h3 {
+        font-family: "Outfit", sans-serif;
+        margin: 14px 0 8px;
+        font-weight: 700;
+      }
+      .msg-bubble h1 {
+        font-size: 20px;
+      }
+      .msg-bubble h2 {
+        font-size: 17px;
+      }
+      .msg-bubble h3 {
+        font-size: 15px;
+      }
+      .msg-bubble blockquote {
+        border-left: 3px solid var(--primary);
+        padding-left: 14px;
+        color: var(--muted);
+        margin: 8px 0;
+      }
+      .msg-bubble table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 10px 0;
+      }
+      .msg-bubble th,
+      .msg-bubble td {
+        border: 1px solid var(--border);
+        padding: 8px 12px;
+        text-align: left;
+      }
+      .msg-bubble th {
+        background: #0000ff;
+      }
+      .model-badge {
+        display: none;
+        align-items: center;
+        gap: 4px;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 10px;
+        font-weight: 500;
+        padding: 3px 8px;
+        border-radius: 99px;
+      }
+      .model-badge.mini {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+      }
+      .model-badge.full {
+        background: rgba(168, 85, 247, 0.1);
+        color: #a855f7;
+        border: 1px solid rgba(168, 85, 247, 0.2);
+      }
+      .typing-cursor::after {
+        content: "▋";
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* ── Input ── */
+      #input-area {
+        flex-shrink: 0;
+        position: relative;
+        background: linear-gradient(to top, #000000 70%, transparent);
+        padding-top: 40px;
+      }
+      #input-inner {
+        max-width: 896px;
+        margin: 0 auto;
+        padding: 0 32px 24px;
+      }
+      #input-wrapper {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        background: rgba(22, 22, 32, 0.5);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 16px;
+        padding: 8px;
+        transition: all 0.2s;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      #input-wrapper:focus-within {
+        background: rgba(22, 22, 32, 0.5);
+        box-shadow:
+          0 0 0 4px rgba(59, 130, 246, 0.08),
+          0 20px 60px rgba(0, 0, 0, 0.4);
+      }
+      #img-preview-wrap {
+        display: none;
+        padding: 4px 4px 0;
+      }
+      #img-preview-container {
+        position: relative;
+        display: inline-block;
+      }
+      #img-preview {
+        height: 96px;
+        width: auto;
+        object-fit: cover;
+        border-radius: 10px;
+        border: 1px solid #00fff7;
+      }
+      #remove-img {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ef4444;
+        border: none;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+      #remove-img:hover {
+        transform: scale(1.1);
+      }
+      #msg-input {
+        flex: 1;
+        background: none;
+        border: none;
+        outline: none;
+        color: var(--fg);
+        font-size: 14px;
+        resize: none;
+        max-height: 200px;
+        line-height: 1.6;
+        font-family: inherit;
+        min-height: 44px;
+        padding: 10px 8px;
+      }
+      #msg-input::placeholder {
+        color: var(--muted);
+      }
+      #attach-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        margin-bottom: 4px;
+      }
+      #attach-btn:hover {
+        box-shadow: 0 4px 20px rgba(0, 255, 247, 0.5);
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        box-shadow: 0 4px 12px rgba(0, 255, 247, 0.2);
+        transform: translateY(-1px);
+      }
+      #send-btn {
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        transition: all 0.2s;
+        flex-shrink: 0;
+        margin-bottom: 4px;
+      }
+      #send-btn:hover {
+        box-shadow: 0 4px 20px rgba(0, 255, 247, 0.5);
+        background: linear-gradient(135deg, #0000ff, #00fff7);
+        box-shadow: 0 4px 12px rgba(0, 255, 247, 0.2);
+        transform: translateY(-1px);
+      }
+      #send-btn:active {
+        transform: translateY(0);
+      }
+      #send-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+        transform: none;
+      }
+      #file-input {
+        display: none;
+      }
+      #hint {
+        font-size: 11px;
+        color: rgba(144, 144, 170, 0.5);
+        text-align: center;
+        margin-top: 10px;
+        font-family: "JetBrains Mono", monospace;
+        letter-spacing: 0.03em;
+      }
+      ::-webkit-scrollbar {
+        width: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border);
+        border-radius: 99px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: rgba(144, 144, 170, 0.4);
+      }
+
+      #msg-canvas {
+        z-index: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="auth-screen">
+      <div style="width: 100%; max-width: 360px">
+        <div class="auth-logo-wrap">
+          <div class="auth-logo-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+              <path d="M5 3v4" />
+              <path d="M19 17v4" />
+              <path d="M3 5h4" />
+              <path d="M17 19h4" />
+            </svg>
+          </div>
+          <div style="text-align: center">
+            <div class="auth-title">GX AI</div>
+            <div class="auth-sub">ALL CREDITS TO EDWARD</div>
+          </div>
+        </div>
+        <div id="auth-box">
+          <div class="tabs">
+            <button class="tab-btn active" id="tab-login">Sign In</button>
+            <button class="tab-btn" id="tab-register">Create Account</button>
+          </div>
+          <div class="field">
+            <label>Username</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              <input type="text" id="auth-username" placeholder="Your Username" autocomplete="username" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <input type="password" id="auth-password" placeholder="Your Password" autocomplete="current-password" />
+            </div>
+          </div>
+          <button class="btn-primary" id="auth-submit"><i class="fa-solid fa-arrow-right-to-bracket"></i>&nbsp;Sign In</button>
+          <div id="auth-error"></div>
+          <div
+            id="ws-status"
+            style="
+              margin-top: 10px;
+              font-size: 11px;
+              color: var(--muted);
+              text-align: center;
+              font-family:
+                \\&quot;JetBrains Mono\\&quot;,
+                monospace;
+            "
+          >
+            connecting...
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="app">
+      <div id="sidebar">
+        <div id="sidebar-header">
+          <div class="logo-wrap">
+            <div class="logo-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+            </div>
+            <span class="logo-text">GX AI</span>
+          </div>
+        </div>
+        <div id="new-chat-area">
+          <button id="new-chat-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            New Chat
+          </button>
+        </div>
+        <div id="conv-list">
+          <div class="conv-section-label">Recent</div>
+        </div>
+        <div id="sidebar-footer">
+          <div class="user-row">
+            <div class="user-avatar">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+            </div>
+            <span id="user-label"></span>
+            <button id="logout-btn" title="Sign out">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div id="chat-area">
+        <canvas id="msg-canvas"></canvas>
+        <div id="messages">
+          <div id="messages-inner">
+            <div id="empty-state">
+              <div class="empty-title" style="font-size: 50px">GX AI</div>
+              <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z" />
+                  <path d="M5 3v4" />
+                  <path d="M19 17v4" />
+                  <path d="M3 5h4" />
+                  <path d="M17 19h4" />
+                </svg>
+              </div>
+              <div>
+                <div class="empty-title">How can I help you today?</div>
+                <div class="empty-sub">Send a message to start the conversation.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="input-area">
+          <div id="input-inner">
+            <div id="img-preview-wrap" style="margin-bottom: 12px">
+              <div id="img-preview-container">
+                <img id="img-preview" src="" alt="preview" />
+                <button id="remove-img">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 6 6 18" />
+                    <path d="m6 6 12 12" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+            <div id="input-wrapper">
+              <button id="attach-btn" title="Attach image">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
+                  <circle cx="9" cy="9" r="2" />
+                  <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21" />
+                </svg>
+              </button>
+              <textarea id="msg-input" placeholder="Type a message... (Shift+Enter for new line)" rows="1"></textarea>
+              <button id="send-btn" title="Send">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m3 3 3 9-3 9 19-9Z" />
+                  <path d="M6 12h16" />
+                </svg>
+              </button>
+              <input type="file" id="file-input" accept="image/*" />
+            </div>
+            <div id="hint">AI can make mistakes. Verify important information.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      // ── State ──────────────────────────────────────────────────────────────────────
+      var SERVER = "` + server + `";
+      var WS_URL = SERVER.replace(/^https/, "wss").replace(/^http(?!s)/, "ws") + "/ws";
+      var token = null,
+        currentUser = null,
+        conversations = [],
+        currentConvId = null;
+      var isStreaming = false,
+        pendingImageDataUrl = null,
+        authTab = "login";
+
+      // ── Helpers ───────────────────────────────────────────────────────────────────
+      function qs(id) {
+        return document.getElementById(id);
+      }
+      function escHtml(s) {
+        return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      }
+      function uid() {
+        return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+      }
+
+      // ── WebSocket client ───────────────────────────────────────────────────────────
+      var _ws = null,
+        _wsReady = false,
+        _wsRetries = 0,
+        _pending = {},
+        _sendBuf = [];
+
+      function wsSend(obj) {
+        var str = JSON.stringify(obj);
+        if (_ws && _ws.readyState === 1 /*OPEN*/) {
+          _ws.send(str);
+        } else {
+          _sendBuf.push(str);
+        }
+      }
+
+      function _flushBuf() {
+        var buf = _sendBuf;
+        _sendBuf = [];
+        for (var i = 0; i < buf.length; i++) {
+          if (_ws && _ws.readyState === 1) _ws.send(buf[i]);
+        }
+      }
+
+      // Send a message and await a single response keyed by requestId
+      function wsCall(type, payload) {
+        return new Promise(function (resolve, reject) {
+          var rid = uid();
+          var timer = setTimeout(function () {
+            delete _pending[rid];
+            reject(new Error("request timed out"));
+          }, 15000);
+          _pending[rid] = {
+            resolve: function (data) {
+              clearTimeout(timer);
+              delete _pending[rid];
+              resolve(data);
+            },
+            reject: function (err) {
+              clearTimeout(timer);
+              delete _pending[rid];
+              reject(err);
+            },
+          };
+          wsSend(Object.assign({}, payload, {type: type, requestId: rid}));
+        });
+      }
+
+      function wsStream(type, payload, onChunk) {
+        return new Promise(function (resolve, reject) {
+          var rid = uid();
+          var timer = setTimeout(function () {
+            delete _pending[rid];
+            reject(new Error("stream timed out"));
+          }, 120000);
+          _pending[rid] = {
+            isStream: true,
+            onChunk: onChunk,
+            resolve: function (data) {
+              clearTimeout(timer);
+              delete _pending[rid];
+              resolve(data);
+            },
+            reject: function (err) {
+              clearTimeout(timer);
+              delete _pending[rid];
+              reject(err);
+            },
+          };
+          wsSend(Object.assign({}, payload, {type: type, requestId: rid}));
+        });
+      }
+
+      function _handleWsMessage(msg) {
+        var p = msg.requestId && _pending[msg.requestId];
+        if (!p) return;
+        if (msg.error) {
+          p.reject(new Error(msg.error));
+          return;
+        }
+        if (p.isStream) {
+          if (msg.type === "chunk") {
+            p.onChunk(msg.content);
+            return;
+          }
+          if (msg.type === "done") {
+            p.resolve({model: msg.model});
+            return;
+          }
+          if (msg.type === "model") {
+            return;
+          } // ignore interim model announcement
+        } else {
+          p.resolve(msg.data !== undefined ? msg.data : null);
+        }
+      }
+
+      function _connectWs(onReady) {
+        try {
+          _ws = new WebSocket(WS_URL);
+        } catch (e) {
+          _wsRetries++;
+          setTimeout(
+            function () {
+              _connectWs(onReady);
+            },
+            Math.min(3000, 500 * _wsRetries),
+          );
+          return;
+        }
+        _ws.onopen = function () {
+          _wsReady = true;
+          _wsRetries = 0;
+          _flushBuf();
+          var s = document.getElementById("ws-status");
+          if (s) s.textContent = "connected";
+          // keepalive ping every 25s so autoscale load balancer doesn't drop idle connections
+          var pingId = setInterval(function () {
+            if (_ws && _ws.readyState === 1) _ws.send(JSON.stringify({type: "ping"}));
+            else clearInterval(pingId);
+          }, 25000);
+          _ws._pingId = pingId;
+          if (onReady) {
+            onReady();
+            onReady = null;
+          }
+        };
+        _ws.onmessage = function (ev) {
+          var msg;
+          try {
+            msg = JSON.parse(ev.data);
+          } catch (e) {
+            return;
+          }
+          _handleWsMessage(msg);
+        };
+        _ws.onclose = function () {
+          _wsReady = false;
+          var s = document.getElementById("ws-status");
+          if (s) s.textContent = "disconnected — reconnecting...";
+          for (var rid in _pending) {
+            _pending[rid].reject(new Error("disconnected"));
+          }
+          _pending = {};
+          _wsRetries++;
+          setTimeout(
+            function () {
+              _connectWs(null);
+            },
+            Math.min(5000, 500 * _wsRetries),
+          );
+        };
+        _ws.onerror = function () {
+          var s = document.getElementById("ws-status");
+          if (s) s.textContent = "connection error — retrying...";
+        };
+      }
+
+      // Boot: connect WS, then restore session or show auth
+      _connectWs(function () {
+        (async function () {
+          try {
+            var savedToken = localStorage.getItem("zyrx_token");
+            if (savedToken) {
+              var user = await wsCall("auth/me", {token: savedToken});
+              token = savedToken;
+              currentUser = user;
+              showApp();
+              return;
+            }
+          } catch (e) {
+            localStorage.removeItem("zyrx_token");
+          }
+          // Show auth form — WS is ready so it will work
+        })();
+      });
+
+      // ── Auth ──────────────────────────────────────────────────────────────────────
+      document.getElementById("tab-login").onclick = function () {
+        switchTab("login");
+      };
+      document.getElementById("tab-register").onclick = function () {
+        switchTab("register");
+      };
+      function switchTab(tab) {
+        authTab = tab;
+        document.getElementById("tab-login").className = "tab-btn" + (tab === "login" ? " active" : "");
+        document.getElementById("tab-register").className = "tab-btn" + (tab === "register" ? " active" : "");
+        qs("auth-submit").innerHTML = tab === "login" ? '<i class="fa-solid fa-arrow-right-to-bracket"></i>&nbsp; Sign In' : '<i class="fa-solid fa-user-plus"></i>&nbsp; Create Account';
+        qs("auth-error").textContent = "";
+      }
+
+      qs("auth-submit").onclick = doAuth;
+      qs("auth-password").onkeydown = function (e) {
+        if (e.key === "Enter") doAuth();
+      };
+      qs("auth-username").onkeydown = function (e) {
+        if (e.key === "Enter") qs("auth-password").focus();
+      };
+
+      async function doAuth() {
+        var username = qs("auth-username").value.trim(),
+          password = qs("auth-password").value;
+        qs("auth-error").textContent = "";
+        if (!username || !password) {
+          qs("auth-error").textContent = "please fill in all fields";
+          return;
+        }
+        if (!_wsReady) {
+          qs("auth-error").textContent = "connecting to server... please wait a moment and try again";
+          return;
+        }
+        qs("auth-submit").disabled = true;
+        try {
+          var wsType = authTab === "login" ? "auth/login" : "auth/register";
+          var data = await wsCall(wsType, {username: username, password: password});
+          token = data.apiToken;
+          currentUser = {id: data.id, username: data.username};
+          try {
+            localStorage.setItem("zyrx_token", token);
+          } catch (e) {}
+          showApp();
+        } catch (e) {
+          qs("auth-error").textContent = e.message || "could not connect to server";
+        } finally {
+          qs("auth-submit").disabled = false;
+        }
+      }
+
+      async function showApp() {
+        qs("auth-screen").style.display = "none";
+        qs("app").className = "visible";
+        qs("user-label").textContent = currentUser.username;
+        await loadConversations();
+      }
+
+      qs("logout-btn").onclick = function () {
+        try {
+          localStorage.removeItem("zyrx_token");
+        } catch (e) {}
+        token = null;
+        currentUser = null;
+        conversations = [];
+        currentConvId = null;
+        qs("app").className = "";
+        qs("auth-screen").style.display = "flex";
+        qs("auth-username").value = "";
+        qs("auth-password").value = "";
+      };
+
+      // ── Conversations ─────────────────────────────────────────────────────────────
+      var EMPTY_STATE =
+        '<div id="empty-state"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div><div><div class="empty-title">How can I help you today?</div><div class="empty-sub">Send a message to start the conversation.</div></div></div>';
+
+      async function loadConversations() {
+        try {
+          conversations = await wsCall("listConversations", {token: token});
+          renderConvList();
+        } catch (e) {}
+      }
+
+      function fmtDate(d) {
+        var dt = new Date(d);
+        var mo = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][dt.getMonth()];
+        var hr = dt.getHours();
+        var mi = dt.getMinutes();
+        var ap = hr >= 12 ? "pm" : "am";
+        hr = hr % 12 || 12;
+        mi = (mi < 10 ? "0" : "") + mi;
+        return mo + " " + dt.getDate() + ", " + hr + ":" + mi + " " + ap;
+      }
+
+      function renderConvList() {
+        var list = qs("conv-list");
+        list.innerHTML = '<div class="conv-section-label">Recent</div>';
+        if (!conversations.length) {
+          list.innerHTML += '<div style="padding:8px 12px;color:var(--muted);font-size:13px;font-style:italic">No conversations yet.</div>';
+          return;
+        }
+        conversations.forEach(function (c) {
+          var div = document.createElement("div");
+          div.className = "conv-item" + (c.id === currentConvId ? " active" : "");
+          var trash =
+            '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>';
+          var ts = c.createdAt ? fmtDate(c.createdAt) : "";
+          div.innerHTML =
+            '<div class="conv-info"><div class="conv-title">' +
+            escHtml(c.title || "Untitled Chat") +
+            "</div>" +
+            (ts ? '<div class="conv-time">' + ts + "</div>" : "") +
+            '</div><button class="conv-delete" title="Delete">' +
+            trash +
+            "</button>";
+          div.querySelector(".conv-delete").onclick = function (e) {
+            e.stopPropagation();
+            deleteConv(c.id);
+          };
+          div.onclick = function () {
+            selectConv(c.id);
+          };
+          list.appendChild(div);
+        });
+      }
+
+      async function selectConv(id) {
+        currentConvId = id;
+        renderConvList();
+        qs("messages-inner").innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:80vh;color:var(--muted);font-size:13px">Loading...</div>';
+        try {
+          var conv = await wsCall("getConversation", {token: token, id: id});
+          renderMessages(conv.messages || []);
+        } catch (e) {}
+      }
+
+      var SPARKLES_SVG =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>';
+      var USER_SVG =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+      var ZAP_SVG =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>';
+
+      function renderMessages(msgs) {
+        var inner = qs("messages-inner");
+        if (!msgs.length) {
+          inner.innerHTML = EMPTY_STATE;
+          return;
+        }
+        inner.innerHTML = "";
+        msgs.forEach(function (m) {
+          appendMessage(m.role, m.content, m.model, m.imageUrl);
+        });
+        qs("messages").scrollTop = qs("messages").scrollHeight;
+      }
+
+      function normalizeMath(text) {
+        var bs = String.fromCharCode(92);
+        var tick = String.fromCharCode(96);
+        var result = "";
+        var i = 0;
+
+        while (i < text.length) {
+          // Code blocks (backticks) - always protect from markdown
+          if (text[i] === tick) {
+            var n = 1;
+            while (text[i + n] === tick) n++;
+            var end = text.indexOf(tick.repeat(n), i + n);
+            if (end >= 0) {
+              result += text.slice(i, end + n);
+              i = end + n;
+              continue;
+            }
+          }
+
+          // Complete $$...$$ blocks - leave for KaTeX
+          if (text[i] === "$" && text[i + 1] === "$") {
+            var end = text.indexOf("$$", i + 2);
+            if (end >= 0) {
+              result += text.slice(i, end + 2);
+              i = end + 2;
+              continue;
+            } else {
+              // Incomplete $$ - escape it
+              result += "&#36;&#36;" + text.slice(i + 2);
+              break;
+            }
+          }
+
+          // Convert complete \[...\] to $$...$$
+          if (text[i] === bs && text[i + 1] === "[") {
+            var end = text.indexOf(bs + "]", i + 2);
+            if (end >= 0) {
+              result += "$$" + text.slice(i + 2, end) + "$$";
+              i = end + 2;
+              continue;
+            } else {
+              // Incomplete \[ - escape it
+              result += bs + "[" + text.slice(i + 2);
+              break;
+            }
+          }
+
+          // Convert complete \(...\) to $...$
+          if (text[i] === bs && text[i + 1] === "(") {
+            var end = text.indexOf(bs + ")", i + 2);
+            if (end >= 0) {
+              result += "$" + text.slice(i + 2, end) + "$";
+              i = end + 2;
+              continue;
+            } else {
+              // Incomplete \( - escape it
+              result += bs + "(" + text.slice(i + 2);
+              break;
+            }
+          }
+
+          // Complete $...$ inline math - leave for KaTeX
+          if (text[i] === "$" && text[i + 1] !== "$") {
+            var end = text.indexOf("$", i + 1);
+            if (end >= 0) {
+              result += text.slice(i, end + 1);
+              i = end + 1;
+              continue;
+            } else {
+              // Incomplete $ - escape it
+              result += "&#36;" + text.slice(i + 1);
+              break;
+            }
+          }
+
+          result += text[i++];
+        }
+
+        return result;
+      }
+
+      function renderMD(text) {
+        return marked.parse(normalizeMath(text), {breaks: true, gfm: true});
+      }
+
+      function doMath(el) {
+        if (window.MathJax && MathJax.typesetPromise) {
+          MathJax.typesetPromise([el]).catch(function(err) {
+            console.log('MathJax error:', err);
+          });
+        }
+      }
+
+      function highlightCode(el) {
+        if (typeof hljs !== 'undefined') {
+          el.querySelectorAll('pre code').forEach(function(block) {
+            hljs.highlightElement(block);
+          });
+        }
+      }
+
+      function appendMessage(role, content, model, imageUrl) {
+        var inner = qs("messages-inner");
+        var empty = document.getElementById("empty-state");
+        if (empty) empty.remove();
+        var isUser = role === "user";
+        var row = document.createElement("div");
+        row.className = "msg-row " + role;
+        var mi = document.createElement("div");
+        mi.className = "msg-inner";
+        var av = document.createElement("div");
+        av.className = "msg-avatar " + (isUser ? "user" : "assistant");
+        av.innerHTML = isUser ? USER_SVG : SPARKLES_SVG;
+        var body = document.createElement("div");
+        body.className = "msg-body";
+        var bubble = document.createElement("div");
+        bubble.className = "msg-bubble";
+        if (imageUrl) {
+          var img = document.createElement("img");
+          img.src = imageUrl;
+          bubble.appendChild(img);
+        }
+        var cd = document.createElement("div");
+        if (isUser) {
+          cd.style.whiteSpace = "pre-wrap";
+          cd.style.lineHeight = "1.65";
+          cd.textContent = content;
+        } else {
+          cd.innerHTML = renderMD(content);
+          doMath(cd);
+          highlightCode(cd);
+        }
+        bubble.appendChild(cd);
+        body.appendChild(bubble);
+        if (!isUser && model) {
+          var badge = document.createElement("div");
+          badge.className = "model-badge " + (model.indexOf("mini") >= 0 ? "mini" : "full");
+          badge.innerHTML = ZAP_SVG + model;
+          body.appendChild(badge);
+        }
+        mi.appendChild(av);
+        mi.appendChild(body);
+        row.appendChild(mi);
+        inner.appendChild(row);
+        qs("messages").scrollTop = qs("messages").scrollHeight;
+        return {row: row, bubble: bubble, contentDiv: cd, body: body};
+      }
+
+      qs("new-chat-btn").onclick = newChat;
+      async function newChat() {
+        try {
+          var conv = await wsCall("createConversation", {token: token, title: "New Chat"});
+          conversations.unshift(conv);
+          currentConvId = conv.id;
+          renderConvList();
+          qs("messages-inner").innerHTML = EMPTY_STATE;
+        } catch (e) {}
+      }
+
+      async function deleteConv(id) {
+        try {
+          await wsCall("deleteConversation", {token: token, id: id});
+          conversations = conversations.filter(function (c) {
+            return c.id !== id;
+          });
+          if (currentConvId === id) {
+            currentConvId = null;
+            qs("messages-inner").innerHTML = EMPTY_STATE;
+          }
+          renderConvList();
+        } catch (e) {}
+      }
+
+      // ── Image ─────────────────────────────────────────────────────────────────────
+      qs("attach-btn").onclick = function () {
+        qs("file-input").click();
+      };
+      qs("file-input").onchange = function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          pendingImageDataUrl = ev.target.result;
+          qs("img-preview").src = pendingImageDataUrl;
+          qs("img-preview-wrap").style.display = "block";
+        };
+        reader.readAsDataURL(file);
+        e.target.value = "";
+      };
+      qs("remove-img").onclick = function () {
+        pendingImageDataUrl = null;
+        qs("img-preview-wrap").style.display = "none";
+        qs("img-preview").src = "";
+      };
+
+      // ── Send message ──────────────────────────────────────────────────────────────
+      var msgInput = qs("msg-input");
+      msgInput.onkeydown = function (e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      };
+      msgInput.oninput = function () {
+        this.style.height = "auto";
+        this.style.height = Math.min(this.scrollHeight, 140) + "px";
+      };
+      qs("send-btn").onclick = sendMessage;
+
+      async function sendMessage() {
+        if (isStreaming) return;
+        var content = msgInput.value.trim(),
+          imageUrl = pendingImageDataUrl;
+        if (!content && !imageUrl) return;
+        if (!currentConvId) {
+          await newChat();
+          if (!currentConvId) return;
+        }
+        qs("remove-img").click();
+        msgInput.value = "";
+        msgInput.style.height = "auto";
+        isStreaming = true;
+        qs("send-btn").disabled = true;
+        appendMessage("user", content || "", null, imageUrl);
+        var msgs = qs("messages");
+        var row = document.createElement("div");
+        row.className = "msg-row assistant";
+        var mi2 = document.createElement("div");
+        mi2.className = "msg-inner";
+        var av2 = document.createElement("div");
+        av2.className = "msg-avatar assistant";
+        av2.innerHTML = SPARKLES_SVG;
+        var body2 = document.createElement("div");
+        body2.className = "msg-body";
+        var bubble = document.createElement("div");
+        bubble.className = "msg-bubble typing-cursor";
+        var cd = document.createElement("div");
+        bubble.appendChild(cd);
+        body2.appendChild(bubble);
+        mi2.appendChild(av2);
+        mi2.appendChild(body2);
+        row.appendChild(mi2);
+        qs("messages-inner").appendChild(row);
+        msgs.scrollTop = msgs.scrollHeight;
+        var fullText = "";
+        try {
+          var result = await wsStream("send", {token: token, conversationId: currentConvId, content: content || " ", imageUrl: imageUrl}, function (chunk) {
+            fullText += chunk;
+            cd.innerHTML = renderMD(fullText);
+            doMath(cd);
+            highlightCode(cd);
+            msgs.scrollTop = msgs.scrollHeight;
+          });
+          bubble.className = "msg-bubble";
+          var finalModel = result && result.model;
+          if (finalModel) {
+            var badge = document.createElement("div");
+            badge.className = "model-badge " + (finalModel.indexOf("mini") >= 0 ? "mini" : "full");
+            badge.innerHTML = ZAP_SVG + finalModel;
+            body2.appendChild(badge);
+          }
+          if (conversations.length && conversations[0].id === currentConvId && (conversations[0].title === "New Chat" || conversations[0].title === "new chat") && fullText) {
+            conversations[0].title = fullText.slice(0, 40).split("\\n")[0];
+            renderConvList();
+          }
+        } catch (e) {
+          cd.textContent = "error: " + (e.message || "connection lost");
+          bubble.className = "msg-bubble";
+        } finally {
+          isStreaming = false;
+          qs("send-btn").disabled = false;
+          msgInput.focus();
+        }
+      }
+    <\/script>
+    <script>
+      const canvas = document.getElementById("msg-canvas");
+      const ctx = canvas.getContext("2d");
+
+      let stars = [];
+      let constellations = [];
+      let shootingStars = [];
+      let lastSpawn = Date.now();
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+        createConstellations();
+      }
+
+      function createStars() {
+        stars = Array.from({length: 200}, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5 + 0.5,
+          opacity: Math.random() * 0.9,
+          speed: Math.random() * 0.02 + 0.005,
+          phase: Math.random() * Math.PI * 2,
+        }));
+      }
+
+      function createConstellations() {
+        constellations = [];
+
+        for (let i = 0; i < 5; i++) {
+          const cx = Math.random() * canvas.width;
+          const cy = Math.random() * canvas.height;
+
+          const points = [];
+          const connections = [];
+          const count = Math.floor(Math.random() * 4) + 4;
+          const radius = Math.random() * 80 + 60;
+
+          for (let j = 0; j < count; j++) {
+            const angle = (j / count) * Math.PI * 2 + Math.random() * 0.5;
+            const dist = radius * (0.6 + Math.random() * 0.4);
+
+            points.push({
+              x: cx + Math.cos(angle) * dist,
+              y: cy + Math.sin(angle) * dist,
+            });
+          }
+
+          for (let j = 0; j < count; j++) {
+            const next = (j + 1) % count;
+            connections.push([j, next]);
+
+            if (Math.random() > 0.5) {
+              connections.push([j, (j + 2) % count]);
+            }
+          }
+
+          constellations.push({points, connections});
+        }
+      }
+
+      function createShootingStar() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.5,
+          length: Math.random() * 80 + 60,
+          speed: Math.random() * 3 + 2,
+          angle: Math.PI / 4,
+          opacity: 0.8,
+        };
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        stars.forEach((s) => {
+          s.phase += s.speed;
+          const glow = (Math.sin(s.phase) + 1) / 1.5;
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(255,255,255," + s.opacity * glow + ")";
+          ctx.fill();
+        });
+
+        constellations.forEach((c) => {
+          ctx.strokeStyle = "rgba(255,255,255,0.16)";
+          ctx.lineWidth = 1;
+
+          c.connections.forEach(([a, b]) => {
+            const p1 = c.points[a];
+            const p2 = c.points[b];
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          });
+
+          c.points.forEach((p) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.70)";
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.2)";
+            ctx.fill();
+          });
+        });
+
+        const now = Date.now();
+        if (now - lastSpawn > 1500 + Math.random() * 2000) {
+          shootingStars.push(createShootingStar());
+          lastSpawn = now;
+        }
+
+        shootingStars = shootingStars.filter((s) => {
+          if (s.opacity <= 0) return false;
+
+          const grad = ctx.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+
+          grad.addColorStop(0, "rgba(255,255,255," + s.opacity + ")");
+          grad.addColorStop(1, "rgba(255,255,255,0)");
+
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          s.x += Math.cos(s.angle) * s.speed;
+          s.y += Math.sin(s.angle) * s.speed;
+          s.opacity -= 0.01;
+
+          return true;
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", resize);
+      resize();
+      draw();
+    <\/script>
+  </body>
+</html>
+
+`
+        );
+      }
+
+      document.getElementById("launch-btn").addEventListener("click", function () {
+        var custom = (document.getElementById("server-input").value || "").trim().replace(/\/$/, "");
+        var srv = custom || SERVER;
+        var w = window.open("about:blank", "_blank");
+        if (!w) {
+          alert("Popup blocked. Please allow popups for this page and try again.");
+          return;
+        }
+        w.document.write(getApp(srv));
+        w.document.close();
+      });
+    </script>
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let stars = [];
+      let constellations = [];
+      let shootingStars = [];
+      let lastSpawn = Date.now();
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        createStars();
+        createConstellations();
+      }
+
+      function createStars() {
+        stars = Array.from({length: 200}, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 1.5 + 0.5,
+          opacity: Math.random() * 0.9,
+          speed: Math.random() * 0.02 + 0.005,
+          phase: Math.random() * Math.PI * 2,
+        }));
+      }
+
+      function createConstellations() {
+        constellations = [];
+
+        for (let i = 0; i < 5; i++) {
+          const cx = Math.random() * canvas.width;
+          const cy = Math.random() * canvas.height;
+
+          const points = [];
+          const connections = [];
+          const count = Math.floor(Math.random() * 4) + 4;
+          const radius = Math.random() * 80 + 60;
+
+          for (let j = 0; j < count; j++) {
+            const angle = (j / count) * Math.PI * 2 + Math.random() * 0.5;
+            const dist = radius * (0.6 + Math.random() * 0.4);
+
+            points.push({
+              x: cx + Math.cos(angle) * dist,
+              y: cy + Math.sin(angle) * dist,
+            });
+          }
+
+          for (let j = 0; j < count; j++) {
+            const next = (j + 1) % count;
+            connections.push([j, next]);
+
+            if (Math.random() > 0.5) {
+              connections.push([j, (j + 2) % count]);
+            }
+          }
+
+          constellations.push({points, connections});
+        }
+      }
+
+      function createShootingStar() {
+        return {
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height * 0.5,
+          length: Math.random() * 80 + 60,
+          speed: Math.random() * 3 + 2,
+          angle: Math.PI / 4,
+          opacity: 0.8,
+        };
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        stars.forEach((s) => {
+          s.phase += s.speed;
+          const glow = (Math.sin(s.phase) + 1) / 1.5;
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(255,255,255,${s.opacity * glow})`;
+          ctx.fill();
+        });
+
+        constellations.forEach((c) => {
+          ctx.strokeStyle = "rgba(255,255,255,0.16)";
+          ctx.lineWidth = 1;
+
+          c.connections.forEach(([a, b]) => {
+            const p1 = c.points[a];
+            const p2 = c.points[b];
+
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          });
+
+          c.points.forEach((p) => {
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.70)";
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255,255,255,0.2)";
+            ctx.fill();
+          });
+        });
+
+        const now = Date.now();
+        if (now - lastSpawn > 1500 + Math.random() * 2000) {
+          shootingStars.push(createShootingStar());
+          lastSpawn = now;
+        }
+
+        shootingStars = shootingStars.filter((s) => {
+          if (s.opacity <= 0) return false;
+
+          const grad = ctx.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+
+          grad.addColorStop(0, `rgba(255,255,255,${s.opacity})`);
+          grad.addColorStop(1, "rgba(255,255,255,0)");
+
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x - Math.cos(s.angle) * s.length, s.y - Math.sin(s.angle) * s.length);
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          s.x += Math.cos(s.angle) * s.speed;
+          s.y += Math.sin(s.angle) * s.speed;
+          s.opacity -= 0.01;
+
+          return true;
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener("resize", resize);
+
+      resize();
+      draw();
+    </script>
+  </body>
+</html>
