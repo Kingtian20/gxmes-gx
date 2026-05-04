@@ -274,14 +274,14 @@
 
       .plus-icon {
         position: relative;
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         transition: 0.4s;
       }
 
       .plus-icon span {
         position: absolute;
-        background: #fff;
+        background: #ffffffb7;
         border-radius: 2px;
         transition: 0.3s;
       }
@@ -303,7 +303,7 @@
       }
 
       .plus-btn:hover .plus-icon {
-        transform: translateY(-5px) scale(1.2);
+        transform: translateY(-5px);
         filter: drop-shadow(0 0 10px var(--primary-color));
       }
 
@@ -323,6 +323,11 @@
 
       .plus-btn.active::before,
       .plus-btn.active:hover::before {
+        opacity: 0 !important;
+      }
+
+      .plus-btn:hover::after,
+      .plus-btn:hover::before {
         opacity: 0 !important;
       }
 
@@ -939,13 +944,10 @@
         opacity: 0.5;
       }
 
-      .settings-btn {
-        position: absolute;
-        top: 20px;
-        right: 20px;
+      .menu-items button#settingsBtn {
         width: 50px;
         height: 50px;
-        background: #000;
+        background: transparent;
         border-radius: 50%;
         display: flex;
         align-items: center;
@@ -953,26 +955,14 @@
         cursor: pointer;
         z-index: 10;
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      }
-
-      .settings-btn:hover {
-        transform: translateY(-5px) scale(1.2);
-      }
-
-      .settings-btn:hover i {
-        color: var(--primary-color);
-        filter: drop-shadow(0 0 10px var(--primary-color));
-      }
-
-      .settings-btn .line-driver {
-        border-radius: 50%;
-        padding: 2px;
-      }
-
-      .settings-btn i {
+        border: none;
         color: rgba(255, 255, 255, 0.6);
         font-size: 1.2rem;
-        z-index: 2;
+      }
+
+      .menu-items button#settingsBtn:hover {
+        transform: translateY(-5px) scale(1.2);
+        color: var(--primary-color);
       }
 
       .settings-modal {
@@ -1420,16 +1410,13 @@
         </button>
         <div class="menu-items">
           <button title="GX AI" id="gxaiBtn"><i class="fa-solid fa-robot"></i></button>
+          <button title="Settings" id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
         </div>
       </div>
     </div>
     <canvas id="home-canvas"></canvas>
 
     <section class="home" id="home-page">
-      <div class="settings-btn" id="settingsBtn" title="Settings">
-        <div class="line-driver"></div>
-        <i class="fa-solid fa-gear"></i>
-      </div>
       <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
       <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX VERSE</h1>
       <div class="search-container">
