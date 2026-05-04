@@ -180,22 +180,47 @@
       .action-bar {
         display: flex;
         flex-direction: row;
-        justify-content: space-evenly;
-        align-items: center;
-        width: 320px;
-        padding: 10px 15px;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 20px;
         position: fixed;
         bottom: 30px;
         left: 50%;
         transform: translateX(-50%);
-        background-color: #000;
-        border-radius: 100px;
         z-index: 10;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       }
 
-      .action-bar:hover {
-        transform: translateX(-50%) scale(1.05);
+      .pod {
+        display: flex;
+        pointer-events: auto;
+        background: rgba(0, 0, 0, 0);
+        border-radius: 100px;
+        position: relative;
+      }
+
+      .bar-pod {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px 20px;
+        align-items: center;
+        height: 65px;
+      }
+
+      .tower-pod {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 65px;
+        height: 65px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50%;
+      }
+
+      .tower-pod.expanded {
+        width: 65px;
       }
 
       .action-bar button {
@@ -209,12 +234,115 @@
         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         cursor: pointer;
         z-index: 2;
+        position: relative;
       }
 
       .action-bar button:hover {
         color: var(--primary-color);
         transform: translateY(-5px) scale(1.2);
         filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .menu-items {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding-left: 0px;
+        padding-right: 12px;
+      }
+
+      .expanded .menu-items {
+        max-width: 350px;
+        overflow: visible;
+        opacity: 1;
+      }
+
+      .plus-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .plus-icon {
+        position: relative;
+        width: 18px;
+        height: 18px;
+        transition: 0.4s;
+      }
+
+      .plus-icon span {
+        position: absolute;
+        background: #fff;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+
+      .plus-icon span:nth-child(1) {
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        transform: translateY(-50%);
+      }
+
+      .plus-icon span:nth-child(2) {
+        top: 0;
+        left: 50%;
+        width: 3px;
+        height: 100%;
+        transform: translateX(-50%);
+      }
+
+      .plus-btn:hover .plus-icon {
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .plus-btn:hover .plus-icon span {
+        background: #0000ff;
+      }
+
+      .plus-btn.active .plus-icon {
+        transform: translateY(-5px) scale(1.2) rotate(45deg);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .plus-btn.active::after,
+      .plus-btn.active:hover::after {
+        opacity: 0 !important;
+      }
+
+      .plus-btn.active::before,
+      .plus-btn.active:hover::before {
+        opacity: 0 !important;
+      }
+
+      .active {
+        color: var(--primary-color) !important;
+        opacity: 1 !important;
+      }
+
+      .active .plus-icon span {
+        background: var(--primary-color);
+      }
+
+      #action-bar-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9;
+        pointer-events: none;
       }
 
       #home-canvas {
@@ -351,11 +479,13 @@
         pointer-events: auto;
       }
 
-      #game-overlay.active ~ .action-bar {
+      #game-overlay.active ~ .action-bar,
+      #game-overlay.active ~ #action-bar-canvas {
         display: none !important;
       }
 
-      #proxy-overlay.active ~ .action-bar {
+      #proxy-overlay.active ~ .action-bar,
+      #proxy-overlay.active ~ #action-bar-canvas {
         display: none !important;
       }
 
@@ -1275,13 +1405,23 @@
   </head>
 
   <body>
+    <canvas id="action-bar-canvas"></canvas>
     <div class="action-bar">
-      <div class="line-driver"></div>
-      <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
-      <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
-      <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book"></i></button>
-      <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
-      <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume"></i></button>
+      <div class="pod bar-pod" id="barPod">
+        <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
+        <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
+        <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book"></i></button>
+        <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
+        <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume"></i></button>
+      </div>
+      <div class="pod tower-pod" id="towerPod">
+        <button class="plus-btn" id="toggleBtn" title="More">
+          <div class="plus-icon"><span></span><span></span></div>
+        </button>
+        <div class="menu-items">
+          <button title="GX AI" id="gxaiBtn"><i class="fa-solid fa-robot"></i></button>
+        </div>
+      </div>
     </div>
     <canvas id="home-canvas"></canvas>
 
@@ -1362,6 +1502,12 @@
       </div>
     </div>
 
+    <section class="gxai" id="gxai-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <iframe id="gxai-frame" style="width: 100%; height: 100%; border: none"></iframe>
+    </section>
+
+
+    <!-- Modal Sections (intentional comment)-->
     <div id="settings-modal" class="settings-modal">
       <div class="settings-content">
         <div class="settings-header">
@@ -1387,6 +1533,7 @@
       const infoPage = document.getElementById("info-page");
       const soundboardPage = document.getElementById("soundboard-page");
       const proxyPage = document.getElementById("proxy-page");
+      const gxaiPage = document.getElementById("gxai-page");
 
       // Buttons, (Intentional Comment)
       const homeBtn = document.getElementById("homeBtn");
@@ -1394,9 +1541,88 @@
       const infoBtn = document.getElementById("infoBtn");
       const soundboardBtn = document.getElementById("soundboardBtn");
       const proxyBtn = document.getElementById("proxyBtn");
-      const buttons = [homeBtn, gxmesBtn, infoBtn, soundboardBtn, proxyBtn];
+      const gxaiBtn = document.getElementById("gxaiBtn");
+      const buttons = [homeBtn, gxmesBtn, infoBtn, soundboardBtn, proxyBtn, gxaiBtn];
 
-      // Extra, (Intentional Comment)
+      // Complex Bar Canvas Anim
+      const actionBarCanvas = document.getElementById("action-bar-canvas");
+      const actionCtx = actionBarCanvas.getContext("2d");
+      const toggleBtn = document.getElementById("toggleBtn");
+      const towerPod = document.getElementById("towerPod");
+      const barPod = document.getElementById("barPod");
+      const menuItems = document.querySelector(".menu-items");
+
+      let barRotation = 0;
+
+      function resizeActionBarCanvas() {
+        actionBarCanvas.width = window.innerWidth;
+        actionBarCanvas.height = window.innerHeight;
+      }
+
+      function renderActionBar() {
+        if (!actionBarCanvas.width || !actionBarCanvas.height) {
+          console.log("Canvas not sized yet");
+          requestAnimationFrame(renderActionBar);
+          return;
+        }
+        
+        actionCtx.clearRect(0, 0, actionBarCanvas.width, actionBarCanvas.height);
+        barRotation += 0.04;
+
+        const b = barPod.getBoundingClientRect();
+        const t = towerPod.getBoundingClientRect();
+
+        const m = menuItems.getBoundingClientRect();
+        const isExpanded = towerPod.classList.contains("expanded");
+        const towerRight = isExpanded ? Math.max(t.right, m.right) : t.right;
+        const towerWidth = isExpanded ? (towerRight - t.left) : t.width;
+
+        actionCtx.fillStyle = "black";
+        actionCtx.beginPath();
+        actionCtx.roundRect(b.left, b.top, b.width, b.height, b.height / 2);
+        actionCtx.fill();
+
+        actionCtx.beginPath();
+        const isCircle = Math.abs(towerWidth - t.height) < 5;
+        const towerRadius = isCircle ? t.height / 2 : 100;
+        actionCtx.roundRect(t.left, t.top, towerWidth, t.height, towerRadius);
+        actionCtx.fill();
+
+        const centerX = (b.left + t.right) / 2;
+        const centerY = (b.top + t.bottom) / 2;
+        const grad = actionCtx.createConicGradient(barRotation, centerX, centerY);
+        grad.addColorStop(0, "transparent");
+        grad.addColorStop(0.1, "#0000ff");
+        grad.addColorStop(0.2, "#00fff7");
+        grad.addColorStop(0.3, "transparent");
+
+        actionCtx.strokeStyle = grad;
+        actionCtx.lineWidth = 3;
+        actionCtx.shadowBlur = 2;
+        actionCtx.shadowColor = "rgba(0, 0, 255, 0.8)";
+        actionCtx.beginPath();
+        actionCtx.roundRect(b.left, b.top, b.width, b.height, b.height / 2);
+        actionCtx.stroke();
+        actionCtx.beginPath();
+        actionCtx.roundRect(t.left, t.top, towerWidth, t.height, towerRadius);
+        actionCtx.stroke();
+
+        requestAnimationFrame(renderActionBar);
+      }
+
+      toggleBtn.addEventListener("click", () => {
+        toggleBtn.classList.toggle("active");
+        towerPod.classList.toggle("expanded");
+      });
+
+      window.addEventListener("resize", resizeActionBarCanvas);
+      resizeActionBarCanvas();
+      
+      setTimeout(() => {
+        resizeActionBarCanvas();
+        renderActionBar();
+      }, 100);
+
       const mainTitle = document.querySelector(".main-title");
       const subTitle = document.querySelector(".sub-title");
 
@@ -1408,6 +1634,7 @@
         info: {page: infoPage, btn: infoBtn},
         soundboard: {page: soundboardPage, btn: soundboardBtn},
         proxy: {page: proxyPage, btn: proxyBtn},
+        gxai: {page: gxaiPage, btn: gxaiBtn},
       };
 
       function updateButtons() {
@@ -1469,6 +1696,7 @@
         } else if (targetPage === "info") {
         } else if (targetPage === "soundboard") {
         } else if (targetPage === "proxy") {
+        } else if (targetPage === "gxai") {
         }
       }
 
@@ -1498,6 +1726,10 @@
       proxyBtn.addEventListener("click", () => {
         showDelayedTooltip(proxyBtn);
         switchPage("proxy");
+      });
+      gxaiBtn.addEventListener("click", () => {
+        showDelayedTooltip(gxaiBtn);
+        switchPage("gxai");
       });
 
       const settingsBtn = document.getElementById("settingsBtn");
@@ -2208,6 +2440,24 @@
         }
       }
 
+      async function loadGxAi() {
+        const infoFrame = document.getElementById("gxai-frame");
+        const cdnUrl = "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/gxai.html";
+
+        try {
+          const response = await fetch(cdnUrl);
+          if (!response.ok) throw new Error("Failed to fetch gxai.html");
+          const htmlContent = await response.text();
+
+          const blob = new Blob([htmlContent], {type: "text/html"});
+          const blobUrl = URL.createObjectURL(blob);
+          infoFrame.src = blobUrl;
+        } catch (error) {
+          console.error("Error loading info page:", error);
+          infoFrame.srcdoc = "<p style='color:white;text-align:center;'>Failed to load content my very HARDEST THING FOR SOME REASON TS TOOK LIKE 2 HOURS. So if this fails I crash out 30 times</p>";
+        }
+      }
+
       async function loadSoundboard() {
         const soundboardFrame = document.getElementById("soundboard-frame");
         const cdnUrl = "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/soundboard.html";
@@ -2229,6 +2479,7 @@
       window.onload = () => {
         loadInfoPage();
         loadSoundboard();
+        loadGxAi();
       };
 
       function abbreviateNumber(num) {
