@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -239,7 +240,7 @@
 
       .action-bar button:hover {
         color: var(--primary-color);
-        transform: translateY(-5px) scale(1.2);
+        transform: translateY(-0px) scale(1.1);
         filter: drop-shadow(0 0 10px var(--primary-color));
       }
 
@@ -278,6 +279,14 @@
         height: 20px;
         transition: 0.4s;
       }
+      
+      .actionbarBtn {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      
+      .actionbarBtn:hover {
+        transform: translateY(-5px) scale(1.2);
+      }
 
       .plus-icon span {
         position: absolute;
@@ -303,17 +312,18 @@
       }
 
       .plus-btn:hover .plus-icon {
-        transform: translateY(-5px);
         filter: drop-shadow(0 0 10px var(--primary-color));
       }
 
       .plus-btn:hover .plus-icon span {
         background: #0000ff;
+        color: var(--primary-color);
       }
 
       .plus-btn.active .plus-icon {
-        transform: translateY(-5px) scale(1.2) rotate(45deg);
+        transform: scale(1.1) rotate(45deg) translateY(-2px);
         filter: drop-shadow(0 0 10px var(--primary-color));
+        color: var(--primary-color);
       }
 
       .plus-btn.active::after,
@@ -957,7 +967,8 @@
         transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         border: none;
         color: rgba(255, 255, 255, 0.6);
-        font-size: 1.2rem;
+        transform: translateY(-2px);
+        font-size: 1.3rem;
       }
 
       .menu-items button#settingsBtn:hover {
@@ -1398,11 +1409,11 @@
     <canvas id="action-bar-canvas"></canvas>
     <div class="action-bar">
       <div class="pod bar-pod" id="barPod">
-        <button title="Home" id="homeBtn"><i class="fa-solid fa-house"></i></button>
-        <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad"></i></button>
-        <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book"></i></button>
-        <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud"></i></button>
-        <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume"></i></button>
+        <button title="Home" id="homeBtn"><i class="fa-solid fa-house actionbarBtn"></i></button>
+        <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad actionbarBtn"></i></button>
+        <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book actionbarBtn"></i></button>
+        <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud actionbarBtn"></i></button>
+        <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume actionbarBtn"></i></button>
       </div>
       <div class="pod tower-pod" id="towerPod">
         <button class="plus-btn" id="toggleBtn" title="More">
