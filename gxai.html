@@ -157,7 +157,7 @@
         -webkit-font-smoothing: antialiased;
       }
 
-      /* ── Auth ── */
+      /* ââ Auth ââ */
       #auth-screen {
         display: flex;
         align-items: center;
@@ -318,7 +318,7 @@
         display: none;
       }
 
-      /* ── App shell ── */
+      /* ââ App shell ââ */
       #app {
         display: none;
         height: 100vh;
@@ -328,7 +328,7 @@
         display: flex;
       }
 
-      /* ── Sidebar ── */
+      /* ââ Sidebar ââ */
       #sidebar {
         width: 288px;
         min-width: 288px;
@@ -526,7 +526,7 @@
         color: #f87171;
       }
 
-      /* ── Chat area ── */
+      /* ââ Chat area ââ */
       #chat-area {
         flex: 1;
         display: flex;
@@ -585,7 +585,7 @@
         max-width: 400px;
       }
 
-      /* ── Messages ── */
+      /* ââ Messages ââ */
       .msg-row {
         display: flex;
         width: 100%;
@@ -812,7 +812,7 @@
         border: 1px solid rgba(168, 85, 247, 0.2);
       }
       .typing-cursor::after {
-        content: "▋";
+        content: "â";
         animation: blink 1s infinite;
       }
       @keyframes blink {
@@ -825,7 +825,7 @@
         }
       }
 
-      /* ── Input ── */
+      /* ââ Input ââ */
       #input-area {
         flex-shrink: 0;
         position: relative;
@@ -1153,7 +1153,7 @@
       </div>
     </div>
     <script>
-      // ── State ──────────────────────────────────────────────────────────────────────
+      // ââ State ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       var SERVER = "` + server + `";
       var WS_URL = SERVER.replace(/^https/, "wss").replace(/^http(?!s)/, "ws") + "/ws";
       var token = null,
@@ -1164,7 +1164,7 @@
         pendingImageDataUrl = null,
         authTab = "login";
 
-      // ── Helpers ───────────────────────────────────────────────────────────────────
+      // ââ Helpers âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       function qs(id) {
         return document.getElementById(id);
       }
@@ -1175,7 +1175,7 @@
         return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
       }
 
-      // ── WebSocket client ───────────────────────────────────────────────────────────
+      // ââ WebSocket client âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       var _ws = null,
         _wsReady = false,
         _wsRetries = 0,
@@ -1314,7 +1314,7 @@
         _ws.onclose = function () {
           _wsReady = false;
           var s = document.getElementById("ws-status");
-          if (s) s.textContent = "disconnected — reconnecting...";
+          if (s) s.textContent = "disconnected â reconnecting...";
           for (var rid in _pending) {
             _pending[rid].reject(new Error("disconnected"));
           }
@@ -1329,7 +1329,7 @@
         };
         _ws.onerror = function () {
           var s = document.getElementById("ws-status");
-          if (s) s.textContent = "connection error — retrying...";
+          if (s) s.textContent = "connection error â retrying...";
         };
       }
 
@@ -1348,11 +1348,11 @@
           } catch (e) {
             localStorage.removeItem("zyrx_token");
           }
-          // Show auth form — WS is ready so it will work
+          // Show auth form â WS is ready so it will work
         })();
       });
 
-      // ── Auth ──────────────────────────────────────────────────────────────────────
+      // ââ Auth ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       document.getElementById("tab-login").onclick = function () {
         switchTab("login");
       };
@@ -1425,7 +1425,7 @@
         qs("auth-password").value = "";
       };
 
-      // ── Conversations ─────────────────────────────────────────────────────────────
+      // ââ Conversations âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       var EMPTY_STATE =
         '<div id="empty-state"><div class="empty-icon"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg></div><div><div class="empty-title">How can I help you today?</div><div class="empty-sub">Send a message to start the conversation.</div></div></div>';
 
@@ -1682,7 +1682,7 @@
         } catch (e) {}
       }
 
-      // ── Image ─────────────────────────────────────────────────────────────────────
+      // ââ Image âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       qs("attach-btn").onclick = function () {
         qs("file-input").click();
       };
@@ -1704,7 +1704,7 @@
         qs("img-preview").src = "";
       };
 
-      // ── Send message ──────────────────────────────────────────────────────────────
+      // ââ Send message ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
       var msgInput = qs("msg-input");
       msgInput.onkeydown = function (e) {
         if (e.key === "Enter" && !e.shiftKey) {
