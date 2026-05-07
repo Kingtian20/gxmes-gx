@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
   <head>
@@ -240,7 +239,7 @@
 
       .action-bar button:hover {
         color: var(--primary-color);
-        transform: translateY(-0px) scale(1.1);
+        transform: translateY(-5px) scale(1.2);
         filter: drop-shadow(0 0 10px var(--primary-color));
       }
 
@@ -285,7 +284,15 @@
       }
       
       .actionbarBtn:hover {
+        color: var(--primary-color);
         transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+      
+      .menu-items button:hover {
+        color: var(--primary-color) !important;
+        transform: translateY(-5px) scale(1.2) !important;
+        filter: drop-shadow(0 0 10px var(--primary-color)) !important;
       }
 
       .plus-icon span {
@@ -955,25 +962,26 @@
       }
 
       .menu-items button#settingsBtn {
-        width: 50px;
-        height: 50px;
-        background: transparent;
+        width: 45px;
+        height: 45px;
+        border: none;
         border-radius: 50%;
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.3rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        z-index: 2;
+        position: relative;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
-        z-index: 10;
-        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        border: none;
-        color: rgba(255, 255, 255, 0.6);
-        transform: translateY(-2px);
-        font-size: 1.3rem;
       }
 
       .menu-items button#settingsBtn:hover {
-        transform: translateY(-5px) scale(1.2);
-        color: var(--primary-color);
+        color: var(--primary-color) !important;
+        transform: translateY(-5px) scale(1.2) !important;
+        filter: drop-shadow(0 0 10px var(--primary-color)) !important;
       }
 
       .settings-modal {
@@ -1420,7 +1428,7 @@
           <div class="plus-icon"><span></span><span></span></div>
         </button>
         <div class="menu-items">
-          <button title="GX AI" id="gxaiBtn"><i class="fa-solid fa-robot"></i></button>
+          <button title="GX AI" id="gxaiBtn" class="actionbarBtn"><i class="fa-solid fa-robot"></i></button>
           <button title="Settings" id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
         </div>
       </div>
