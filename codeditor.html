@@ -5482,6 +5482,7 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
 	                          model = monaco.editor.createModel(
 	                              file.content || '',
 	                              file.language || 'plaintext',
+                                  contextmenu: false,
 	                              monaco.Uri.parse('gxcode://workspace/' + file.id + '/' + safeName)
 	                          );
 	                          this.models.set(file.id, model);
