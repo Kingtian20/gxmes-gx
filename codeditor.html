@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GX Code Editor</title>
@@ -12,2104 +13,2147 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" />
     <style>
-      *,
-      *::before,
-      *::after {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
-
-      :root {
-        --ctp-rosewater: #f5e0dc;
-        --ctp-flamingo: #f2cdcd;
-        --ctp-pink: #f5c2e7;
-        --ctp-mauve: #cba6f7;
-        --ctp-red: #f38ba8;
-        --ctp-maroon: #eba0ac;
-        --ctp-peach: #fab387;
-        --ctp-yellow: #f9e2af;
-        --ctp-green: #a6e3a1;
-        --ctp-teal: #94e2d5;
-        --ctp-sky: #89dceb;
-        --ctp-sapphire: #74c7ec;
-        --ctp-blue: #00fff7;
-        --ctp-lavender: #b4befe;
-        --ctp-text: #e0e0e0;
-        --ctp-subtext1: #c0c0c0;
-        --ctp-subtext0: #a0a0a0;
-        --ctp-overlay2: #808080;
-        --ctp-overlay1: #707070;
-        --ctp-overlay0: #606060;
-        --ctp-surface2: #2a2a2a;
-        --ctp-surface1: #252525;
-        --ctp-surface0: #1a1a1a;
-        --ctp-base: #0a0a0a;
-        --ctp-mantle: #050505;
-        --ctp-crust: #000000;
-
-        --primary-color: var(--ctp-blue);
-        --secondary-color: var(--ctp-teal);
-        --bg-primary: var(--ctp-crust);
-        --bg-secondary: var(--ctp-mantle);
-        --bg-tertiary: var(--ctp-base);
-        --bg-hover: var(--ctp-surface0);
-        --text-primary: var(--ctp-text);
-        --text-secondary: var(--ctp-subtext0);
-        --border-color: var(--ctp-surface0);
-        --accent-glow: rgba(0, 255, 247, 0.3);
-        --terminal-bg: var(--ctp-mantle);
-        --terminal-green: var(--ctp-green);
-        --font-code: "Menlo", "SF Mono", "Consolas", "Monaco", "Courier New", monospace;
-        --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      body {
-        width: 100vw;
-        height: 100vh;
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        font-family: var(--font-ui);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        font-size: 13px;
-      }
-
-      .app-container {
-        display: flex;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      .activity-bar {
-        width: 48px;
-        background: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 8px 0;
-        gap: 4px;
-        flex-shrink: 0;
-      }
-
-      .activity-btn {
-        width: 36px;
-        height: 36px;
-        border: none;
-        background: transparent;
-        color: var(--text-secondary);
-        font-size: 1rem;
-        cursor: pointer;
-        border-radius: 6px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.15s ease;
-        position: relative;
-      }
-
-      .activity-btn:hover {
-        color: var(--text-primary);
-        background: var(--bg-hover);
-      }
-
-      .activity-btn.active {
-        color: var(--text-primary);
-        background: var(--ctp-surface1);
-      }
-
-      .activity-btn.active::before {
-        content: "";
-        position: absolute;
-        left: -8px;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 2px;
-        height: 20px;
-        background: var(--primary-color);
-        border-radius: 0 2px 2px 0;
-      }
-
-      .activity-btn::after {
-        content: attr(title);
-        position: absolute;
-        left: 55px;
-        top: 50%;
-        transform: translateY(-50%) scale(0.8);
-        background: var(--primary-color);
-        color: #000;
-        padding: 5px 10px;
-        border-radius: 4px;
-        font-family: var(--font-ui);
-        font-size: 0.65rem;
-        font-weight: bold;
-        white-space: nowrap;
-        opacity: 0;
-        pointer-events: none;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 1000;
-      }
-
-      .activity-btn:hover::after {
-        opacity: 1;
-        transform: translateY(-50%) scale(1);
-      }
-
-      .sidebar {
-        width: 250px;
-        background: var(--bg-secondary);
-        border-right: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        transition: width 0.3s ease;
-        position: relative;
-      }
-
-      .sidebar.collapsed {
-        width: 0;
-        overflow: hidden;
-      }
-
-      .sidebar-header {
-        padding: 15px;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .sidebar-title {
-        font-size: 0.75rem;
-        text-transform: uppercase;
-        letter-spacing: 2px;
-        color: var(--text-secondary);
-      }
-
-      .sidebar-actions {
-        display: flex;
-        gap: 8px;
-      }
-
-      .sidebar-btn {
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        cursor: pointer;
-        font-size: 0.8rem;
-        width: 24px;
-        height: 24px;
-        border-radius: 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-      }
-
-      .sidebar-btn:hover {
-        color: var(--text-primary);
-        background: var(--bg-hover);
-      }
-
-      .sidebar-view {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-        overflow: hidden;
-      }
-
-      .sidebar-view.hidden {
-        display: none;
-      }
-
-      .recent-files-section {
-        border-top: 1px solid var(--border-color);
-        margin-top: 100px;
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 100%;
-        flex-shrink: 0;
-      }
-
-      .recent-files-header {
-        padding: 4px 10px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: var(--text-secondary);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        cursor: pointer;
-        user-select: none;
-        transition: background-color 0.1s;
-      }
-
-      .recent-files-header:hover {
-        background: var(--bg-hover);
-      }
-
-      .recent-files-header i {
-        font-size: 0.7rem;
-        transition: transform 0.2s ease;
-        transform-origin: center;
-        width: 12px;
-        text-align: center;
-      }
-
-      .recent-files-list {
-        list-style: none;
-        padding: 0 5px;
-        max-height: 150px;
-        overflow-y: auto;
-      }
-
-      .recent-file-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 5px 10px;
-        cursor: pointer;
-        border-radius: 4px;
-        font-size: 0.8rem;
-        font-family: var(--font-code);
-      }
-
-      .recent-file-item:hover {
-        background: var(--bg-hover);
-      }
-
-      .recent-file-item i {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-      }
-
-      .search-panel {
-        padding: 15px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        overflow: hidden;
-      }
-
-      .search-input {
-        width: 100%;
-        padding: 8px 12px;
-        background: var(--ctp-crust);
-        border: 1px solid var(--ctp-surface0);
-        border-radius: 6px;
-        color: var(--text-primary);
-        font-family: var(--font-ui);
-        font-size: 0.9rem;
-        outline: none;
-      }
-
-      .search-input:focus {
-        border-color: var(--ctp-blue);
-      }
-
-      .search-options {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-      }
-
-      .search-option {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        cursor: pointer;
-      }
-
-      .search-option input {
-        cursor: pointer;
-      }
-
-      .search-results {
-        flex: 1;
-        overflow-y: auto;
-        font-family: var(--font-code);
-        font-size: 0.8rem;
-      }
-
-      .search-result-item {
-        padding: 8px 10px;
-        cursor: pointer;
-        border-radius: 4px;
-        border-bottom: 1px solid var(--ctp-surface0);
-      }
-
-      .search-result-item:hover {
-        background: var(--ctp-surface0);
-      }
-
-      .search-result-file {
-        color: var(--ctp-blue);
-        font-size: 0.75rem;
-        margin-bottom: 3px;
-      }
-
-      .search-result-line {
-        color: var(--text-secondary);
-      }
-
-      .search-result-match {
-        background: var(--ctp-yellow);
-        color: var(--ctp-crust);
-        padding: 0 2px;
-        border-radius: 2px;
-      }
-
-      .file-explorer {
-        flex: 1;
-        overflow-y: auto;
-        padding: 5px;
-        display: flex;
-        flex-direction: column;
-        transition: background-color 0.2s ease;
-      }
-
-      .file-explorer.drag-over-root {
-        background: rgba(0, 255, 247, 0.05);
-        outline: 2px dashed var(--ctp-teal);
-        outline-offset: -2px;
-        border-radius: 8px;
-      }
-
-      .file-tree {
-        list-style: none;
-        user-select: none;
-        position: relative;
-      }
-
-      .file-tree > li {
-        position: relative;
-      }
-
-      .folder-container {
-        position: relative;
-        width: 100%;
-        border-radius: 6px;
-      }
-
-      .folder-container.drag-over {
-        background: rgba(166, 227, 161, 0.1);
-        box-shadow: 0 0 0 2px var(--ctp-green);
-      }
-
-      .file-item {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 8px;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: background-color 0.15s ease;
-        position: relative;
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-        min-height: 22px;
-      }
-
-      .tree-line {
-        position: absolute;
-        background: var(--ctp-surface0);
-        pointer-events: none;
-      }
-
-      .tree-line-vertical {
-        width: 1px;
-        left: 16px;
-        top: -11px;
-        bottom: 17px;
-      }
-
-      .file-item.file {
-        padding-left: -20px !important;
-        margin-top: 6px;
-      }
-
-      .file-item:hover {
-        background: var(--bg-hover);
-      }
-
-      .file-item.highlighted {
-        background: rgba(94, 129, 172, 0.4);
-      }
-
-      .file-item.selected {
-        background: rgba(94, 129, 172, 0.5);
-      }
-
-      .file-item.selected::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 2px;
-        background: var(--ctp-blue);
-      }
-
-      .file-item.dragging {
-        opacity: 0.5;
-      }
-
-      .file-item.drag-over {
-        background: var(--ctp-surface0);
-        border: 1px dashed var(--ctp-teal);
-      }
-
-      .file-icon {
-        font-size: 0.9rem;
-        width: 16px;
-        text-align: center;
-      }
-
-      .file-item.folder .file-icon {
-        color: var(--ctp-peach);
-      }
-
-      .file-item.html .file-icon {
-        color: var(--ctp-red);
-      }
-
-      .file-item.css .file-icon {
-        color: var(--ctp-blue);
-      }
-
-      .file-item.js .file-icon {
-        color: var(--ctp-yellow);
-      }
-
-      .file-item.image .file-icon {
-        color: var(--ctp-green);
-      }
-
-      .file-name {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .file-item.editing .file-name {
-        display: none;
-      }
-
-      .file-item input {
-        width: 75%;
-        max-width: 75%;
-        height: 16px;
-        min-height: 16px;
-        background: var(--ctp-base);
-        border: 1px solid var(--ctp-blue);
-        color: var(--text-primary);
-        padding: inherit;
-        border-radius: 3px;
-        font-family: var(--font-code);
-        font-size: 0.70rem;
-        outline: none;
-        box-sizing: border-box;
-        line-height: 16px;
-      }
-
-      .file-children {
-        list-style: none;
-        padding-left: 0;
-        position: relative;
-      }
-
-      .file-children > li {
-        position: relative;
-      }
-
-      .file-children li::before {
-        content: "";
-        position: absolute;
-        left: 17px;
-        top: -4px;
-        bottom: 17px;
-        width: 1px;
-        background: var(--ctp-surface0);
-        pointer-events: none;
-      }
-
-      .file-children li:last-child::before {
-        bottom: 50%;
-      }
-
-      .expand-icon {
-        width: 16px;
-        height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.6rem;
-        transition: transform 0.2s;
-        color: var(--text-secondary);
-        cursor: pointer;
-        z-index: 2;
-        margin-left: 8px;
-      }
-
-      .expand-icon:hover {
-        color: var(--text-primary);
-      }
-
-      .expand-icon.expanded {
-        transform: rotate(90deg);
-      }
-
-      .expand-icon.placeholder {
-        visibility: hidden;
-      }
-
-      .main-area {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        min-width: 0;
-        position: relative;
-      }
-
-      .tab-bar {
-        display: flex;
-        background: var(--bg-secondary);
-        border-bottom: 1px solid var(--border-color);
-        overflow-x: auto;
-        overflow-y: hidden;
-        height: 36px;
-        scrollbar-width: none;
-      }
-
-      .tab-bar::-webkit-scrollbar {
-        display: none;
-      }
-
-      .tab {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 0 12px;
-        background: var(--bg-tertiary);
-        border-right: 1px solid var(--border-color);
-        cursor: pointer;
-        min-width: 120px;
-        max-width: 200px;
-        transition: all 0.2s;
-        position: relative;
-        font-family: var(--font-code);
-        font-size: 0.8rem;
-      }
-
-      .tab:hover {
-        background: var(--bg-hover);
-      }
-
-      .tab.active {
-        background: var(--ctp-base);
-        border-bottom: 2px solid var(--ctp-blue);
-      }
-
-      .tab:hover {
-        background: var(--ctp-surface0);
-      }
-
-      .tab.unsaved .tab-name::after {
-        content: "";
-        display: inline-block;
-        width: 6px;
-        height: 6px;
-        background: cyan;
-        border-radius: 50%;
-        margin-left: 6px;
-        vertical-align: middle;
-      }
-
-      .tab-name {
-        flex: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .tab-close {
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        cursor: pointer;
-        width: 16px;
-        height: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 3px;
-        font-size: 0.7rem;
-        transition: all 0.2s;
-      }
-
-      .tab-close:hover {
-        background: var(--ctp-red);
-        color: var(--ctp-crust);
-      }
-
-      .editor-container {
-        flex: 1;
-        position: relative;
-        background: var(--bg-primary);
-        display: flex;
-        min-height: 0;
-        overflow: hidden;
-      }
-
-	      #monaco-editor {
-	        flex: 1;
-	        min-height: 0;
-	        min-width: 0;
-	      }
-
-	      #monaco-editor-secondary {
-	        display: none;
-	        flex: 1;
-	        min-height: 0;
-	        min-width: 0;
-	        border-left: 1px solid var(--border-color);
-	      }
-
-	      .editor-container.split-active #monaco-editor-secondary {
-	        display: block;
-	      }
-
-      .welcome-screen {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        background: var(--bg-primary);
-        z-index: 10;
-      }
-
-      .welcome-title {
-        font-size: 2.5rem;
-        font-weight: 600;
-        margin-bottom: 16px;
-        color: var(--ctp-text);
-      }
-
-      .welcome-subtitle {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        margin-bottom: 32px;
-      }
-
-      .welcome-actions {
-        display: flex;
-        gap: 12px;
-      }
-
-      .welcome-btn {
-        padding: 10px 20px;
-        background: var(--ctp-surface0);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        font-family: var(--font-ui);
-        font-size: 0.85rem;
-        font-weight: 500;
-        cursor: pointer;
-        border-radius: 6px;
-        transition: all 0.15s ease;
-      }
-
-      .welcome-btn:hover {
-        background: var(--ctp-surface1);
-        border-color: var(--ctp-overlay0);
-      }
-
-      .right-panel {
-        width: 350px;
-        background: var(--bg-secondary);
-        border-left: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        transition: width 0.3s ease;
-        position: relative;
-      }
-
-      .right-panel.collapsed {
-        width: 36px;
-        min-width: 36px;
-      }
-
-      .right-panel.collapsed .right-panel-content {
-        display: none;
-      }
-
-      .right-panel.collapsed .right-panel-title {
-        display: none;
-      }
-
-      .right-panel-header {
-        padding: 12px 10px;
-        border-bottom: 1px solid var(--border-color);
-        border-left: 1px solid var(--border-color);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background: var(--ctp-mantle);
-        min-height: 44px;
-      }
-
-      .right-panel.collapsed .right-panel-header {
-        justify-content: center;
-        padding: 12px 8px;
-        border-left: none;
-      }
-
-      .right-panel-title {
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: var(--text-primary);
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .right-panel-content {
-        flex: 1;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .right-panel-actions {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-      }
-
-      .right-panel.collapsed .right-panel-actions {
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .right-panel .preview-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-
-      .right-panel .preview-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: white;
-      }
-
-      .right-panel .preview-toolbar {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 8px;
-      }
-
-      .bottom-panel {
-        height: 200px;
-        background: var(--bg-secondary);
-        border-top: 1px solid var(--border-color);
-        display: flex;
-        flex-direction: column;
-        transition: height 0.3s ease;
-        position: relative;
-      }
-
-      .bottom-panel.collapsed {
-        height: 30px;
-      }
-
-      .bottom-panel.collapsed .panel-content {
-        display: none;
-      }
-
-      .panel-tabs {
-        display: flex;
-        background: var(--bg-tertiary);
-        height: 30px;
-        align-items: center;
-        padding: 0 10px;
-        gap: 5px;
-      }
-
-      .panel-tab {
-        padding: 5px 12px;
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        font-family: var(--font-ui);
-        font-size: 0.75rem;
-        cursor: pointer;
-        border-radius: 4px 4px 0 0;
-        transition: all 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .panel-tab:hover {
-        color: var(--text-primary);
-        background: var(--ctp-surface0);
-      }
-
-      .panel-tab.active {
-        background: var(--ctp-mantle);
-        color: var(--ctp-text);
-        border-bottom: 2px solid var(--ctp-blue);
-      }
-
-      .panel-toggle {
-        margin-left: auto;
-        background: transparent;
-        border: none;
-        color: var(--text-secondary);
-        cursor: pointer;
-        width: 24px;
-        height: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s;
-      }
-
-      .resize-handle {
-        position: absolute;
-        z-index: 100;
-        transition: background 0.15s;
-      }
-
-      .resize-handle:hover,
-      .resize-handle.resizing {
-        background: var(--ctp-blue);
-      }
-
-      .sidebar .resize-handle {
-        right: -3px;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        cursor: col-resize;
-      }
-
-      .sidebar.collapsed .resize-handle {
-        display: none;
-      }
-
-      .bottom-panel .resize-handle {
-        top: -3px;
-        left: 0;
-        right: 0;
-        height: 6px;
-        cursor: row-resize;
-      }
-
-      .bottom-panel.collapsed .resize-handle {
-        display: none;
-      }
-
-      .right-panel .resize-handle {
-        left: -3px;
-        top: 0;
-        bottom: 0;
-        width: 6px;
-        cursor: col-resize;
-      }
-
-      .right-panel.collapsed .resize-handle {
-        display: none;
-      }
-
-      .sidebar.resizing,
-      .bottom-panel.resizing,
-      .right-panel.resizing {
-        transition: none !important;
-      }
-
-      .panel-toggle:hover {
-        color: var(--primary-color);
-      }
-
-      .panel-content {
-        flex: 1;
-        overflow: hidden;
-        display: flex;
-      }
-
-      .panel-section {
-        flex: 1;
-        display: none;
-        overflow: auto;
-      }
-
-      .panel-section.active {
-        display: block;
-      }
-
-      .terminal {
-        background: var(--terminal-bg);
-        padding: 10px;
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-        height: 100%;
-        overflow-y: auto;
-      }
-
-      .terminal-line {
-        margin-bottom: 4px;
-        display: flex;
-        gap: 10px;
-      }
-
-      .terminal-timestamp {
-        color: var(--text-secondary);
-        opacity: 0.5;
-        font-size: 0.75rem;
-      }
-
-      .terminal-type-log {
-        color: var(--ctp-green);
-      }
-      .terminal-type-warn {
-        color: var(--ctp-yellow);
-      }
-      .terminal-type-error {
-        color: var(--ctp-red);
-      }
-      .terminal-type-info {
-        color: var(--ctp-sapphire);
-      }
-
-      .terminal-input-line {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 10px;
-      }
-
-      .terminal-prompt {
-        color: var(--ctp-green);
-        font-weight: 600;
-      }
-
-      .terminal-input {
-        flex: 1;
-        background: transparent;
-        border: none;
-        color: var(--text-primary);
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-        outline: none;
-      }
-
-      .problems-container {
-        padding: 10px;
-        overflow-y: auto;
-        height: 100%;
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-      }
-
-      .problems-empty {
-        color: var(--text-secondary);
-        text-align: center;
-        padding: 40px 20px;
-        opacity: 0.7;
-      }
-
-      .problem-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        padding: 8px 12px;
-        border-radius: 6px;
-        margin-bottom: 6px;
-        cursor: pointer;
-        transition: background 0.15s;
-      }
-
-      .problem-item:hover {
-        background: var(--ctp-surface0);
-      }
-
-      .problem-icon {
-        font-size: 0.9rem;
-        margin-top: 2px;
-      }
-
-      .problem-icon.error {
-        color: var(--ctp-red);
-      }
-
-      .problem-icon.warning {
-        color: var(--ctp-yellow);
-      }
-
-      .problem-content {
-        flex: 1;
-        min-width: 0;
-      }
-
-      .problem-message {
-        color: var(--text-primary);
-        margin-bottom: 2px;
-        word-break: break-word;
-      }
-
-      .problem-location {
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-      }
-
-      .problems-count {
-        display: flex;
-        gap: 15px;
-        padding: 8px 15px;
-        border-bottom: 1px solid var(--border-color);
-        background: var(--ctp-mantle);
-        font-size: 0.8rem;
-      }
-
-      .problems-count-item {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-
-      .problems-count-item.errors {
-        color: var(--ctp-red);
-      }
-
-      .problems-count-item.warnings {
-        color: var(--ctp-yellow);
-      }
-
-      .preview-container {
-        width: 100%;
-        height: 100%;
-        position: relative;
-      }
-
-      .preview-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: white;
-      }
-
-      .preview-toolbar {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        display: flex;
-        gap: 10px;
-      }
-
-      .preview-btn {
-        padding: 6px 12px;
-        background: var(--ctp-surface0);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        font-family: var(--font-ui);
-        font-size: 0.75rem;
-        cursor: pointer;
-        border-radius: 4px;
-        transition: all 0.15s;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-      }
-
-      .preview-btn:hover {
-        background: var(--ctp-surface1);
-        border-color: var(--ctp-overlay0);
-      }
-
-      .status-bar {
-        height: 22px;
-        background: var(--ctp-blue);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 12px;
-        font-size: 0.75rem;
-        color: var(--ctp-crust);
-        font-family: var(--font-ui);
-      }
-
-      .status-section {
-        display: flex;
-        gap: 16px;
-        align-items: center;
-      }
-
-      .status-item {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        cursor: pointer;
-        padding: 2px 6px;
-        border-radius: 3px;
-        transition: background 0.15s;
-      }
-
-	      .status-item:hover {
-	        background: rgba(0, 0, 0, 0.15);
-	      }
-
-	      .status-item.active {
-	        color: var(--ctp-green);
-	        background: rgba(166, 227, 161, 0.12);
-	      }
-
-      .context-menu {
-        position: absolute;
-        background: var(--ctp-mantle);
-        border: 1px solid var(--ctp-surface0);
-        border-radius: 6px;
-        padding: 4px 0;
-        min-width: 140px;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-        z-index: 10000;
-        display: none;
-      }
-
-      .context-menu.visible {
-        display: block;
-      }
-
-      .context-item {
-        padding: 8px 15px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 0.8rem;
-        transition: all 0.2s;
-      }
-
-      .context-item:hover {
-        background: rgba(0, 0, 255, 0.1);
-        color: var(--secondary-color);
-      }
-
-      .context-separator {
-        height: 1px;
-        background: var(--border-color);
-        margin: 5px 0;
-      }
-
-      .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.6);
-        z-index: 1000;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .modal-overlay.visible {
-        display: flex;
-      }
-
-      .modal {
-        background: var(--ctp-mantle);
-        border: 1px solid var(--ctp-surface0);
-        border-radius: 12px;
-        width: 90%;
-        max-width: 400px;
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-        animation: modalSlideIn 0.2s ease;
-      }
-
-      @keyframes modalSlideIn {
-        from {
-          opacity: 0;
-          transform: translateY(-20px);
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        to {
-          opacity: 1;
-          transform: translateY(0);
+
+        :root {
+            --ctp-rosewater: #f5e0dc;
+            --ctp-flamingo: #f2cdcd;
+            --ctp-pink: #f5c2e7;
+            --ctp-mauve: #cba6f7;
+            --ctp-red: #f38ba8;
+            --ctp-maroon: #eba0ac;
+            --ctp-peach: #fab387;
+            --ctp-yellow: #f9e2af;
+            --ctp-green: #a6e3a1;
+            --ctp-teal: #94e2d5;
+            --ctp-sky: #89dceb;
+            --ctp-sapphire: #74c7ec;
+            --ctp-blue: #00fff7;
+            --ctp-lavender: #b4befe;
+            --ctp-text: #e0e0e0;
+            --ctp-subtext1: #c0c0c0;
+            --ctp-subtext0: #a0a0a0;
+            --ctp-overlay2: #808080;
+            --ctp-overlay1: #707070;
+            --ctp-overlay0: #606060;
+            --ctp-surface2: #2a2a2a;
+            --ctp-surface1: #252525;
+            --ctp-surface0: #1a1a1a;
+            --ctp-base: #0a0a0a;
+            --ctp-mantle: #050505;
+            --ctp-crust: #000000;
+
+            --primary-color: var(--ctp-blue);
+            --secondary-color: var(--ctp-teal);
+            --bg-primary: var(--ctp-crust);
+            --bg-secondary: var(--ctp-mantle);
+            --bg-tertiary: var(--ctp-base);
+            --bg-hover: var(--ctp-surface0);
+            --text-primary: var(--ctp-text);
+            --text-secondary: var(--ctp-subtext0);
+            --border-color: var(--ctp-surface0);
+            --accent-glow: rgba(0, 255, 247, 0.3);
+            --terminal-bg: var(--ctp-mantle);
+            --terminal-green: var(--ctp-green);
+            --font-code: "Menlo", "SF Mono", "Consolas", "Monaco", "Courier New", monospace;
+            --font-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         }
-      }
 
-      .modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--ctp-surface0);
-      }
-
-      .modal-title {
-        font-size: 1.1rem;
-        font-weight: 600;
-        color: var(--ctp-text);
-        margin: 0;
-      }
-
-      .modal-close {
-        background: transparent;
-        border: none;
-        color: var(--ctp-overlay0);
-        font-size: 1.2rem;
-        cursor: pointer;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 6px;
-        transition: all 0.15s;
-      }
-
-      .modal-close:hover {
-        background: var(--ctp-surface0);
-        color: var(--ctp-text);
-      }
-
-      .modal-body {
-        padding: 20px;
-      }
-
-      .modal-label {
-        display: block;
-        font-size: 0.85rem;
-        color: var(--ctp-subtext0);
-        margin-bottom: 8px;
-      }
-
-      .modal-input {
-        width: 100%;
-        padding: 10px 14px;
-        background: var(--ctp-crust);
-        border: 1px solid var(--ctp-surface0);
-        border-radius: 8px;
-        color: var(--ctp-text);
-        font-size: 0.95rem;
-        outline: none;
-        transition: all 0.15s;
-        box-sizing: border-box;
-      }
-
-      .modal-input:focus {
-        border-color: var(--ctp-blue);
-        background: var(--ctp-base);
-      }
-
-      .modal-footer {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        padding: 16px 20px;
-        border-top: 1px solid var(--ctp-surface0);
-      }
-
-      .modal-btn {
-        padding: 8px 16px;
-        border-radius: 6px;
-        font-size: 0.9rem;
-        font-weight: 500;
-        cursor: pointer;
-        border: none;
-        transition: all 0.15s;
-      }
-
-      .modal-btn-primary {
-        background: var(--ctp-blue);
-        color: var(--ctp-crust);
-      }
-
-      .modal-btn-primary:hover {
-        background: var(--ctp-sapphire);
-      }
-
-      .modal-btn-secondary {
-        background: transparent;
-        color: var(--ctp-subtext0);
-        border: 1px solid var(--ctp-surface0);
-      }
-
-      .modal-btn-secondary:hover {
-        background: var(--ctp-surface0);
-        color: var(--ctp-text);
-      }
-
-      .settings-section {
-        margin-bottom: 20px;
-      }
-
-      .settings-control {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-      }
-
-      .settings-slider {
-        flex: 1;
-        height: 6px;
-        -webkit-appearance: none;
-        appearance: none;
-        background: var(--ctp-surface0);
-        border-radius: 3px;
-        outline: none;
-      }
-
-      .settings-slider::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 18px;
-        height: 18px;
-        border-radius: 50%;
-        background: var(--ctp-blue);
-        cursor: pointer;
-      }
-
-      .settings-value {
-        min-width: 40px;
-        color: var(--ctp-text);
-        font-size: 0.9rem;
-      }
-
-      .settings-toggle {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-
-      input[type="checkbox"] {
-        appearance: none;
-        width: 16px;
-        height: 16px;
-        border: 2px solid var(--ctp-surface0);
-        border-radius: 3px;
-        background: var(--ctp-base);
-        cursor: pointer;
-        position: relative;
-        transition: all 0.2s ease;
-        flex-shrink: 0;
-      }
-
-      input[type="checkbox"]:hover {
-        border-color: var(--ctp-blue);
-        background: var(--ctp-surface0);
-      }
-
-      input[type="checkbox"]:checked {
-        background: var(--ctp-blue);
-        border-color: var(--ctp-blue);
-      }
-
-      input[type="checkbox"]:checked::after {
-        content: "";
-        position: absolute;
-        top: 2px;
-        left: 5px;
-        width: 4px;
-        height: 8px;
-        border: solid white;
-        border-width: 0 2px 2px 0;
-        transform: rotate(45deg);
-        display: block;
-      }
-
-      input[type="checkbox"]:focus {
-        outline: 2px solid var(--ctp-blue);
-        outline-offset: 2px;
-      }
-
-      .settings-toggle input[type="checkbox"] {
-        width: 18px;
-        height: 18px;
-      }
-
-      .find-option input[type="checkbox"],
-      .search-option input[type="checkbox"] {
-        width: 14px;
-        height: 14px;
-        margin-right: 6px;
-      }
-
-      .find-option input[type="checkbox"]:checked::after,
-      .search-option input[type="checkbox"]:checked::after {
-        font-size: 9px;
-      }
-
-      .settings-toggle label {
-        color: var(--ctp-text);
-        cursor: pointer;
-      }
-
-      .shortcuts-list {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .shortcut-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 8px 0;
-        border-bottom: 1px solid var(--ctp-surface0);
-      }
-
-      .shortcut-item:last-child {
-        border-bottom: none;
-      }
-
-      .shortcut-keys {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-      }
-
-      .shortcut-keys kbd {
-        background: var(--ctp-surface0);
-        border: 1px solid var(--ctp-surface1);
-        border-radius: 4px;
-        padding: 4px 8px;
-        font-family: var(--font-code);
-        font-size: 0.8rem;
-        color: var(--ctp-text);
-      }
-
-      .shortcut-desc {
-        color: var(--ctp-subtext0);
-        font-size: 0.9rem;
-      }
-
-      .color-picker-widget {
-        position: absolute;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow:
-          0 10px 40px rgba(0, 0, 0, 0.5),
-          0 0 30px var(--accent-glow);
-        z-index: 1000;
-        display: none;
-        min-width: 220px;
-      }
-
-      .color-picker-widget.visible {
-        display: block;
-      }
-
-      .color-picker-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
-      }
-
-      .color-format-toggle {
-        background: var(--ctp-surface0);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        padding: 4px 10px;
-        border-radius: 4px;
-        font-family: var(--font-ui);
-        font-size: 0.75rem;
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.15s;
-      }
-
-      .color-format-toggle:hover {
-        background: var(--ctp-surface1);
-        border-color: var(--ctp-overlay0);
-      }
-
-      .color-picker-area {
-        width: 100%;
-        height: 150px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        position: relative;
-        cursor: crosshair;
-        background: linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, transparent);
-      }
-
-      .color-picker-thumb {
-        position: absolute;
-        width: 12px;
-        height: 12px;
-        border: 2px solid white;
-        border-radius: 50%;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-      }
-
-      .color-hue-slider {
-        width: 100%;
-        height: 20px;
-        border-radius: 10px;
-        background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
-        margin-bottom: 10px;
-        position: relative;
-        cursor: pointer;
-      }
-
-      .color-hue-thumb {
-        position: absolute;
-        top: -2px;
-        width: 10px;
-        height: 24px;
-        background: white;
-        border-radius: 5px;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
-        transform: translateX(-50%);
-        pointer-events: none;
-      }
-
-      .color-value-input {
-        width: 100%;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        padding: 8px;
-        border-radius: 6px;
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-        text-align: center;
-      }
-
-      .color-preview {
-        width: 100%;
-        height: 40px;
-        border-radius: 8px;
-        border: 2px solid var(--border-color);
-        margin-top: 10px;
-      }
-
-      .find-replace-widget {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        background: var(--bg-secondary);
-        border: 1px solid var(--border-color);
-        border-radius: 12px;
-        padding: 15px;
-        box-shadow:
-          0 10px 40px rgba(0, 0, 0, 0.5),
-          0 0 30px var(--accent-glow);
-        z-index: 100;
-        display: none;
-        min-width: 300px;
-      }
-
-      .find-replace-widget.visible {
-        display: block;
-      }
-
-      .find-input-group,
-      .replace-input-group {
-        display: flex;
-        gap: 10px;
-        margin-bottom: 10px;
-      }
-
-      .find-replace-input {
-        flex: 1;
-        background: var(--bg-tertiary);
-        border: 1px solid var(--border-color);
-        color: var(--text-primary);
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-family: var(--font-code);
-        font-size: 0.85rem;
-        outline: none;
-      }
-
-      .find-replace-input:focus {
-        border-color: var(--ctp-blue);
-      }
-
-      .find-replace-btn {
-        background: var(--ctp-surface0);
-        border: 1px solid var(--border-color);
-        color: var(--text-secondary);
-        width: 28px;
-        height: 28px;
-        border-radius: 4px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.15s;
-      }
-
-      .find-replace-btn:hover {
-        background: var(--ctp-surface1);
-        color: var(--text-primary);
-      }
-
-      .find-options {
-        display: flex;
-        gap: 15px;
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-      }
-
-      .find-option {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        cursor: pointer;
-      }
-
-	      .find-option input {
-	        cursor: pointer;
-	      }
-
-	      .quick-open-results {
-	        max-height: 260px;
-	        overflow-y: auto;
-	        border: 1px solid var(--border-color);
-	        border-radius: 8px;
-	        margin-top: 12px;
-	        background: var(--ctp-crust);
-	      }
-
-	      .quick-open-item {
-	        padding: 9px 12px;
-	        border-bottom: 1px solid var(--border-color);
-	        cursor: pointer;
-	        display: flex;
-	        flex-direction: column;
-	        gap: 3px;
-	      }
-
-	      .quick-open-item:last-child {
-	        border-bottom: none;
-	      }
-
-	      .quick-open-item:hover,
-	      .quick-open-item.selected {
-	        background: var(--ctp-surface0);
-	      }
-
-	      .quick-open-name {
-	        color: var(--text-primary);
-	        font-family: var(--font-code);
-	        font-size: 0.85rem;
-	      }
-
-	      .quick-open-path {
-	        color: var(--text-secondary);
-	        font-size: 0.72rem;
-	      }
-
-      .toast-container {
-        position: fixed;
-        bottom: 40px;
-        right: 20px;
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        z-index: 10000;
-      }
-
-      .toast {
-        background: var(--ctp-mantle);
-        border: 1px solid var(--ctp-surface0);
-        border-radius: 6px;
-        padding: 10px 16px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-        animation: slideIn 0.2s ease;
-        min-width: 200px;
-      }
-
-      .toast.success {
-        border-left: 3px solid var(--ctp-green);
-      }
-      .toast.error {
-        border-left: 3px solid var(--ctp-red);
-      }
-      .toast.info {
-        border-left: 3px solid var(--ctp-blue);
-      }
-
-      @keyframes slideIn {
-        from {
-          opacity: 0;
-          transform: translateX(100%);
+        body {
+            width: 100vw;
+            height: 100vh;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            font-size: 13px;
         }
-        to {
-          opacity: 1;
-          transform: translateX(0);
+
+        .app-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
         }
-      }
 
-      .toast.success {
-        border-left-color: #4af626;
-      }
-      .toast.error {
-        border-left-color: #ff4444;
-      }
-      .toast.info {
-        border-left-color: #00fff7;
-      }
+        .activity-bar {
+            width: 48px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+            gap: 4px;
+            flex-shrink: 0;
+        }
 
-      #file-upload-input {
-        display: none;
-      }
+        .activity-btn {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            cursor: pointer;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s ease;
+            position: relative;
+        }
 
-      ::-webkit-scrollbar {
-        width: 8px;
-        height: 8px;
-      }
+        .activity-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
 
-      ::-webkit-scrollbar-track {
-        background: var(--bg-primary);
-      }
+        .activity-btn.active {
+            color: var(--text-primary);
+            background: var(--ctp-surface1);
+        }
 
-      ::-webkit-scrollbar-thumb {
-        background: var(--bg-tertiary);
-        border-radius: 4px;
-      }
+        .activity-btn.active::before {
+            content: "";
+            position: absolute;
+            left: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2px;
+            height: 20px;
+            background: var(--primary-color);
+            border-radius: 0 2px 2px 0;
+        }
 
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--primary-color);
-      }
+        .activity-btn::after {
+            content: attr(title);
+            position: absolute;
+            left: 55px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.8);
+            background: var(--primary-color);
+            color: #000;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: var(--font-ui);
+            font-size: 0.65rem;
+            font-weight: bold;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+        }
 
-      ::selection {
-        background: rgba(0, 0, 255, 0.3);
-      }
+        .activity-btn:hover::after {
+            opacity: 1;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .sidebar {
+            width: 250px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .sidebar.collapsed {
+            width: 0;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .sidebar-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.8rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .sidebar-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .sidebar-view {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar-view.hidden {
+            display: none;
+        }
+
+        .recent-files-section {
+            border-top: 1px solid var(--border-color);
+            margin-top: 100px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .recent-files-header {
+            padding: 4px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.1s;
+        }
+
+        .recent-files-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .recent-files-header i {
+            font-size: 0.7rem;
+            transition: transform 0.2s ease;
+            transform-origin: center;
+            width: 12px;
+            text-align: center;
+        }
+
+        .recent-files-list {
+            list-style: none;
+            padding: 0 5px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .recent-file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-family: var(--font-code);
+        }
+
+        .recent-file-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .recent-file-item i {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .search-panel {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow: hidden;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--ctp-crust);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--ctp-blue);
+        }
+
+        .search-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .search-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .search-option input {
+            cursor: pointer;
+        }
+
+        .search-results {
+            flex: 1;
+            overflow-y: auto;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+        }
+
+        .search-result-item {
+            padding: 8px 10px;
+            cursor: pointer;
+            border-radius: 4px;
+            border-bottom: 1px solid var(--ctp-surface0);
+        }
+
+        .search-result-item:hover {
+            background: var(--ctp-surface0);
+        }
+
+        .search-result-file {
+            color: var(--ctp-blue);
+            font-size: 0.75rem;
+            margin-bottom: 3px;
+        }
+
+        .search-result-line {
+            color: var(--text-secondary);
+        }
+
+        .search-result-match {
+            background: var(--ctp-yellow);
+            color: var(--ctp-crust);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        .file-explorer {
+            flex: 1;
+            overflow-y: auto;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.2s ease;
+        }
+
+        .file-explorer.drag-over-root {
+            background: rgba(0, 255, 247, 0.05);
+            outline: 2px dashed var(--ctp-teal);
+            outline-offset: -2px;
+            border-radius: 8px;
+        }
+
+        .file-tree {
+            list-style: none;
+            user-select: none;
+            position: relative;
+        }
+
+        .file-tree>li {
+            position: relative;
+        }
+
+        .folder-container {
+            position: relative;
+            width: 100%;
+            border-radius: 6px;
+        }
+
+        .folder-container.drag-over {
+            background: rgba(166, 227, 161, 0.1);
+            box-shadow: 0 0 0 2px var(--ctp-green);
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.15s ease;
+            position: relative;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            min-height: 22px;
+        }
+
+        .tree-line {
+            position: absolute;
+            background: var(--ctp-surface0);
+            pointer-events: none;
+        }
+
+        .tree-line-vertical {
+            width: 1px;
+            left: 16px;
+            top: -11px;
+            bottom: 17px;
+        }
+
+        .file-item.file {
+            padding-left: -20px !important;
+            margin-top: 6px;
+        }
+
+        .file-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .file-item.highlighted {
+            background: rgba(94, 129, 172, 0.4);
+        }
+
+        .file-item.selected {
+            background: rgba(94, 129, 172, 0.5);
+        }
+
+        .file-item.selected::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--ctp-blue);
+        }
+
+        .file-item.dragging {
+            opacity: 0.5;
+        }
+
+        .file-item.drag-over {
+            background: var(--ctp-surface0);
+            border: 1px dashed var(--ctp-teal);
+        }
+
+        .file-icon {
+            font-size: 0.9rem;
+            width: 16px;
+            text-align: center;
+        }
+
+        .file-item.folder .file-icon {
+            color: var(--ctp-peach);
+        }
+
+        .file-item.html .file-icon {
+            color: var(--ctp-red);
+        }
+
+        .file-item.css .file-icon {
+            color: var(--ctp-blue);
+        }
+
+        .file-item.js .file-icon {
+            color: var(--ctp-yellow);
+        }
+
+        .file-item.image .file-icon {
+            color: var(--ctp-green);
+        }
+
+        .file-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-item.editing .file-name {
+            display: none;
+        }
+
+        .file-item input {
+            width: 75%;
+            max-width: 75%;
+            height: 16px;
+            min-height: 16px;
+            background: var(--ctp-base);
+            border: 1px solid var(--ctp-blue);
+            color: var(--text-primary);
+            padding: inherit;
+            border-radius: 3px;
+            font-family: var(--font-code);
+            font-size: 0.70rem;
+            outline: none;
+            box-sizing: border-box;
+            line-height: 16px;
+        }
+
+        .file-children {
+            list-style: none;
+            padding-left: 0;
+            position: relative;
+        }
+
+        .file-children>li {
+            position: relative;
+        }
+
+        .file-children li::before {
+            content: "";
+            position: absolute;
+            left: 17px;
+            top: -4px;
+            bottom: 17px;
+            width: 1px;
+            background: var(--ctp-surface0);
+            pointer-events: none;
+        }
+
+        .file-children li:last-child::before {
+            bottom: 50%;
+        }
+
+        .expand-icon {
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            transition: transform 0.2s;
+            color: var(--text-secondary);
+            cursor: pointer;
+            z-index: 2;
+            margin-left: 8px;
+        }
+
+        .expand-icon:hover {
+            color: var(--text-primary);
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(90deg);
+        }
+
+        .expand-icon.placeholder {
+            visibility: hidden;
+        }
+
+        .main-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            position: relative;
+        }
+
+        .tab-bar {
+            display: flex;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            overflow-y: hidden;
+            height: 36px;
+            scrollbar-width: none;
+        }
+
+        .tab-bar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 12px;
+            background: var(--bg-tertiary);
+            border-right: 1px solid var(--border-color);
+            cursor: pointer;
+            min-width: 120px;
+            max-width: 200px;
+            transition: all 0.2s;
+            position: relative;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+        }
+
+        .tab:hover {
+            background: var(--bg-hover);
+        }
+
+        .tab.active {
+            background: var(--ctp-base);
+            border-bottom: 2px solid var(--ctp-blue);
+        }
+
+        .tab:hover {
+            background: var(--ctp-surface0);
+        }
+
+        .tab.unsaved .tab-name::after {
+            content: "";
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: cyan;
+            border-radius: 50%;
+            margin-left: 6px;
+            vertical-align: middle;
+        }
+
+        .tab-name {
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .tab-close {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            transition: all 0.2s;
+        }
+
+        .tab-close:hover {
+            background: var(--ctp-red);
+            color: var(--ctp-crust);
+        }
+
+        .editor-container {
+            flex: 1;
+            position: relative;
+            background: var(--bg-primary);
+            display: flex;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+        #monaco-editor {
+            flex: 1;
+            min-height: 0;
+            min-width: 0;
+        }
+
+        #monaco-editor-secondary {
+            display: none;
+            flex: 1;
+            min-height: 0;
+            min-width: 0;
+            border-left: 1px solid var(--border-color);
+        }
+
+        .editor-container.split-active #monaco-editor-secondary {
+            display: block;
+        }
+
+        .welcome-screen {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            z-index: 10;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--ctp-text);
+        }
+
+        .welcome-subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .welcome-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .welcome-btn {
+            padding: 10px 20px;
+            background: var(--ctp-surface0);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .welcome-btn:hover {
+            background: var(--ctp-surface1);
+            border-color: var(--ctp-overlay0);
+        }
+
+        .right-panel {
+            width: 350px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+
+        .right-panel.collapsed {
+            width: 36px;
+            min-width: 36px;
+        }
+
+        .right-panel.collapsed .right-panel-content {
+            display: none;
+        }
+
+        .right-panel.collapsed .right-panel-title {
+            display: none;
+        }
+
+        .right-panel-header {
+            padding: 12px 10px;
+            border-bottom: 1px solid var(--border-color);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--ctp-mantle);
+            min-height: 44px;
+        }
+
+        .right-panel.collapsed .right-panel-header {
+            justify-content: center;
+            padding: 12px 8px;
+            border-left: none;
+        }
+
+        .right-panel-title {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .right-panel-content {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .right-panel-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .right-panel.collapsed .right-panel-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .right-panel .preview-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .right-panel .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .right-panel .preview-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .bottom-panel {
+            height: 200px;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            transition: height 0.3s ease;
+            position: relative;
+        }
+
+        .bottom-panel.collapsed {
+            height: 30px;
+        }
+
+        .bottom-panel.collapsed .panel-content {
+            display: none;
+        }
+
+        .panel-tabs {
+            display: flex;
+            background: var(--bg-tertiary);
+            height: 30px;
+            align-items: center;
+            padding: 0 10px;
+            gap: 5px;
+        }
+
+        .panel-tab {
+            padding: 5px 12px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .panel-tab:hover {
+            color: var(--text-primary);
+            background: var(--ctp-surface0);
+        }
+
+        .panel-tab.active {
+            background: var(--ctp-mantle);
+            color: var(--ctp-text);
+            border-bottom: 2px solid var(--ctp-blue);
+        }
+
+        .panel-toggle {
+            margin-left: auto;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .resize-handle {
+            position: absolute;
+            z-index: 100;
+            transition: background 0.15s;
+        }
+
+        .resize-handle:hover,
+        .resize-handle.resizing {
+            background: var(--ctp-blue);
+        }
+
+        .sidebar .resize-handle {
+            right: -3px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+        }
+
+        .sidebar.collapsed .resize-handle {
+            display: none;
+        }
+
+        .bottom-panel .resize-handle {
+            top: -3px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            cursor: row-resize;
+        }
+
+        .bottom-panel.collapsed .resize-handle {
+            display: none;
+        }
+
+        .right-panel .resize-handle {
+            left: -3px;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            cursor: col-resize;
+        }
+
+        .right-panel.collapsed .resize-handle {
+            display: none;
+        }
+
+        .sidebar.resizing,
+        .bottom-panel.resizing,
+        .right-panel.resizing {
+            transition: none !important;
+        }
+
+        .panel-toggle:hover {
+            color: var(--primary-color);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+        }
+
+        .panel-section {
+            flex: 1;
+            display: none;
+            overflow: auto;
+        }
+
+        .panel-section.active {
+            display: block;
+        }
+
+        .terminal {
+            background: var(--terminal-bg);
+            padding: 10px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .terminal-line {
+            margin-bottom: 4px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-timestamp {
+            color: var(--text-secondary);
+            opacity: 0.5;
+            font-size: 0.75rem;
+        }
+
+        .terminal-type-log {
+            color: var(--ctp-green);
+        }
+
+        .terminal-type-warn {
+            color: var(--ctp-yellow);
+        }
+
+        .terminal-type-error {
+            color: var(--ctp-red);
+        }
+
+        .terminal-type-info {
+            color: var(--ctp-sapphire);
+        }
+
+        .terminal-input-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .terminal-prompt {
+            color: var(--ctp-green);
+            font-weight: 600;
+        }
+
+        .terminal-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .problems-container {
+            padding: 10px;
+            overflow-y: auto;
+            height: 100%;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+        }
+
+        .problems-empty {
+            color: var(--text-secondary);
+            text-align: center;
+            padding: 40px 20px;
+            opacity: 0.7;
+        }
+
+        .problem-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .problem-item:hover {
+            background: var(--ctp-surface0);
+        }
+
+        .problem-icon {
+            font-size: 0.9rem;
+            margin-top: 2px;
+        }
+
+        .problem-icon.error {
+            color: var(--ctp-red);
+        }
+
+        .problem-icon.warning {
+            color: var(--ctp-yellow);
+        }
+
+        .problem-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .problem-message {
+            color: var(--text-primary);
+            margin-bottom: 2px;
+            word-break: break-word;
+        }
+
+        .problem-location {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+        }
+
+        .problems-count {
+            display: flex;
+            gap: 15px;
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--ctp-mantle);
+            font-size: 0.8rem;
+        }
+
+        .problems-count-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .problems-count-item.errors {
+            color: var(--ctp-red);
+        }
+
+        .problems-count-item.warnings {
+            color: var(--ctp-yellow);
+        }
+
+        .preview-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .preview-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: white;
+        }
+
+        .preview-toolbar {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .preview-btn {
+            padding: 6px 12px;
+            background: var(--ctp-surface0);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preview-btn:hover {
+            background: var(--ctp-surface1);
+            border-color: var(--ctp-overlay0);
+        }
+
+        .status-bar {
+            height: 22px;
+            background: var(--ctp-blue);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            font-size: 0.75rem;
+            color: var(--ctp-crust);
+            font-family: var(--font-ui);
+        }
+
+        .status-section {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 3px;
+            transition: background 0.15s;
+        }
+
+        .status-item:hover {
+            background: rgba(0, 0, 0, 0.15);
+        }
+
+        .status-item.active {
+            color: var(--ctp-green);
+            background: rgba(166, 227, 161, 0.12);
+        }
+
+        .context-menu {
+            position: absolute;
+            background: var(--ctp-mantle);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 6px;
+            padding: 4px 0;
+            min-width: 140px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            z-index: 10000;
+            display: none;
+        }
+
+        .context-menu.visible {
+            display: block;
+        }
+
+        .context-item {
+            padding: 8px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+
+        .context-item:hover {
+            background: rgba(0, 0, 255, 0.1);
+            color: var(--secondary-color);
+        }
+
+        .context-separator {
+            height: 1px;
+            background: var(--border-color);
+            margin: 5px 0;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--ctp-mantle);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            animation: modalSlideIn 0.2s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--ctp-surface0);
+        }
+
+        .modal-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--ctp-text);
+            margin: 0;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: var(--ctp-overlay0);
+            font-size: 1.2rem;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.15s;
+        }
+
+        .modal-close:hover {
+            background: var(--ctp-surface0);
+            color: var(--ctp-text);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--ctp-subtext0);
+            margin-bottom: 8px;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--ctp-crust);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 8px;
+            color: var(--ctp-text);
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.15s;
+            box-sizing: border-box;
+        }
+
+        .modal-input:focus {
+            border-color: var(--ctp-blue);
+            background: var(--ctp-base);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px 20px;
+            border-top: 1px solid var(--ctp-surface0);
+        }
+
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.15s;
+        }
+
+        .modal-btn-primary {
+            background: var(--ctp-blue);
+            color: var(--ctp-crust);
+        }
+
+        .modal-btn-primary:hover {
+            background: var(--ctp-sapphire);
+        }
+
+        #deleteDataBtn {
+            background: red;
+            color: white;
+        }
+
+        #deleteDataBtn:hover {
+            background: #ff1b1b;
+        }
+
+        .modal-btn-secondary {
+            background: transparent;
+            color: var(--ctp-subtext0);
+            border: 1px solid var(--ctp-surface0);
+        }
+
+        .modal-btn-secondary:hover {
+            background: var(--ctp-surface0);
+            color: var(--ctp-text);
+        }
+
+        .settings-section {
+            margin-bottom: 20px;
+        }
+
+        .settings-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .settings-slider {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--ctp-surface0);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .settings-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--ctp-blue);
+            cursor: pointer;
+        }
+
+        .settings-value {
+            min-width: 40px;
+            color: var(--ctp-text);
+            font-size: 0.9rem;
+        }
+
+        .settings-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="checkbox"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--ctp-surface0);
+            border-radius: 3px;
+            background: var(--ctp-base);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        input[type="checkbox"]:hover {
+            border-color: var(--ctp-blue);
+            background: var(--ctp-surface0);
+        }
+
+        input[type="checkbox"]:checked {
+            background: var(--ctp-blue);
+            border-color: var(--ctp-blue);
+        }
+
+        input[type="checkbox"]:checked::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 5px;
+            width: 4px;
+            height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+            display: block;
+        }
+
+        input[type="checkbox"]:focus {
+            outline: 2px solid var(--ctp-blue);
+            outline-offset: 2px;
+        }
+
+        .settings-toggle input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .find-option input[type="checkbox"],
+        .search-option input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin-right: 6px;
+        }
+
+        .find-option input[type="checkbox"]:checked::after,
+        .search-option input[type="checkbox"]:checked::after {
+            font-size: 9px;
+        }
+
+        .settings-toggle label {
+            color: var(--ctp-text);
+            cursor: pointer;
+        }
+
+        .shortcuts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--ctp-surface0);
+        }
+
+        .shortcut-item:last-child {
+            border-bottom: none;
+        }
+
+        .shortcut-keys {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .shortcut-keys kbd {
+            background: var(--ctp-surface0);
+            border: 1px solid var(--ctp-surface1);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-family: var(--font-code);
+            font-size: 0.8rem;
+            color: var(--ctp-text);
+        }
+
+        .shortcut-desc {
+            color: var(--ctp-subtext0);
+            font-size: 0.9rem;
+        }
+
+        .color-picker-widget {
+            position: absolute;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 30px var(--accent-glow);
+            z-index: 1000;
+            display: none;
+            min-width: 220px;
+        }
+
+        .color-picker-widget.visible {
+            display: block;
+        }
+
+        .color-picker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .color-format-toggle {
+            background: var(--ctp-surface0);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-family: var(--font-ui);
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .color-format-toggle:hover {
+            background: var(--ctp-surface1);
+            border-color: var(--ctp-overlay0);
+        }
+
+        .color-picker-area {
+            width: 100%;
+            height: 150px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+            cursor: crosshair;
+            background: linear-gradient(to bottom, transparent, #000), linear-gradient(to right, #fff, transparent);
+        }
+
+        .color-picker-thumb {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid white;
+            border-radius: 50%;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+
+        .color-hue-slider {
+            width: 100%;
+            height: 20px;
+            border-radius: 10px;
+            background: linear-gradient(to right, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+            margin-bottom: 10px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .color-hue-thumb {
+            position: absolute;
+            top: -2px;
+            width: 10px;
+            height: 24px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        .color-value-input {
+            width: 100%;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px;
+            border-radius: 6px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .color-preview {
+            width: 100%;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            margin-top: 10px;
+        }
+
+        .find-replace-widget {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow:
+                0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 30px var(--accent-glow);
+            z-index: 100;
+            display: none;
+            min-width: 300px;
+        }
+
+        .find-replace-widget.visible {
+            display: block;
+        }
+
+        .find-input-group,
+        .replace-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .find-replace-input {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .find-replace-input:focus {
+            border-color: var(--ctp-blue);
+        }
+
+        .find-replace-btn {
+            background: var(--ctp-surface0);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            width: 28px;
+            height: 28px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .find-replace-btn:hover {
+            background: var(--ctp-surface1);
+            color: var(--text-primary);
+        }
+
+        .find-options {
+            display: flex;
+            gap: 15px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .find-option {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .find-option input {
+            cursor: pointer;
+        }
+
+        .quick-open-results {
+            max-height: 260px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 12px;
+            background: var(--ctp-crust);
+        }
+
+        .quick-open-item {
+            padding: 9px 12px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .quick-open-item:last-child {
+            border-bottom: none;
+        }
+
+        .quick-open-item:hover,
+        .quick-open-item.selected {
+            background: var(--ctp-surface0);
+        }
+
+        .quick-open-name {
+            color: var(--text-primary);
+            font-family: var(--font-code);
+            font-size: 0.85rem;
+        }
+
+        .quick-open-path {
+            color: var(--text-secondary);
+            font-size: 0.72rem;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 40px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10000;
+        }
+
+        .toast {
+            background: var(--ctp-mantle);
+            border: 1px solid var(--ctp-surface0);
+            border-radius: 6px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            animation: slideIn 0.2s ease;
+            min-width: 200px;
+        }
+
+        .toast.success {
+            border-left: 3px solid var(--ctp-green);
+        }
+
+        .toast.error {
+            border-left: 3px solid var(--ctp-red);
+        }
+
+        .toast.info {
+            border-left: 3px solid var(--ctp-blue);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.success {
+            border-left-color: #4af626;
+        }
+
+        .toast.error {
+            border-left-color: #ff4444;
+        }
+
+        .toast.info {
+            border-left-color: #00fff7;
+        }
+
+        #file-upload-input {
+            display: none;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-color);
+        }
+
+        ::selection {
+            background: rgba(0, 0, 255, 0.3);
+        }
     </style>
-  </head>
-  <body>
+</head>
+
+<body>
     <div class="app-container">
-      <div class="activity-bar">
-        <button class="activity-btn active" id="btn-explorer" title="Explorer"><i class="fa-solid fa-folder-open"></i></button>
-        <button class="activity-btn" id="btn-search" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
-        <div style="flex: 1"></div>
-        <button class="activity-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
-      </div>
-
-      <div class="sidebar" id="sidebar">
-        <div class="resize-handle" data-resize="sidebar"></div>
-
-        <div class="sidebar-view" id="sidebar-explorer">
-          <div class="sidebar-header">
-            <span class="sidebar-title">Explorer</span>
-            <div class="sidebar-actions">
-              <button class="sidebar-btn" id="btn-new-file" title="New File"><i class="fa-solid fa-file-circle-plus"></i></button>
-              <button class="sidebar-btn" id="btn-new-folder" title="New Folder"><i class="fa-solid fa-folder-plus"></i></button>
-              <button class="sidebar-btn" id="btn-upload" title="Upload File"><i class="fa-solid fa-cloud-arrow-up"></i></button>
-              <button class="sidebar-btn" id="btn-collapse-sidebar" title="Collapse"><i class="fa-solid fa-angles-left"></i></button>
-            </div>
-          </div>
-
-          <div class="file-explorer" id="file-explorer">
-            <ul class="file-tree" id="file-tree"></ul>
-          </div>
+        <div class="activity-bar">
+            <button class="activity-btn active" id="btn-explorer" title="Explorer"><i class="fa-solid fa-folder-open"></i></button>
+            <button class="activity-btn" id="btn-search" title="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+            <div style="flex: 1"></div>
+            <button class="activity-btn" id="btn-settings" title="Settings"><i class="fa-solid fa-gear"></i></button>
         </div>
 
-        <div class="sidebar-view hidden" id="sidebar-search">
-          <div class="sidebar-header">
-            <span class="sidebar-title">Search</span>
-            <div class="sidebar-actions">
-              <button class="sidebar-btn" id="btn-collapse-sidebar-search" title="Collapse"><i class="fa-solid fa-angles-left"></i></button>
-            </div>
-          </div>
-          <div class="search-panel">
-            <input type="text" class="search-input" id="global-search-input" placeholder="Search in files..." />
-            <div class="search-options">
-              <label class="search-option"> <input type="checkbox" id="search-case-sensitive" /> Match Case </label>
-              <label class="search-option"> <input type="checkbox" id="search-whole-word" /> Whole Word </label>
-            </div>
-            <div class="search-results" id="search-results"></div>
-          </div>
-        </div>
-      </div>
+        <div class="sidebar" id="sidebar">
+            <div class="resize-handle" data-resize="sidebar"></div>
 
-      <div class="main-area">
-        <div class="tab-bar" id="tab-bar"></div>
-
-	        <div class="editor-container">
-	          <div id="monaco-editor"></div>
-	          <div id="monaco-editor-secondary"></div>
-
-	          <div class="welcome-screen" id="welcome-screen">
-            <h1 class="welcome-title">GX Code</h1>
-            <p class="welcome-subtitle">The ultimate coding experience for simple projects</p>
-            <div class="welcome-actions">
-              <button class="welcome-btn" id="btn-welcome-new"><i class="fa-solid fa-file"></i> New File</button>
-              <button class="welcome-btn" id="btn-welcome-folder"><i class="fa-solid fa-folder-plus"></i> New Folder</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="bottom-panel" id="bottom-panel">
-          <div class="resize-handle" data-resize="bottom"></div>
-          <div class="panel-tabs">
-            <button class="panel-tab active" data-panel="terminal"><i class="fa-solid fa-terminal"></i> Terminal</button>
-            <button class="panel-tab" data-panel="problems"><i class="fa-solid fa-circle-exclamation"></i> Problems</button>
-            <button class="panel-toggle" id="btn-toggle-panel"><i class="fa-solid fa-chevron-down"></i></button>
-          </div>
-          <div class="panel-content">
-            <div class="panel-section active" id="panel-terminal">
-              <div class="terminal" id="terminal">
-                <div class="terminal-line">
-                  <span class="terminal-timestamp">[00:00:00]</span>
-                  <span class="terminal-type-info">GX Terminal v1.0 - User program output only</span>
+            <div class="sidebar-view" id="sidebar-explorer">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Explorer</span>
+                    <div class="sidebar-actions">
+                        <button class="sidebar-btn" id="btn-new-file" title="New File"><i class="fa-solid fa-file-circle-plus"></i></button>
+                        <button class="sidebar-btn" id="btn-new-folder" title="New Folder"><i class="fa-solid fa-folder-plus"></i></button>
+                        <button class="sidebar-btn" id="btn-upload" title="Upload File"><i class="fa-solid fa-cloud-arrow-up"></i></button>
+                        <button class="sidebar-btn" id="btn-collapse-sidebar" title="Collapse"><i class="fa-solid fa-angles-left"></i></button>
+                    </div>
                 </div>
-              </div>
-            </div>
-            <div class="panel-section" id="panel-problems">
-              <div class="problems-count">
-                <div class="problems-count-item errors">
-                  <i class="fa-solid fa-circle-xmark"></i>
-                  <span id="problems-error-count">0 Errors</span>
-                </div>
-                <div class="problems-count-item warnings">
-                  <i class="fa-solid fa-triangle-exclamation"></i>
-                  <span id="problems-warning-count">0 Warnings</span>
-                </div>
-              </div>
-              <div class="problems-container" id="problems-list">
-                <div class="problems-empty">
-                  <i class="fa-solid fa-check-circle" style="font-size: 2rem; margin-bottom: 10px; display: block"></i>
-                  No problems detected
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-      <div class="right-panel" id="right-panel">
-        <div class="resize-handle" data-resize="right"></div>
-        <div class="right-panel-header">
-          <span class="right-panel-title"><i class="fa-solid fa-eye"></i> Live Preview</span>
-          <div class="right-panel-actions">
-            <button class="sidebar-btn" id="btn-refresh-preview" title="Refresh Preview"><i class="fa-solid fa-rotate"></i></button>
-            <button class="sidebar-btn" id="btn-open-new-tab" title="Open in New Tab"><i class="fa-solid fa-external-link-alt"></i></button>
-            <button class="sidebar-btn" id="btn-collapse-preview" title="Collapse Panel"><i class="fa-solid fa-angles-right"></i></button>
-          </div>
+                <div class="file-explorer" id="file-explorer">
+                    <ul class="file-tree" id="file-tree"></ul>
+                </div>
+            </div>
+
+            <div class="sidebar-view hidden" id="sidebar-search">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Search</span>
+                    <div class="sidebar-actions">
+                        <button class="sidebar-btn" id="btn-collapse-sidebar-search" title="Collapse"><i class="fa-solid fa-angles-left"></i></button>
+                    </div>
+                </div>
+                <div class="search-panel">
+                    <input type="text" class="search-input" id="global-search-input" placeholder="Search in files..." />
+                    <div class="search-options">
+                        <label class="search-option"> <input type="checkbox" id="search-case-sensitive" /> Match Case </label>
+                        <label class="search-option"> <input type="checkbox" id="search-whole-word" /> Whole Word </label>
+                    </div>
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
         </div>
-        <div class="right-panel-content">
-          <div class="preview-container">
-            <iframe class="preview-iframe" id="preview-iframe"></iframe>
-          </div>
+
+        <div class="main-area">
+            <div class="tab-bar" id="tab-bar"></div>
+
+            <div class="editor-container">
+                <div id="monaco-editor"></div>
+                <div id="monaco-editor-secondary"></div>
+
+                <div class="welcome-screen" id="welcome-screen">
+                    <h1 class="welcome-title">GX Code</h1>
+                    <p class="welcome-subtitle">The ultimate coding experience for simple projects</p>
+                    <div class="welcome-actions">
+                        <button class="welcome-btn" id="btn-welcome-new"><i class="fa-solid fa-file"></i> New File</button>
+                        <button class="welcome-btn" id="btn-welcome-folder"><i class="fa-solid fa-folder-plus"></i> New Folder</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-panel" id="bottom-panel">
+                <div class="resize-handle" data-resize="bottom"></div>
+                <div class="panel-tabs">
+                    <button class="panel-tab active" data-panel="terminal"><i class="fa-solid fa-terminal"></i> Terminal</button>
+                    <button class="panel-tab" data-panel="problems"><i class="fa-solid fa-circle-exclamation"></i> Problems</button>
+                    <button class="panel-toggle" id="btn-toggle-panel"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+                <div class="panel-content">
+                    <div class="panel-section active" id="panel-terminal">
+                        <div class="terminal" id="terminal">
+                            <div class="terminal-line">
+                                <span class="terminal-timestamp">[00:00:00]</span>
+                                <span class="terminal-type-info">GX Terminal v1.0 - User program output only</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-section" id="panel-problems">
+                        <div class="problems-count">
+                            <div class="problems-count-item errors">
+                                <i class="fa-solid fa-circle-xmark"></i>
+                                <span id="problems-error-count">0 Errors</span>
+                            </div>
+                            <div class="problems-count-item warnings">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                <span id="problems-warning-count">0 Warnings</span>
+                            </div>
+                        </div>
+                        <div class="problems-container" id="problems-list">
+                            <div class="problems-empty">
+                                <i class="fa-solid fa-check-circle" style="font-size: 2rem; margin-bottom: 10px; display: block"></i>
+                                No problems detected
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
+
+        <div class="right-panel" id="right-panel">
+            <div class="resize-handle" data-resize="right"></div>
+            <div class="right-panel-header">
+                <span class="right-panel-title"><i class="fa-solid fa-eye"></i> Live Preview</span>
+                <div class="right-panel-actions">
+                    <button class="sidebar-btn" id="btn-refresh-preview" title="Refresh Preview"><i class="fa-solid fa-rotate"></i></button>
+                    <button class="sidebar-btn" id="btn-open-new-tab" title="Open in New Tab"><i class="fa-solid fa-external-link-alt"></i></button>
+                    <button class="sidebar-btn" id="btn-collapse-preview" title="Collapse Panel"><i class="fa-solid fa-angles-right"></i></button>
+                </div>
+            </div>
+            <div class="right-panel-content">
+                <div class="preview-container">
+                    <iframe class="preview-iframe" id="preview-iframe"></iframe>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="status-bar">
-      <div class="status-section">
-        <div class="status-item" id="status-cursor">Ln 1, Col 1</div>
-        <div class="status-item" id="status-encoding">UTF-8</div>
-        <div class="status-item" id="status-language">Plain Text</div>
-        <div class="status-item" id="status-file-size">0 B</div>
-      </div>
-	      <div class="status-section">
-	        <div class="status-item" id="status-prettier"><i class="fa-solid fa-wand-magic-sparkles"></i> Prettier</div>
-	        <div class="status-item" id="status-autosave"><i class="fa-solid fa-floppy-disk"></i> Auto Save</div>
-	        <div class="status-item" id="status-notification"><i class="fa-solid fa-bell"></i></div>
-	      </div>
-	    </div>
+        <div class="status-section">
+            <div class="status-item" id="status-cursor">Ln 1, Col 1</div>
+            <div class="status-item" id="status-encoding">UTF-8</div>
+            <div class="status-item" id="status-language">Plain Text</div>
+            <div class="status-item" id="status-file-size">0 B</div>
+        </div>
+        <div class="status-section">
+            <div class="status-item" id="status-prettier"><i class="fa-solid fa-wand-magic-sparkles"></i> Prettier</div>
+            <div class="status-item" id="status-autosave"><i class="fa-solid fa-floppy-disk"></i> Auto Save</div>
+            <div class="status-item" id="status-notification"><i class="fa-solid fa-bell"></i></div>
+        </div>
+    </div>
 
     <div class="context-menu" id="context-menu">
-      <div class="context-item" data-action="rename"><i class="fa-solid fa-pen"></i> Rename</div>
-      <div class="context-item" data-action="delete"><i class="fa-solid fa-trash"></i> Delete</div>
-      <div class="context-separator"></div>
-      <div class="context-item" data-action="duplicate"><i class="fa-solid fa-copy"></i> Duplicate</div>
-      <div class="context-item" data-action="download"><i class="fa-solid fa-download"></i> Download</div>
-      <div class="context-item" data-action="copyPath"><i class="fa-solid fa-link"></i> Copy Path</div>
+        <div class="context-item" data-action="rename"><i class="fa-solid fa-pen"></i> Rename</div>
+        <div class="context-item" data-action="delete"><i class="fa-solid fa-trash"></i> Delete</div>
+        <div class="context-separator"></div>
+        <div class="context-item" data-action="duplicate"><i class="fa-solid fa-copy"></i> Duplicate</div>
+        <div class="context-item" data-action="download"><i class="fa-solid fa-download"></i> Download</div>
+        <div class="context-item" data-action="copyPath"><i class="fa-solid fa-link"></i> Copy Path</div>
     </div>
 
     <div class="modal-overlay" id="input-modal">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 class="modal-title" id="modal-title">New File</h3>
-          <button class="modal-close" id="modal-close"><i class="fa-solid fa-times"></i></button>
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modal-title">New File</h3>
+                <button class="modal-close" id="modal-close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <label class="modal-label" id="modal-label">File name:</label>
+                <input type="text" class="modal-input" id="modal-input" placeholder="Enter name..." />
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="modal-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="modal-confirm">Create</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <label class="modal-label" id="modal-label">File name:</label>
-          <input type="text" class="modal-input" id="modal-input" placeholder="Enter name..." />
-        </div>
-        <div class="modal-footer">
-          <button class="modal-btn modal-btn-secondary" id="modal-cancel">Cancel</button>
-          <button class="modal-btn modal-btn-primary" id="modal-confirm">Create</button>
-        </div>
-      </div>
     </div>
 
     <div class="modal-overlay" id="confirm-modal">
-      <div class="modal">
-        <div class="modal-header">
-          <h3 class="modal-title" id="confirm-modal-title">Confirm</h3>
-          <button class="modal-close" id="confirm-modal-close"><i class="fa-solid fa-times"></i></button>
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="confirm-modal-title">Confirm</h3>
+                <button class="modal-close" id="confirm-modal-close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-modal-message" style="margin: 0; color: var(--ctp-text)">Are you sure?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="confirm-modal-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="confirm-modal-confirm">Confirm</button>
+            </div>
         </div>
-        <div class="modal-body">
-          <p id="confirm-modal-message" style="margin: 0; color: var(--ctp-text)">Are you sure?</p>
-        </div>
-        <div class="modal-footer">
-          <button class="modal-btn modal-btn-secondary" id="confirm-modal-cancel">Cancel</button>
-          <button class="modal-btn modal-btn-primary" id="confirm-modal-confirm">Confirm</button>
-        </div>
-      </div>
     </div>
 
     <div class="modal-overlay" id="settings-modal">
-      <div class="modal" style="max-width: 500px">
-        <div class="modal-header">
-          <h3 class="modal-title">Settings</h3>
-          <button class="modal-close" id="settings-modal-close"><i class="fa-solid fa-times"></i></button>
-        </div>
-        <div class="modal-body">
-          <div class="settings-section">
-            <label class="modal-label">Font Size</label>
-            <div class="settings-control">
-              <input type="range" id="settings-font-size" min="10" max="24" value="14" class="settings-slider" />
-              <span id="settings-font-size-value" class="settings-value">14px</span>
+        <div class="modal" style="max-width: 500px">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+                <button class="modal-close" id="settings-modal-close"><i class="fa-solid fa-times"></i></button>
             </div>
-          </div>
-          <div class="settings-section">
-            <label class="modal-label">Word Wrap</label>
-            <div class="settings-toggle">
-              <input type="checkbox" id="settings-word-wrap" checked />
-              <label for="settings-word-wrap">Enabled</label>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <label class="modal-label">Font Size</label>
+                    <div class="settings-control">
+                        <input type="range" id="settings-font-size" min="10" max="24" value="14" class="settings-slider" />
+                        <span id="settings-font-size-value" class="settings-value">14px</span>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <label class="modal-label">Word Wrap</label>
+                    <div class="settings-toggle">
+                        <input type="checkbox" id="settings-word-wrap" checked />
+                        <label for="settings-word-wrap">Enabled</label>
+                    </div>
+                </div>
+                <div class="settings-section">
+                    <label class="modal-label">Minimap</label>
+                    <div class="settings-toggle">
+                        <input type="checkbox" id="settings-minimap" checked />
+                        <label for="settings-minimap">Enabled</label>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <label class="modal-label">Data Removal</label>
+                    <div class="settings-toggle">
+                        <button class="modal-btn" id="deleteDataBtn"><strong>DELETE ALL DATA</strong></button>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="settings-section">
-            <label class="modal-label">Minimap</label>
-            <div class="settings-toggle">
-              <input type="checkbox" id="settings-minimap" checked />
-              <label for="settings-minimap">Enabled</label>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-primary" id="settings-modal-save">Save</button>
             </div>
-          </div>
         </div>
-        <div class="modal-footer">
-          <button class="modal-btn modal-btn-primary" id="settings-modal-save">Save</button>
-        </div>
-      </div>
     </div>
 
-	    <div class="modal-overlay" id="shortcuts-modal">
-	      <div class="modal" style="max-width: 450px">
-        <div class="modal-header">
-          <h3 class="modal-title">Keyboard Shortcuts</h3>
-          <button class="modal-close" id="shortcuts-modal-close"><i class="fa-solid fa-times"></i></button>
+    <div class="modal-overlay" id="dataRemoveApproval-modal">
+        <div class="modal" style="max-width: 520px">
+            <div class="modal-header">
+                <h3 class="modal-title">Data Removal</h3>
+                <button class="modal-close" id="dataRemoveApproval-close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <h3 class="modal-title">Are you sure you want to delete <strong>ALL DATA?</strong></h3>
+                <label class="modal-label" style="margin-top: 5px">You cannot undo this</label>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="data-removal-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="data-removal-confirm">Open</button> <!-- Bookmark 2 -->
+            </div>
         </div>
-        <div class="modal-body">
-          <div class="shortcuts-list">
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>S</kbd></span>
-              <span class="shortcut-desc">Save File</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>F</kbd></span>
-              <span class="shortcut-desc">Find</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>H</kbd></span>
-              <span class="shortcut-desc">Find & Replace</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>P</kbd></span>
-              <span class="shortcut-desc">Quick Open File</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>\</kbd></span>
-              <span class="shortcut-desc">Split Editor</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Q</kbd></span>
-              <span class="shortcut-desc">Show Shortcuts</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd></span>
-              <span class="shortcut-desc">Search in Files</span>
-            </div>
-            <div class="shortcut-item">
-              <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></span>
-              <span class="shortcut-desc">Format Document</span>
-            </div>
-          </div>
-	        </div>
-	      </div>
-	    </div>
+    </div>
 
-	    <div class="modal-overlay" id="quick-open-modal">
-	      <div class="modal" style="max-width: 520px">
-	        <div class="modal-header">
-	          <h3 class="modal-title">Quick Open</h3>
-	          <button class="modal-close" id="quick-open-close"><i class="fa-solid fa-times"></i></button>
-	        </div>
-	        <div class="modal-body">
-	          <input type="text" class="modal-input" id="quick-open-input" placeholder="Type a file name..." />
-	          <div class="quick-open-results" id="quick-open-results"></div>
-	        </div>
-	        <div class="modal-footer">
-	          <button class="modal-btn modal-btn-secondary" id="quick-open-cancel">Cancel</button>
-	          <button class="modal-btn modal-btn-primary" id="quick-open-confirm">Open</button>
-	        </div>
-	      </div>
-	    </div>
+    <div class="modal-overlay" id="shortcuts-modal">
+        <div class="modal" style="max-width: 450px">
+            <div class="modal-header">
+                <h3 class="modal-title">Keyboard Shortcuts</h3>
+                <button class="modal-close" id="shortcuts-modal-close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="shortcuts-list">
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>S</kbd></span>
+                        <span class="shortcut-desc">Save File</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>F</kbd></span>
+                        <span class="shortcut-desc">Find</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>H</kbd></span>
+                        <span class="shortcut-desc">Find & Replace</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>P</kbd></span>
+                        <span class="shortcut-desc">Quick Open File</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>\</kbd></span>
+                        <span class="shortcut-desc">Split Editor</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Q</kbd></span>
+                        <span class="shortcut-desc">Show Shortcuts</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>F</kbd></span>
+                        <span class="shortcut-desc">Search in Files</span>
+                    </div>
+                    <div class="shortcut-item">
+                        <span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>X</kbd></span>
+                        <span class="shortcut-desc">Format Document</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="quick-open-modal">
+        <div class="modal" style="max-width: 520px">
+            <div class="modal-header">
+                <h3 class="modal-title">Quick Open</h3>
+                <button class="modal-close" id="quick-open-close"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <input type="text" class="modal-input" id="quick-open-input" placeholder="Type a file name..." />
+                <div class="quick-open-results" id="quick-open-results"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-secondary" id="quick-open-cancel">Cancel</button>
+                <button class="modal-btn modal-btn-primary" id="quick-open-confirm">Open</button>
+            </div>
+        </div>
+    </div>
 
     <div class="color-picker-widget" id="color-picker">
-      <div class="color-picker-header">
-        <span class="color-format-toggle" id="color-format-toggle">HEX</span>
-      </div>
-      <div class="color-picker-area" id="color-picker-area">
-        <div class="color-picker-thumb" id="color-picker-thumb"></div>
-      </div>
-      <div class="color-hue-slider" id="color-hue-slider">
-        <div class="color-hue-thumb" id="color-hue-thumb"></div>
-      </div>
-      <input type="text" class="color-value-input" id="color-value-input" value="#0000ff" />
-      <div class="color-preview" id="color-preview"></div>
+        <div class="color-picker-header">
+            <span class="color-format-toggle" id="color-format-toggle">HEX</span>
+        </div>
+        <div class="color-picker-area" id="color-picker-area">
+            <div class="color-picker-thumb" id="color-picker-thumb"></div>
+        </div>
+        <div class="color-hue-slider" id="color-hue-slider">
+            <div class="color-hue-thumb" id="color-hue-thumb"></div>
+        </div>
+        <input type="text" class="color-value-input" id="color-value-input" value="#0000ff" />
+        <div class="color-preview" id="color-preview"></div>
     </div>
 
     <div class="find-replace-widget" id="find-replace-widget">
-      <div class="find-input-group">
-        <input type="text" class="find-replace-input" id="find-input" placeholder="Find..." />
-        <button class="find-replace-btn" id="btn-find-prev"><i class="fa-solid fa-chevron-up"></i></button>
-        <button class="find-replace-btn" id="btn-find-next"><i class="fa-solid fa-chevron-down"></i></button>
-      </div>
-      <div class="replace-input-group">
-        <input type="text" class="find-replace-input" id="replace-input" placeholder="Replace..." />
-        <button class="find-replace-btn" id="btn-replace"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
-        <button class="find-replace-btn" id="btn-replace-all"><i class="fa-solid fa-arrows-rotate"></i></button>
-      </div>
-      <div class="find-options">
-        <label class="find-option"> <input type="checkbox" id="find-case-sensitive" /> Match Case </label>
-        <label class="find-option"> <input type="checkbox" id="find-regex" /> Regex </label>
-      </div>
+        <div class="find-input-group">
+            <input type="text" class="find-replace-input" id="find-input" placeholder="Find..." />
+            <button class="find-replace-btn" id="btn-find-prev"><i class="fa-solid fa-chevron-up"></i></button>
+            <button class="find-replace-btn" id="btn-find-next"><i class="fa-solid fa-chevron-down"></i></button>
+        </div>
+        <div class="replace-input-group">
+            <input type="text" class="find-replace-input" id="replace-input" placeholder="Replace..." />
+            <button class="find-replace-btn" id="btn-replace"><i class="fa-solid fa-arrow-right-arrow-left"></i></button>
+            <button class="find-replace-btn" id="btn-replace-all"><i class="fa-solid fa-arrows-rotate"></i></button>
+        </div>
+        <div class="find-options">
+            <label class="find-option"> <input type="checkbox" id="find-case-sensitive" /> Match Case </label>
+            <label class="find-option"> <input type="checkbox" id="find-regex" /> Regex </label>
+        </div>
     </div>
 
     <div class="toast-container" id="toast-container"></div>
     <input type="file" id="file-upload-input" multiple accept=".html,.css,.js,.png,.jpg,.jpeg,.gif,.svg,.webp,.json,.md,.txt" />
 
     <script>
-              const AppState = {
+        const AppState = {
                   files: [],
                   openTabs: [],
                   activeTab: null,
@@ -2127,6 +2171,7 @@
 
 	              const STORAGE_KEY = 'gxcode_files_v1';
 	              const SETTINGS_KEY = 'gxcode_settings_v1';
+                  window.addEventListener('contextmenu', (e) => e.preventDefault());
 
 	              function loadSettings() {
 	                  try {
@@ -2316,7 +2361,7 @@
           • class="magic-button" applies button styling from CSS
         -->
         <button id="magic-button" class="magic-button">
-          Click for Magic
+          ✨ Click for Magic
         </button>
         
         <!-- 
@@ -3839,6 +3884,17 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
 	                      tabManager.openFile(match.file.id);
 	                      this.hideQuickOpen();
 	                  }
+                  
+                      showDataRemovalApproval() {
+	                    this.quickOpenIndex = 0;
+	                    const dataRemoveModal = document.getElementById('dataRemoveApproval-modal');
+                        const dataRemovalCancel = document.getElementById("data-removal-cancel");
+                        const dataRemovalConfirm = document.getElementById("data-removal-confirm");
+	                  }
+
+	                  hideDataRemovalApproval() {
+	                      document.getElementById('dataRemoveApproval-modal').classList.remove('visible'); // Bookmark 1
+	                  }
 
 	                  performGlobalSearch() {
 	                      const query = document.getElementById('global-search-input').value.trim();
@@ -4043,6 +4099,10 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
 	                          return;
 	                      }
 	                  }
+                
+                  openDataRemovalConfirmationModal() { //bookmark 4
+                    document.getElementById("dataRemoveApproval-modal").classList.add("visible");
+                  }
 
                   modalCallback = null;
                   confirmCallback = null;
@@ -4050,6 +4110,7 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
                   setupModalListeners() {
                       document.getElementById('modal-close').addEventListener('click', () => this.closeModal());
                       document.getElementById('modal-cancel').addEventListener('click', () => this.closeModal());
+                      document.getElementById('deleteDataBtn').addEventListener('click', () => document.getElementById("dataRemoveApproval-modal").classList.add("visible"));
 
                       document.getElementById('modal-confirm').addEventListener('click', () => {
                           const input = document.getElementById('modal-input');
@@ -4084,6 +4145,7 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
                       });
 
 	                      document.getElementById('shortcuts-modal-close').addEventListener('click', () => this.hideShortcuts());
+                          
 
 	                      document.getElementById('quick-open-close').addEventListener('click', () => this.hideQuickOpen());
 	                      document.getElementById('quick-open-cancel').addEventListener('click', () => this.hideQuickOpen());
@@ -6598,6 +6660,7 @@ This a library to add a custom DevTools panel to your website. (Avoid using in p
           const tabManager = new TabManager();
           const uiManager = new UIManager();
           const editorManager = new EditorManager();
-        </script>
-      </body>
-    </html>
+    </script>
+</body>
+
+</html>
