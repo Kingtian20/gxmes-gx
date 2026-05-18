@@ -1,1531 +1,1511 @@
+
 <!doctype html>
 <html lang="en">
-
-<head>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ1S2GS6RP"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VJ1S2GS6RP"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
 
       gtag("config", "G-VJ1S2GS6RP");
-  </script>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"></script>
-  <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" />
-  <title>GX Verse</title>
-  <style>
-    *,
-    *::before,
-    *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    :root {
-      --primary-color: #0000ff;
-      --secondary-color: #00fff7;
-    }
-
-    body {
-      width: 100vw;
-      height: 100vh;
-      background-color: #000;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    section {
-      position: relative;
-    }
-
-    .main-title {
-      position: absolute;
-      top: 30%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      font-weight: bold;
-      font-family: "Orbitron", sans-serif;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: clamp(2px, 1vw, 4px);
-      animation: glitch 2s infinite;
-      text-align: center;
-      white-space: nowrap;
-      z-index: 5;
-    }
-
-    .main-title::before,
-    .main-title::after {
-      content: "GX VERSE";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      overflow: hidden;
-    }
-
-    .sub-title::before,
-    .sub-title::after {
-      content: "Welcome to GX VERSE";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      overflow: hidden;
-    }
-
-    .main-title::before,
-    .sub-title::before {
-      color: var(--secondary-color);
-      z-index: -1;
-    }
-
-    .main-title::after,
-    .sub-title::after {
-      color: var(--primary-color);
-      z-index: -2;
-    }
-
-    .home {
-      width: 100vw;
-      height: 100vh;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .search-container {
-      width: 100%;
-      max-width: 400px;
-      margin: 0 auto;
-      position: relative;
-    }
-
-    .search-box {
-      position: relative;
-      width: 100%;
-      height: 54px;
-      background: #000;
-      border-radius: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .search-box input {
-      width: 100%;
-      height: 100%;
-      padding: 0 25px;
-      border: none;
-      background: transparent;
-      color: #fff;
-      font-size: 1.1rem;
-      outline: none;
-      font-family: "Orbitron", sans-serif;
-    }
-
-    .search-box:hover {
-      transform: scale(1.05);
-    }
-
-    .search-box:focus-within {
-      transform: scale(1.02);
-    }
-
-    .search-box:focus-within .line-driver {
-      filter: drop-shadow(0 0 12px var(--secondary-color));
-    }
-
-    .line-driver {
-      position: absolute;
-      inset: 0;
-      border-radius: 100px;
-      z-index: -1;
-      overflow: hidden;
-      -webkit-mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      mask:
-        linear-gradient(#000 0 0) content-box,
-        linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      padding: 2px;
-    }
-
-    .line-driver::before {
-      content: "";
-      position: absolute;
-      width: 500px;
-      height: 500px;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
-      animation: rotate 3s linear infinite;
-      filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
-    }
-
-    .action-bar {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: flex-end;
-      gap: 20px;
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 10;
-    }
-
-    .pod {
-      display: flex;
-      pointer-events: auto;
-      background: rgba(0, 0, 0, 0);
-      border-radius: 100px;
-      position: relative;
-    }
-
-    .bar-pod {
-      flex-direction: row;
-      gap: 10px;
-      padding: 10px 20px;
-      align-items: center;
-      height: 65px;
-    }
-
-    .tower-pod {
-      position: relative;
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: center;
-      width: 65px;
-      height: 65px;
-      padding: 0;
-      gap: 0;
-      border-radius: 50%;
-    }
-
-    .tower-pod.expanded {
-      width: 65px;
-    }
-
-    .action-bar button {
-      width: 45px;
-      height: 45px;
-      border: none;
-      border-radius: 50%;
-      background-color: transparent;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 1.3rem;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      cursor: pointer;
-      z-index: 2;
-      position: relative;
-    }
-
-    .action-bar button:hover {
-      color: var(--primary-color);
-      transform: translateY(-5px) scale(1.2);
-      filter: drop-shadow(0 0 10px var(--primary-color));
-    }
-
-    .menu-items {
-      position: absolute;
-      left: 100%;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      flex-direction: row;
-      gap: 10px;
-      max-width: 0;
-      opacity: 0;
-      overflow: hidden;
-      transition: max-width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      padding-left: 0px;
-      padding-right: 12px;
-    }
-
-    .expanded .menu-items {
-      max-width: 350px;
-      overflow: visible;
-      opacity: 1;
-    }
-
-    .plus-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-
-    .plus-icon {
-      position: relative;
-      width: 20px;
-      height: 20px;
-      transition: 0.4s;
-    }
-
-    .actionbarBtn {
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .plus-icon span {
-      position: absolute;
-      background: #ffffffb7;
-      border-radius: 2px;
-      transition: 0.3s;
-    }
-
-    .plus-icon span:nth-child(1) {
-      top: 50%;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      transform: translateY(-50%);
-    }
-
-    .plus-icon span:nth-child(2) {
-      top: 0;
-      left: 50%;
-      width: 3px;
-      height: 100%;
-      transform: translateX(-50%);
-    }
-
-    .plus-btn:hover .plus-icon {
-      filter: drop-shadow(0 0 10px var(--primary-color));
-    }
-
-    .plus-btn:hover .plus-icon span {
-      background: #0000ff;
-      color: var(--primary-color);
-    }
-
-    .plus-btn.active .plus-icon {
-      transform: scale(1.1) rotate(45deg) translateY(-2px);
-      filter: drop-shadow(0 0 10px var(--primary-color));
-      color: var(--primary-color);
-    }
-
-    .plus-btn.active::after,
-    .plus-btn.active:hover::after {
-      opacity: 0 !important;
-    }
-
-    .plus-btn.active::before,
-    .plus-btn.active:hover::before {
-      opacity: 0 !important;
-    }
-
-    .plus-btn:hover::after,
-    .plus-btn:hover::before {
-      opacity: 0 !important;
-    }
-
-    .active {
-      color: var(--primary-color) !important;
-      opacity: 1 !important;
-    }
-
-    .active .plus-icon span {
-      background: var(--primary-color);
-    }
-
-    #action-bar-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 9;
-      pointer-events: none;
-    }
-
-    #home-canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -1;
-      opacity: 1;
-      transition: opacity 0.5s ease-out;
-      pointer-events: none;
-    }
-
-    #home-canvas.hidden {
-      opacity: 0;
-    }
-
-    .g-circle {
-      position: relative;
-      display: inline-block;
-      color: #fff;
-      z-index: 5;
-      perspective: 600px;
-      animation: glow 10s linear infinite;
-    }
-
-    .g-circle::before,
-    .g-circle::after {
-      content: "";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 1.4em;
-      height: 1.4em;
-      border: 10px solid #ffff00;
-      border-radius: 50%;
-      pointer-events: none;
-      transform: translate(-50%, -50%) rotateX(70deg) rotateY(-20deg);
-
-      box-shadow:
-        0 0 10px rgba(255, 255, 0, 0.6),
-        inset 0 0 10px rgba(255, 255, 0, 0.6);
-    }
-
-    .g-circle::before {
-      z-index: -1;
-    }
-
-    .g-circle::after {
-      z-index: 1;
-      clip-path: inset(50% 0 0 0);
-    }
-
-    .grid {
-      width: 90%;
-      max-width: 1200px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 30px;
-      margin-top: 80px;
-      padding-bottom: 100px;
-    }
-
-    .game-item {
-      aspect-ratio: 1/1;
-      background: #111;
-      border: 2px solid transparent;
-      border-radius: 14px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
-    }
-
-    .game-item:hover {
-      transform: translateY(-10px) scale(1.05);
-      border-color: white;
-      box-shadow: 0 0 20px var(--primary-color);
-      z-index: 2;
-    }
-
-    .game-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .game-item:hover img {
-      transform: scale(1.1);
-      opacity: 0.5;
-    }
-
-    .game-title {
-      position: absolute;
-      bottom: -60px;
-      width: 100%;
-      padding: 15px 10px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-      text-align: center;
-      font-family: "Orbitron", sans-serif;
-      color: white;
-      font-weight: bold;
-      transition: bottom 0.3s ease-out;
-    }
-
-    .game-item:hover .game-title {
-      bottom: 0;
-    }
-
-    .game-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      transform: translateY(100%);
-      visibility: hidden;
-      pointer-events: none;
-      transition:
-        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
-        visibility 0.5s;
-    }
-
-    .game-overlay.active {
-      transform: translateY(0);
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #game-overlay.active~.action-bar,
-    #game-overlay.active~#action-bar-canvas {
-      display: none !important;
-    }
-
-    #proxy-overlay.active~.action-bar,
-    #proxy-overlay.active~#action-bar-canvas {
-      display: none !important;
-    }
-
-    .proxy-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: #000;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      transform: translateY(100%);
-      visibility: hidden;
-      pointer-events: none;
-      transition:
-        transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
-        visibility 0.5s;
-    }
-
-    .proxy-overlay.active {
-      transform: translateY(0);
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #proxy-frame-container {
-      flex: 1;
-      width: 100%;
-      background: #111;
-    }
-
-    .proxy-controls {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 65px;
-      height: 65px;
-      background: #000;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 0;
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(0, 255, 247, 0.1);
-      z-index: 10000;
-    }
-
-    .proxy-controls button {
-      width: 45px;
-      height: 45px;
-      border: none;
-      border-radius: 50%;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    .proxy-controls button:hover {
-      color: var(--primary-color);
-      transform: translateY(-5px) scale(1.2);
-      filter: drop-shadow(0 0 10px var(--primary-color));
-    }
-
-    .proxy-launch-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      z-index: 5;
-    }
-
-    .proxy-launch-btn {
-      background: linear-gradient(135deg, rgba(0, 0, 255, 0.2), rgba(0, 255, 247, 0.2));
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 100px;
-      padding: 20px 50px;
-      color: #fff;
-      font-family: "Orbitron", sans-serif;
-      font-size: 1.2rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      box-shadow: 0 0 20px rgba(0, 0, 255, 0.3);
-      display: flex;
-      align-items: center;
-      gap: 15px;
-    }
-
-    .proxy-launch-btn:hover {
-      transform: translateY(-5px) scale(1.05);
-      border-color: var(--primary-color);
-      box-shadow:
-        0 0 40px var(--primary-color),
-        0 0 80px rgba(0, 0, 255, 0.5);
-      color: var(--secondary-color);
-    }
-
-    .proxy-launch-btn i {
-      font-size: 1.5rem;
-      transition: transform 0.3s;
-    }
-
-    .proxy-launch-btn:hover i {
-      transform: translateX(5px);
-    }
-
-    .proxy-launch-title {
-      font-family: "Orbitron", sans-serif;
-      font-size: 2rem;
-      color: #fff;
-      text-shadow: 0 0 20px var(--primary-color);
-      margin-bottom: 10px;
-    }
-
-    .action-bar button::after,
-    .proxy-controls button::after {
-      content: attr(title);
-      position: absolute;
-      top: -45px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.8);
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: #000;
-      background: var(--primary-color);
-      padding: 4px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .action-bar button:hover::after,
-    .proxy-controls button:hover::after,
-    .action-bar button.show-tooltip::after,
-    .proxy-controls button.show-tooltip::after {
-      opacity: 1;
-      transform: translateX(-50%) scale(1.1);
-      top: -50px;
-    }
-
-    .action-bar button::before,
-    .proxy-controls button::before {
-      content: "";
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: var(--primary-color) transparent transparent transparent;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .action-bar button:hover::before,
-    .proxy-controls button:hover::before,
-    .action-bar button.show-tooltip::before,
-    .proxy-controls button.show-tooltip::before {
-      opacity: 1;
-    }
-
-    .proxy-pop {
-      animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
-
-    @keyframes proxyPopIn {
-      from {
-        opacity: 0;
-        transform: scale(0.5);
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://kit.fontawesome.com/48def32dfd.js" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.css">
+    <title>GX Verse</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      to {
+      :root {
+        --primary-color: #0000ff;
+        --secondary-color: #00fff7;
+      }
+
+      body {
+        width: 100vw;
+        height: 100vh;
+        background-color: #000;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      section {
+        position: relative;
+      }
+
+      .main-title {
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        animation: glitch 2s infinite;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 5;
+      }
+
+      .main-title::before,
+      .main-title::after {
+        content: "GX VERSE";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      .sub-title::before,
+      .sub-title::after {
+        content: "Welcome to GX VERSE";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        overflow: hidden;
+      }
+
+      .main-title::before,
+      .sub-title::before {
+        color: var(--secondary-color);
+        z-index: -1;
+      }
+
+      .main-title::after,
+      .sub-title::after {
+        color: var(--primary-color);
+        z-index: -2;
+      }
+
+      .home {
+        width: 100vw;
+        height: 100vh;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .search-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        position: relative;
+      }
+
+      .search-box {
+        position: relative;
+        width: 100%;
+        height: 54px;
+        background: #000;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .search-box input {
+        width: 100%;
+        height: 100%;
+        padding: 0 25px;
+        border: none;
+        background: transparent;
+        color: #fff;
+        font-size: 1.1rem;
+        outline: none;
+        font-family: "Orbitron", sans-serif;
+      }
+
+      .search-box:hover {
+        transform: scale(1.05);
+      }
+
+      .search-box:focus-within {
+        transform: scale(1.02);
+      }
+
+      .search-box:focus-within .line-driver {
+        filter: drop-shadow(0 0 12px var(--secondary-color));
+      }
+
+      .line-driver {
+        position: absolute;
+        inset: 0;
+        border-radius: 100px;
+        z-index: -1;
+        overflow: hidden;
+        -webkit-mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        mask:
+          linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        padding: 2px;
+      }
+
+      .line-driver::before {
+        content: "";
+        position: absolute;
+        width: 500px;
+        height: 500px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 10%, var(--secondary-color) 20%, transparent 25%);
+        animation: rotate 3s linear infinite;
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .action-bar {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 20px;
+        position: fixed;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+      }
+
+      .pod {
+        display: flex;
+        pointer-events: auto;
+        background: rgba(0, 0, 0, 0);
+        border-radius: 100px;
+        position: relative;
+      }
+
+      .bar-pod {
+        flex-direction: row;
+        gap: 10px;
+        padding: 10px 20px;
+        align-items: center;
+        height: 65px;
+      }
+
+      .tower-pod {
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 65px;
+        height: 65px;
+        padding: 0;
+        gap: 0;
+        border-radius: 50%;
+      }
+
+      .tower-pod.expanded {
+        width: 65px;
+      }
+
+      .action-bar button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background-color: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.3rem;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        z-index: 2;
+        position: relative;
+      }
+
+      .action-bar button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .menu-items {
+        position: absolute;
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%);
+        display: flex;
+        flex-direction: row;
+        gap: 10px;
+        max-width: 0;
+        opacity: 0;
+        overflow: hidden;
+        transition: max-width 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        padding-left: 0px;
+        padding-right: 12px;
+      }
+
+      .expanded .menu-items {
+        max-width: 350px;
+        overflow: visible;
         opacity: 1;
+      }
+
+      .plus-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+      }
+
+      .plus-icon {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        transition: 0.4s;
+      }
+      
+      .actionbarBtn {
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+      
+      .plus-icon span {
+        position: absolute;
+        background: #ffffffb7;
+        border-radius: 2px;
+        transition: 0.3s;
+      }
+
+      .plus-icon span:nth-child(1) {
+        top: 50%;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        transform: translateY(-50%);
+      }
+
+      .plus-icon span:nth-child(2) {
+        top: 0;
+        left: 50%;
+        width: 3px;
+        height: 100%;
+        transform: translateX(-50%);
+      }
+
+      .plus-btn:hover .plus-icon {
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .plus-btn:hover .plus-icon span {
+        background: #0000ff;
+        color: var(--primary-color);
+      }
+
+      .plus-btn.active .plus-icon {
+        transform: scale(1.1) rotate(45deg) translateY(-2px);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+        color: var(--primary-color);
+      }
+
+      .plus-btn.active::after,
+      .plus-btn.active:hover::after {
+        opacity: 0 !important;
+      }
+
+      .plus-btn.active::before,
+      .plus-btn.active:hover::before {
+        opacity: 0 !important;
+      }
+
+      .plus-btn:hover::after,
+      .plus-btn:hover::before {
+        opacity: 0 !important;
+      }
+
+      .active {
+        color: var(--primary-color) !important;
+        opacity: 1 !important;
+      }
+
+      .active .plus-icon span {
+        background: var(--primary-color);
+      }
+
+      #action-bar-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 9;
+        pointer-events: none;
+      }
+
+      #home-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        opacity: 1;
+        transition: opacity 0.5s ease-out;
+        pointer-events: none;
+      }
+
+      #home-canvas.hidden {
+        opacity: 0;
+      }
+
+      .g-circle {
+        position: relative;
+        display: inline-block;
+        color: #fff;
+        z-index: 5;
+        perspective: 600px;
+        animation: glow 10s linear infinite;
+      }
+
+      .g-circle::before,
+      .g-circle::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1.4em;
+        height: 1.4em;
+        border: 10px solid #ffff00;
+        border-radius: 50%;
+        pointer-events: none;
+        transform: translate(-50%, -50%) rotateX(70deg) rotateY(-20deg);
+
+        box-shadow:
+          0 0 10px rgba(255, 255, 0, 0.6),
+          inset 0 0 10px rgba(255, 255, 0, 0.6);
+      }
+
+      .g-circle::before {
+        z-index: -1;
+      }
+
+      .g-circle::after {
+        z-index: 1;
+        clip-path: inset(50% 0 0 0);
+      }
+
+      .grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 30px;
+        margin-top: 80px;
+        padding-bottom: 100px;
+      }
+
+      .game-item {
+        aspect-ratio: 1/1;
+        background: #111;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
+      }
+
+      .game-item:hover {
+        transform: translateY(-10px) scale(1.05);
+        border-color: white;
+        box-shadow: 0 0 20px var(--primary-color);
+        z-index: 2;
+      }
+
+      .game-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .game-item:hover img {
+        transform: scale(1.1);
+        opacity: 0.5;
+      }
+
+      .game-title {
+        position: absolute;
+        bottom: -60px;
+        width: 100%;
+        padding: 15px 10px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        color: white;
+        font-weight: bold;
+        transition: bottom 0.3s ease-out;
+      }
+
+      .game-item:hover .game-title {
+        bottom: 0;
+      }
+
+      .game-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(100%);
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+          visibility 0.5s;
+      }
+
+      .game-overlay.active {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      #game-overlay.active ~ .action-bar,
+      #game-overlay.active ~ #action-bar-canvas {
+        display: none !important;
+      }
+
+      #proxy-overlay.active ~ .action-bar,
+      #proxy-overlay.active ~ #action-bar-canvas {
+        display: none !important;
+      }
+
+      .proxy-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #000;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        transform: translateY(100%);
+        visibility: hidden;
+        pointer-events: none;
+        transition:
+          transform 0.5s cubic-bezier(0.25, 1, 0.5, 1),
+          visibility 0.5s;
+      }
+
+      .proxy-overlay.active {
+        transform: translateY(0);
+        visibility: visible;
+        pointer-events: auto;
+      }
+
+      #proxy-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      .proxy-controls {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 65px;
+        height: 65px;
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(0, 255, 247, 0.1);
+        z-index: 10000;
+      }
+
+      .proxy-controls button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .proxy-controls button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .proxy-launch-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        z-index: 5;
+      }
+
+      .proxy-launch-btn {
+        background: linear-gradient(135deg, rgba(0, 0, 255, 0.2), rgba(0, 255, 247, 0.2));
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        border-radius: 100px;
+        padding: 20px 50px;
+        color: #fff;
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        text-transform: uppercase;
+        letter-spacing: 3px;
+        box-shadow: 0 0 20px rgba(0, 0, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .proxy-launch-btn:hover {
+        transform: translateY(-5px) scale(1.05);
+        border-color: var(--primary-color);
+        box-shadow:
+          0 0 40px var(--primary-color),
+          0 0 80px rgba(0, 0, 255, 0.5);
+        color: var(--secondary-color);
+      }
+
+      .proxy-launch-btn i {
+        font-size: 1.5rem;
+        transition: transform 0.3s;
+      }
+
+      .proxy-launch-btn:hover i {
+        transform: translateX(5px);
+      }
+
+      .proxy-launch-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 2rem;
+        color: #fff;
+        text-shadow: 0 0 20px var(--primary-color);
+        margin-bottom: 10px;
+      }
+
+      .action-bar button::after,
+      .proxy-controls button::after {
+        content: attr(title);
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #000;
+        background: var(--primary-color);
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .action-bar button:hover::after,
+      .proxy-controls button:hover::after,
+      .action-bar button.show-tooltip::after,
+      .proxy-controls button.show-tooltip::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.1);
+        top: -50px;
+      }
+
+      .action-bar button::before,
+      .proxy-controls button::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--primary-color) transparent transparent transparent;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .action-bar button:hover::before,
+      .proxy-controls button:hover::before,
+      .action-bar button.show-tooltip::before,
+      .proxy-controls button.show-tooltip::before {
+        opacity: 1;
+      }
+
+      .proxy-pop {
+        animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      @keyframes proxyPopIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      #game-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      #proxy-frame-container {
+        flex: 1;
+        width: 100%;
+        background: #111;
+      }
+
+      .newtab-iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        display: block;
+      }
+
+      .game-controls {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 320px;
+        height: 65px;
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 100px;
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+        gap: 10px;
+        padding: 0 15px;
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.5),
+          0 0 20px rgba(0, 255, 247, 0.1);
+        z-index: 10000;
+      }
+
+      #proxy-overlay .game-controls {
+        width: 65px;
+        height: 65px;
+        border-radius: 50%;
+        padding: 0;
+        justify-content: center;
+      }
+
+      .game-controls button {
+        width: 45px;
+        height: 45px;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+      }
+
+      .game-controls button:hover {
+        color: var(--primary-color);
+        transform: translateY(-5px) scale(1.2);
+        filter: drop-shadow(0 0 10px var(--primary-color));
+      }
+
+      .action-bar button::after,
+      .game-controls button::after {
+        content: attr(title);
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%) scale(0.8);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #000;
+        background: var(--primary-color);
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .action-bar button:hover::after,
+      .game-controls button:hover::after,
+      .action-bar button.show-tooltip::after,
+      .game-controls button.show-tooltip::after {
+        opacity: 1;
+        transform: translateX(-50%) scale(1.1);
+        top: -50px;
+      }
+
+      .action-bar button::before,
+      .game-controls button::before {
+        content: "";
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--primary-color) transparent transparent transparent;
+        opacity: 0;
+        transition: opacity 0.3s;
+      }
+
+      .action-bar button:hover::before,
+      .game-controls button:hover::before,
+      .action-bar button.show-tooltip::before,
+      .game-controls button.show-tooltip::before {
+        opacity: 1;
+      }
+
+      .search-wrapper {
+        position: sticky;
+        top: 20px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        padding: 15px 0;
+        z-index: 100;
+        background: transparent;
+        pointer-events: none;
+      }
+
+      #gxmes-page .search-box {
+        width: 80%;
+        max-width: 800px;
+        height: 60px;
+        pointer-events: all;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+      }
+
+      #gxmes-page .search-box input {
+        font-size: 1rem;
+        pointer-events: all;
+        letter-spacing: 1px;
+      }
+
+      #gxmes-page .line-driver::before {
+        width: 1000px;
+        height: 1000px;
+      }
+
+      #gxmes-page {
+        background-color: #000 !important;
+        min-height: 100vh;
+      }
+
+      #proxy-page {
+        background-color: #000 !important;
+        min-height: 100vh;
+        position: relative;
+      }
+
+      #proxy-page-heading {
+        position: absolute;
+        top: 80px;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: clamp(2.5rem, 8vw, 5rem);
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: clamp(2px, 1vw, 4px);
+        text-shadow:
+          0 0 2px #fff,
+          0 0 10px var(--primary-color);
+        text-align: center;
+        white-space: nowrap;
+        z-index: 5;
+      }
+
+      .proxy-grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+        margin-top: 160px;
+        padding-bottom: 100px;
+      }
+
+      .proxy-item {
+        aspect-ratio: 32/9;
+        background: #111;
+        border: 2px solid transparent;
+        border-radius: 14px;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
+      }
+
+      .proxy-item:hover {
+        transform: translateY(-10px) scale(1.05);
+        border-color: white;
+        box-shadow: 0 0 20px var(--primary-color);
+        z-index: 2;
+      }
+
+      .proxy-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+      }
+
+      .proxy-item:hover img {
+        transform: scale(1.1);
+        opacity: 0.5;
+      }
+
+      .proxy-title {
+        position: absolute;
+        bottom: -60px;
+        width: 100%;
+        padding: 15px 10px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        text-align: center;
+        font-family: "Orbitron", sans-serif;
+        color: white;
+        font-weight: bold;
+        transition: bottom 0.3s ease-out;
+      }
+
+      .proxy-item:hover .proxy-title {
+        bottom: 0;
+      }
+
+      .version-label {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.7rem;
+        font-weight: bold;
+        color: #ffffffb7;
+        background: transparent;
+        padding: 4px 10px;
+        border-radius: 4px;
+        white-space: nowrap;
+        opacity: 0.5;
+      }
+
+      .menu-items button#settingsBtn:hover {
+        transform: translateY(-5px) scale(1.2);
+        color: var(--primary-color);
+      }
+
+      .settings-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        visibility: hidden;
+        transition:
+          opacity 0.3s ease,
+          visibility 0.3s ease;
+      }
+
+      .settings-modal.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .settings-content {
+        background: #000;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 20px;
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        position: relative;
+        box-shadow: 0 0 30px rgba(0, 0, 255, 0.3);
+        transform: scale(0.9);
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .settings-modal.active .settings-content {
         transform: scale(1);
       }
-    }
 
-    #game-frame-container {
-      flex: 1;
-      width: 100%;
-      background: #111;
-    }
-
-    #proxy-frame-container {
-      flex: 1;
-      width: 100%;
-      background: #111;
-    }
-
-    .newtab-iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-      display: block;
-    }
-
-    .game-controls {
-      position: absolute;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 320px;
-      height: 65px;
-      background: #000;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 100px;
-      display: flex;
-      justify-content: space-evenly;
-      align-items: center;
-      gap: 10px;
-      padding: 0 15px;
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.5),
-        0 0 20px rgba(0, 255, 247, 0.1);
-      z-index: 10000;
-    }
-
-    #proxy-overlay .game-controls {
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      padding: 0;
-      justify-content: center;
-    }
-
-    .game-controls button {
-      width: 45px;
-      height: 45px;
-      border: none;
-      border-radius: 50%;
-      background: transparent;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 1.2rem;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-
-    .game-controls button:hover {
-      color: var(--primary-color);
-      transform: translateY(-5px) scale(1.2);
-      filter: drop-shadow(0 0 10px var(--primary-color));
-    }
-
-    .action-bar button::after,
-    .game-controls button::after {
-      content: attr(title);
-      position: absolute;
-      top: -45px;
-      left: 50%;
-      transform: translateX(-50%) scale(0.8);
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: #000;
-      background: var(--primary-color);
-      padding: 4px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .action-bar button:hover::after,
-    .game-controls button:hover::after,
-    .action-bar button.show-tooltip::after,
-    .game-controls button.show-tooltip::after {
-      opacity: 1;
-      transform: translateX(-50%) scale(1.1);
-      top: -50px;
-    }
-
-    .action-bar button::before,
-    .game-controls button::before {
-      content: "";
-      position: absolute;
-      top: -15px;
-      left: 50%;
-      transform: translateX(-50%);
-      border-width: 5px;
-      border-style: solid;
-      border-color: var(--primary-color) transparent transparent transparent;
-      opacity: 0;
-      transition: opacity 0.3s;
-    }
-
-    .action-bar button:hover::before,
-    .game-controls button:hover::before,
-    .action-bar button.show-tooltip::before,
-    .game-controls button.show-tooltip::before {
-      opacity: 1;
-    }
-
-    .search-wrapper {
-      position: sticky;
-      top: 20px;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      padding: 15px 0;
-      z-index: 100;
-      background: transparent;
-      pointer-events: none;
-    }
-
-    #gxmes-page .search-box {
-      width: 80%;
-      max-width: 800px;
-      height: 60px;
-      pointer-events: all;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-    }
-
-    #gxmes-page .search-box input {
-      font-size: 1rem;
-      pointer-events: all;
-      letter-spacing: 1px;
-    }
-
-    #gxmes-page .line-driver::before {
-      width: 1000px;
-      height: 1000px;
-    }
-
-    #gxmes-page {
-      background-color: #000 !important;
-      min-height: 100vh;
-    }
-
-    #proxy-page {
-      background-color: #000 !important;
-      min-height: 100vh;
-      position: relative;
-    }
-
-    #proxy-page-heading {
-      position: absolute;
-      top: 80px;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: clamp(2.5rem, 8vw, 5rem);
-      font-weight: bold;
-      font-family: "Orbitron", sans-serif;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: clamp(2px, 1vw, 4px);
-      text-shadow:
-        0 0 2px #fff,
-        0 0 10px var(--primary-color);
-      text-align: center;
-      white-space: nowrap;
-      z-index: 5;
-    }
-
-    .proxy-grid {
-      width: 90%;
-      max-width: 1200px;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 30px;
-      margin-top: 160px;
-      padding-bottom: 100px;
-    }
-
-    .proxy-item {
-      aspect-ratio: 32/9;
-      background: #111;
-      border: 2px solid transparent;
-      border-radius: 14px;
-      position: relative;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 0 10px rgba(0, 0, 255, 0.2);
-    }
-
-    .proxy-item:hover {
-      transform: translateY(-10px) scale(1.05);
-      border-color: white;
-      box-shadow: 0 0 20px var(--primary-color);
-      z-index: 2;
-    }
-
-    .proxy-item img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.3s ease;
-    }
-
-    .proxy-item:hover img {
-      transform: scale(1.1);
-      opacity: 0.5;
-    }
-
-    .proxy-title {
-      position: absolute;
-      bottom: -60px;
-      width: 100%;
-      padding: 15px 10px;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-      text-align: center;
-      font-family: "Orbitron", sans-serif;
-      color: white;
-      font-weight: bold;
-      transition: bottom 0.3s ease-out;
-    }
-
-    .proxy-item:hover .proxy-title {
-      bottom: 0;
-    }
-
-    .version-label {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: #ffffffb7;
-      background: transparent;
-      padding: 4px 10px;
-      border-radius: 4px;
-      white-space: nowrap;
-      opacity: 0.5;
-    }
-
-    .menu-items button#settingsBtn:hover {
-      transform: translateY(-5px) scale(1.2);
-      color: var(--primary-color);
-    }
-
-    .settings-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      z-index: 10000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      visibility: hidden;
-      transition:
-        opacity 0.3s ease,
-        visibility 0.3s ease;
-    }
-
-    .settings-modal.active {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .settings-content {
-      background: #000;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      border-radius: 20px;
-      padding: 40px;
-      max-width: 500px;
-      width: 90%;
-      position: relative;
-      box-shadow: 0 0 30px rgba(0, 0, 255, 0.3);
-      transform: scale(0.9);
-      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .settings-modal.active .settings-content {
-      transform: scale(1);
-    }
-
-    .settings-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-
-    .settings-title {
-      font-family: "Orbitron", sans-serif;
-      font-size: 1.5rem;
-      color: #fff;
-      text-shadow: 0 0 10px var(--primary-color);
-      margin: 0;
-    }
-
-    .settings-close {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 1.5rem;
-      cursor: pointer;
-      transition:
-        color 0.3s,
-        transform 0.3s;
-    }
-
-    .settings-close:hover {
-      color: var(--primary-color);
-      transform: scale(1.1);
-    }
-
-    .settings-item {
-      margin-bottom: 20px;
-    }
-
-    .settings-label {
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.6);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-      display: block;
-    }
-
-    .settings-value-wrapper {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .settings-value {
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.9rem;
-      color: #fff;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 15px;
-      border-radius: 10px;
-      word-break: break-all;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      text-shadow: 0 0 5px var(--primary-color);
-      flex: 1;
-      transition: all 0.3s ease;
-    }
-
-    .settings-value-wrapper:hover .settings-value {
-      border-color: var(--primary-color);
-      box-shadow: 0 0 15px rgba(0, 0, 255, 0.3);
-    }
-
-    .copy-btn {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%) scale(0.8);
-      background: #262626;
-      border: none;
-      border-radius: 100px;
-      padding: 8px 12px;
-      color: rgba(255, 255, 255, 0.6);
-      font-family: "Orbitron", sans-serif;
-      font-size: 0.9rem;
-      cursor: pointer;
-      opacity: 0;
-      width: 35px;
-      height: 35px;
-      visibility: hidden;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .settings-value-wrapper:hover .copy-btn {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(-50%) scale(1);
-    }
-
-    .copy-btn:hover {
-      color: white;
-      transform: translateY(-50%) scale(1.1);
-    }
-
-    .copy-btn.copied {
-      color: #00ff00;
-    }
-
-    .visitors-container {
-      position: absolute;
-      top: 70%;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 60px;
-      justify-content: center;
-      align-items: center;
-      z-index: 5;
-    }
-
-    .visitors-stat {
-      text-align: center;
-    }
-
-    .visitors-label {
-      font-size: 8px;
-      color: white;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-family: "Orbitron", sans-serif;
-    }
-
-    #home-live {
-      font-size: 20px;
-      color: #2ecc71;
-      font-weight: bold;
-      font-family: "Orbitron", sans-serif;
-      text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
-    }
-
-    #home-all {
-      font-size: 20px;
-      color: #3498db;
-      font-weight: bold;
-      font-family: "Orbitron", sans-serif;
-      text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
-    }
-
-    .visitors-gradient-bar {
-      position: absolute;
-      top: calc(65% + 80px);
-      left: 50%;
-      transform: translateX(-50%);
-      width: 300px;
-      height: 3px;
-      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
-      background-size: 200% 100%;
-      border-radius: 100px;
-      animation: backgroundShift 3s ease-in-out infinite;
-      z-index: 5;
-    }
-
-    @keyframes backgroundShift {
-      0% {
-        background-position: 0% 50%;
+      .settings-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
       }
 
-      50% {
-        background-position: 100% 50%;
+      .settings-title {
+        font-family: "Orbitron", sans-serif;
+        font-size: 1.5rem;
+        color: #fff;
+        text-shadow: 0 0 10px var(--primary-color);
+        margin: 0;
       }
 
-      100% {
-        background-position: 0% 50%;
+      .settings-close {
+        background: transparent;
+        border: none;
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 1.5rem;
+        cursor: pointer;
+        transition:
+          color 0.3s,
+          transform 0.3s;
       }
-    }
 
-    .page-fade {
-      animation: fadeInPage 0.4s ease-out forwards;
-    }
+      .settings-close:hover {
+        color: var(--primary-color);
+        transform: scale(1.1);
+      }
 
-    .game-pop {
-      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
+      .settings-item {
+        margin-bottom: 20px;
+      }
 
-    .proxy-pop {
-      animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-    }
+      .settings-label {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 10px;
+        display: block;
+      }
 
-    .staff-grid {
-      width: 90%;
-      max-width: 1200px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
-      gap: 30px;
-      margin: 0 auto;
-      margin-top: 250px;
-      align-content: center;
-      justify-content: center;
-      padding: 10%;
-    }
+      .settings-value-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
 
-    .staff-card {
-      width: 90%;
-      height: 450px;
-      position: relative;
-      background: transparent;
-      border-radius: 40px;
-      align-items: center;
-      text-align: center;
-      justify-content: center;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+      .settings-value {
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9rem;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        word-break: break-all;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        text-shadow: 0 0 5px var(--primary-color);
+        flex: 1;
+        transition: all 0.3s ease;
+      }
 
-    .staff-card:hover {
-      transform: translateY(-10px) scale(1.02);
-    }
+      .settings-value-wrapper:hover .settings-value {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 15px rgba(0, 0, 255, 0.3);
+      }
 
-    .staff-card:hover .staff-box .line-driver {
-      filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
-    }
+      .copy-btn {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%) scale(0.8);
+        background: #262626;
+        border: none;
+        border-radius: 100px;
+        padding: 8px 12px;
+        color: rgba(255, 255, 255, 0.6);
+        font-family: "Orbitron", sans-serif;
+        font-size: 0.9rem;
+        cursor: pointer;
+        opacity: 0;
+        width: 35px;
+        height: 35px;
+        visibility: hidden;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
 
-    .staff-rank {
-      font-family: "Orbitron";
-      margin: 20px;
-      font-size: 40px;
-      transform: translateY(20px);
-      text-shadow:
-        0 0 2px #fff,
-        0 0 10px var(--primary-color);
-    }
+      .settings-value-wrapper:hover .copy-btn {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) scale(1);
+      }
 
-    .staff-name {
-      font-family: "Orbitron";
-      font-size: 30px;
-      text-shadow:
-        0 0 2px #fff,
-        0 0 10px var(--primary-color);
-    }
+      .copy-btn:hover {
+        color: white;
+        transform: translateY(-50%) scale(1.1);
+      }
 
-    .staff-img-wrapper {
-      position: relative;
-      width: 120px;
-      height: 120px;
-      margin: 10px auto;
-      border-radius: 100%;
-      padding: 4px;
-    }
+      .copy-btn.copied {
+        color: #00ff00;
+      }
 
-    .staff-img {
-      border-radius: 50%;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: relative;
-      z-index: -1;
-    }
+      .visitors-container {
+        position: absolute;
+        top: 70%;
+        left: 50%;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 60px;
+        justify-content: center;
+        align-items: center;
+        z-index: 5;
+      }
 
-    .staff-img-wrapper .line-driver {
-      border-radius: 50% !important;
-    }
+      .visitors-stat {
+        text-align: center;
+      }
 
-    .staff-card:hover .staff-img-wrapper .line-driver {
-      filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
-    }
+      .visitors-label {
+        font-size: 8px;
+        color: white;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-family: "Orbitron", sans-serif;
+      }
 
-    .staff-info ul {
-      list-style: none;
-      padding: 0;
-      margin-top: 15px;
-      justify-content: left;
-    }
+      #home-live {
+        font-size: 20px;
+        color: #2ecc71;
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        text-shadow: 0 0 10px rgba(46, 204, 113, 0.5);
+      }
 
-    .staff-info li {
-      font-family: "Orbitron", sans-serif;
-      font-size: 14px;
-      color: rgba(255, 255, 255, 0.8);
-      padding: 5px 0;
-      text-shadow: 0 0 5px rgba(0, 255, 247, 0.3);
-    }
+      #home-all {
+        font-size: 20px;
+        color: #3498db;
+        font-weight: bold;
+        font-family: "Orbitron", sans-serif;
+        text-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+      }
 
-    .staff-box {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 40px;
-      z-index: 1;
-    }
+      .visitors-gradient-bar {
+        position: absolute;
+        top: calc(65% + 80px);
+        left: 50%;
+        transform: translateX(-50%);
+        width: 300px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--primary-color));
+        background-size: 200% 100%;
+        border-radius: 100px;
+        animation: backgroundShift 3s ease-in-out infinite;
+        z-index: 5;
+      }
 
-    .staff-box .line-driver {
-      z-index: 2;
-      border-radius: 40px;
-      padding: 4px;
-    }
+      @keyframes backgroundShift {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
 
-    .staff-box .line-driver::before {
-      background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 5%, var(--secondary-color) 8%, transparent 12%, transparent 50%, var(--primary-color) 55%, var(--secondary-color) 58%, transparent 62%);
-    }
+      .page-fade {
+        animation: fadeInPage 0.4s ease-out forwards;
+      }
 
-    @keyframes glitch {
-      0% {
+      .game-pop {
+        animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .proxy-pop {
+        animation: proxyPopIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      }
+
+      .staff-grid {
+        width: 90%;
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 2fr));
+        gap: 30px;
+        margin: 0 auto;
+        margin-top: 250px;
+        align-content: center;
+        justify-content: center;
+        padding: 10%;
+      }
+
+      .staff-card {
+        width: 90%;
+        height: 450px;
+        position: relative;
+        background: transparent;
+        border-radius: 40px;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .staff-card:hover {
+        transform: translateY(-10px) scale(1.02);
+      }
+
+      .staff-card:hover .staff-box .line-driver {
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
+      }
+
+      .staff-rank {
+        font-family: "Orbitron";
+        margin: 20px;
+        font-size: 40px;
+        transform: translateY(20px);
         text-shadow:
           0 0 2px #fff,
           0 0 10px var(--primary-color);
       }
 
-      20% {
-        text-shadow:
-          -2px 0 var(--secondary-color),
-          2px 2px var(--primary-color);
-      }
-
-      40% {
-        text-shadow:
-          2px -2px var(--secondary-color),
-          -2px 2px var(--primary-color);
-      }
-
-      60% {
-        text-shadow:
-          0 0 3px #fff,
-          0 0 15px var(--primary-color);
-      }
-
-      80% {
-        text-shadow:
-          2px 0 var(--secondary-color),
-          -2px -2px var(--primary-color);
-      }
-
-      100% {
+      .staff-name {
+        font-family: "Orbitron";
+        font-size: 30px;
         text-shadow:
           0 0 2px #fff,
           0 0 10px var(--primary-color);
       }
-    }
 
-    @keyframes rotate {
-      from {
-        transform: translate(-50%, -50%) rotate(0deg);
+      .staff-img-wrapper {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        margin: 10px auto;
+        border-radius: 100%;
+        padding: 4px;
       }
 
-      to {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
-
-    @keyframes glow {
-      0% {
-        filter: drop-shadow(0 0 10px #ffff00);
-      }
-
-      50% {
-        filter: drop-shadow(0 0 1px #ffff00);
+      .staff-img {
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        position: relative;
+        z-index: -1;
       }
 
-      100% {
-        filter: drop-shadow(0 0 10px #ffff00);
-      }
-    }
-
-    @keyframes fadeInPage {
-      from {
-        opacity: 0;
-        transform: scale(0.98);
+      .staff-img-wrapper .line-driver {
+        border-radius: 50% !important;
       }
 
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes popIn {
-      from {
-        opacity: 0;
-        transform: scale(0.5);
+      .staff-card:hover .staff-img-wrapper .line-driver {
+        filter: drop-shadow(0 0 15px var(--primary-color)) drop-shadow(0 0 5px var(--secondary-color)) drop-shadow(0 0 50px var(--primary-color));
       }
 
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
-    }
-
-    @keyframes proxyPopIn {
-      from {
-        opacity: 0;
-        transform: scale(0.5);
+      .staff-info ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 15px;
+        justify-content: left;
       }
 
-      to {
-        opacity: 1;
-        transform: scale(1);
+      .staff-info li {
+        font-family: "Orbitron", sans-serif;
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        padding: 5px 0;
+        text-shadow: 0 0 5px rgba(0, 255, 247, 0.3);
       }
-    }
-  </style>
-</head>
 
-<body>
-  <canvas id="action-bar-canvas"></canvas>
-  <div class="action-bar">
-    <div class="pod bar-pod" id="barPod">
-      <button title="Home" id="homeBtn"><i class="fa-solid fa-house actionbarBtn"></i></button>
-      <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad actionbarBtn"></i></button>
-      <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book actionbarBtn"></i></button>
-      <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud actionbarBtn"></i></button>
-      <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume actionbarBtn"></i></button>
-    </div>
-    <div class="pod tower-pod" id="towerPod">
-      <button class="plus-btn" id="toggleBtn" title="More">
+      .staff-box {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        border-radius: 40px;
+        z-index: 1;
+      }
+
+      .staff-box .line-driver {
+        z-index: 2;
+        border-radius: 40px;
+        padding: 4px;
+      }
+
+      .staff-box .line-driver::before {
+        background: conic-gradient(from 0deg, transparent 0%, var(--primary-color) 5%, var(--secondary-color) 8%, transparent 12%, transparent 50%, var(--primary-color) 55%, var(--secondary-color) 58%, transparent 62%);
+      }
+
+      @keyframes glitch {
+        0% {
+          text-shadow:
+            0 0 2px #fff,
+            0 0 10px var(--primary-color);
+        }
+        20% {
+          text-shadow:
+            -2px 0 var(--secondary-color),
+            2px 2px var(--primary-color);
+        }
+        40% {
+          text-shadow:
+            2px -2px var(--secondary-color),
+            -2px 2px var(--primary-color);
+        }
+        60% {
+          text-shadow:
+            0 0 3px #fff,
+            0 0 15px var(--primary-color);
+        }
+        80% {
+          text-shadow:
+            2px 0 var(--secondary-color),
+            -2px -2px var(--primary-color);
+        }
+        100% {
+          text-shadow:
+            0 0 2px #fff,
+            0 0 10px var(--primary-color);
+        }
+      }
+
+      @keyframes rotate {
+        from {
+          transform: translate(-50%, -50%) rotate(0deg);
+        }
+        to {
+          transform: translate(-50%, -50%) rotate(360deg);
+        }
+      }
+
+      @keyframes glow {
+        0% {
+          filter: drop-shadow(0 0 10px #ffff00);
+        }
+        50% {
+          filter: drop-shadow(0 0 1px #ffff00);
+        }
+        100% {
+          filter: drop-shadow(0 0 10px #ffff00);
+        }
+      }
+
+      @keyframes fadeInPage {
+        from {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes popIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      @keyframes proxyPopIn {
+        from {
+          opacity: 0;
+          transform: scale(0.5);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="action-bar-canvas"></canvas>
+    <div class="action-bar">
+      <div class="pod bar-pod" id="barPod">
+        <button title="Home" id="homeBtn"><i class="fa-solid fa-house actionbarBtn"></i></button>
+        <button title="Gxmes" id="gxmesBtn"><i class="fa-solid fa-gamepad actionbarBtn"></i></button>
+        <button title="Info" id="infoBtn"><i class="fa-solid fa-address-book actionbarBtn"></i></button>
+        <button title="Pr0xys" id="proxyBtn"><i class="fa-solid fa-cloud actionbarBtn"></i></button>
+        <button title="Sound Board" id="soundboardBtn"><i class="fa-solid fa-volume-high actionbarBtn"></i></button>
+      </div>
+      <div class="pod tower-pod" id="towerPod">
+        <button class="plus-btn" id="toggleBtn" title="More">
           <div class="plus-icon"><span></span><span></span></div>
         </button>
-      <div class="menu-items">
-        <button title="GX AI" id="gxaiBtn"><i class="fa-solid fa-robot"></i></button>
-        <button title="Settings" id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
-      </div>
-    </div>
-  </div>
-  <canvas id="home-canvas"></canvas>
-
-  <section class="home" id="home-page">
-    <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
-    <h1 class="sub-title main-title"
-      style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX
-      VERSE</h1>
-    <div class="search-container">
-      <div class="search-box">
-        <div class="line-driver"></div>
-        <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false" />
-      </div>
-    </div>
-    <div class="visitors-container">
-      <div class="visitors-stat">
-        <div id="home-live">...</div>
-        <div class="visitors-label">Live Users</div>
-      </div>
-      <div class="visitors-stat">
-        <div id="home-all">...</div>
-        <div class="visitors-label">AllTime Visits</div>
-      </div>
-    </div>
-    <div class="visitors-gradient-bar"></div>
-    <label class="version-label">Ver 0.0.3 BETA</label>
-  </section>
-
-  <section class="gxmes" id="gxmes-page"
-    style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
-    <div class="search-wrapper">
-      <div class="search-box">
-        <div class="line-driver"></div>
-        <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
-      </div>
-    </div>
-
-    <div class="grid" id="game-grid"></div>
-  </section>
-
-  <section class="info" id="info-page"
-    style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
-    <iframe id="info-frame" style="width: 100%; height: 100%; border: none"></iframe>
-  </section>
-
-  <section class="soundboard" id="soundboard-page"
-    style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
-    <iframe id="soundboard-frame" style="width: 100%; height: 100%; border: none"></iframe>
-  </section>
-
-  <section class="proxies" id="proxy-page"
-    style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
-    <h1 id="proxy-page-heading">Pr0xys</h1>
-
-    <div class="proxy-grid" id="proxy-grid"></div>
-  </section>
-
-  <div id="game-overlay" class="game-overlay">
-    <div id="game-frame-container"></div>
-
-    <div class="game-controls">
-      <button id="btn-fullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
-      <button id="btn-download" title="Download"><i class="fa-solid fa-download"></i></button>
-      <button id="btn-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-  </div>
-
-  <div id="proxy-overlay" class="proxy-overlay">
-    <div id="proxy-frame-container"></div>
-    <div class="proxy-launch-container" id="proxy-launch-container" style="display: none">
-      <div class="proxy-launch-title" id="proxy-launch-title"></div>
-      <button class="proxy-launch-btn" id="proxy-launch-btn">
-          <span>Launch</span>
-          <i class="fa-solid fa-external-link-alt"></i>
-        </button>
-    </div>
-
-    <div class="proxy-controls">
-      <button id="btn-proxy-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
-    </div>
-  </div>
-
-  <section class="gxai" id="gxai-page"
-    style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
-    <iframe id="gxai-frame" style="width: 100%; height: 100%; border: none"></iframe>
-  </section>
-
-
-  <!-- Modal Sections (intentional comment)-->
-  <div id="settings-modal" class="settings-modal">
-    <div class="settings-content">
-      <div class="settings-header">
-        <h2 class="settings-title">Settings</h2>
-        <button class="settings-close" id="settingsClose"><i class="fa-solid fa-xmark"></i></button>
-      </div>
-      <div class="settings-item">
-        <span class="settings-label">User UUID</span>
-        <div class="settings-value-wrapper">
-          <div class="settings-value" id="settings-uuid">Loading...</div>
-          <button class="copy-btn" id="copyUuidBtn" title="Copy to clipboard">
-              <i class="fa-solid fa-copy"></i>
-            </button>
+        <div class="menu-items">
+          <button title="GX AI" id="gxaiBtn"><i class="fa-solid fa-robot"></i></button>
+          <button title="Settings" id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
         </div>
       </div>
     </div>
-  </div>
+    <canvas id="home-canvas"></canvas>
 
-  <script>
-    // Pages, (Intentional Comment)
+    <section class="home" id="home-page">
+      <h1 class="main-title"><span class="g-circle">G</span>X VERSE</h1>
+      <h1 class="sub-title main-title" style="font-size: 1rem; position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%)">Welcome to GX VERSE</h1>
+      <div class="search-container">
+        <div class="search-box">
+          <div class="line-driver"></div>
+          <input type="text" id="home-search" autocomplete="off" autofocus autocapitalize="off" autocorrect="off" placeholder="Search gxmes..." spellcheck="false" />
+        </div>
+      </div>
+      <div class="visitors-container">
+        <div class="visitors-stat">
+          <div id="home-live">...</div>
+          <div class="visitors-label">Live Users</div>
+        </div>
+        <div class="visitors-stat">
+          <div id="home-all">...</div>
+          <div class="visitors-label">AllTime Visits</div>
+        </div>
+      </div>
+      <div class="visitors-gradient-bar"></div>
+      <label class="version-label">Ver 0.0.3 BETA</label>
+    </section>
+
+    <section class="gxmes" id="gxmes-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <div class="search-wrapper">
+        <div class="search-box">
+          <div class="line-driver"></div>
+          <input type="text" id="game-search" placeholder="Search gxmes..." autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" />
+        </div>
+      </div>
+
+      <div class="grid" id="game-grid"></div>
+    </section>
+
+    <section class="info" id="info-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+      <iframe id="info-frame" style="width: 100%; height: 100%; border: none"></iframe>
+    </section>
+
+    <section class="soundboard" id="soundboard-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto; position: relative">
+      <iframe id="soundboard-frame" style="width: 100%; height: 100%; border: none"></iframe>
+    </section>
+
+    <section class="proxies" id="proxy-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <h1 id="proxy-page-heading">Pr0xys</h1>
+
+      <div class="proxy-grid" id="proxy-grid"></div>
+    </section>
+
+    <div id="game-overlay" class="game-overlay">
+      <div id="game-frame-container"></div>
+
+      <div class="game-controls">
+        <button id="btn-fullscreen" title="Fullscreen"><i class="fa-solid fa-expand"></i></button>
+        <button id="btn-download" title="Download"><i class="fa-solid fa-download"></i></button>
+        <button id="btn-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div id="proxy-overlay" class="proxy-overlay">
+      <div id="proxy-frame-container"></div>
+      <div class="proxy-launch-container" id="proxy-launch-container" style="display: none">
+        <div class="proxy-launch-title" id="proxy-launch-title"></div>
+        <button class="proxy-launch-btn" id="proxy-launch-btn">
+          <span>Launch</span>
+          <i class="fa-solid fa-external-link-alt"></i>
+        </button>
+      </div>
+
+      <div class="proxy-controls">
+        <button id="btn-proxy-exit" title="Exit"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <section class="gxai" id="gxai-page" style="display: none; width: 100vw; height: 100vh; flex-direction: column; align-items: center; overflow-y: auto">
+      <iframe id="gxai-frame" style="width: 100%; height: 100%; border: none"></iframe>
+    </section>
+
+
+    <!-- Modal Sections (intentional comment)-->
+    <div id="settings-modal" class="settings-modal">
+      <div class="settings-content">
+        <div class="settings-header">
+          <h2 class="settings-title">Settings</h2>
+          <button class="settings-close" id="settingsClose"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="settings-item">
+          <span class="settings-label">User UUID</span>
+          <div class="settings-value-wrapper">
+            <div class="settings-value" id="settings-uuid">Loading...</div>
+            <button class="copy-btn" id="copyUuidBtn" title="Copy to clipboard">
+              <i class="fa-solid fa-copy"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Pages, (Intentional Comment)
       const homePage = document.getElementById("home-page");
       const gxmesPage = document.getElementById("gxmes-page");
       const infoPage = document.getElementById("info-page");
@@ -1826,10 +1806,10 @@
           e.preventDefault();
         }
       });
-  </script>
+    </script>
 
-  <script>
-    const canvas = document.getElementById("home-canvas");
+    <script>
+      const canvas = document.getElementById("home-canvas");
       const ctx = canvas.getContext("2d");
 
       let stars = [];
@@ -1976,10 +1956,10 @@
 
       resize();
       draw();
-  </script>
+    </script>
 
-  <script>
-    const gamesList = [
+    <script>
+      const gamesList = [
         {
           title: "1v1 Lol",
           image: "https://cdn.jsdelivr.net/gh/Kingtian20/search-embeds@images/147.png",
@@ -2072,12 +2052,6 @@
           webgl: true,
         },
         {
-          title: "Space Waves",
-          image: "https://cdn.jsdelivr.net/gh/Kingtian20/search-embeds@images/21.png",
-          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/spacewaves/spacewaves.xml",
-          webgl: true,
-        },
-        {
           title: "Schoolboy Runaway",
           image: "https://cdn.jsdelivr.net/gh/Kingtian20/search-embeds@images/314.png",
           cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/schoolboyrunaway/schoolboyrunaway.xml",
@@ -2150,6 +2124,18 @@
           cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/baseballbros/baseballbros.xml",
           webgl: true,
         },
+        {
+          title: "Space Waves",
+          image: "https://cdn.jsdelivr.net/gh/Kingtian20/search-embeds@images/21.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/spacewaves/spacewaves.xml",
+          webgl: true,
+        },
+        {
+          title: "Moto X3M",
+          image: "https://cdn.jsdelivr.net/gh/Kingtian20/search-embeds@images/21.png",
+          cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/motox3m/motox3m.xml",
+          webgl: false,
+        }
       ];
 
       gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, {numeric: true, sensitivity: "base"}));
@@ -2328,10 +2314,10 @@
         }
       });
       renderGames(gamesList);
-  </script>
+    </script>
 
-  <script>
-    const proxiesList = [
+    <script>
+      const proxiesList = [
         {
           Proxy_name: "Fern",
           proxyimgurl: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/pxy/fern/fern.png",
@@ -2424,9 +2410,9 @@
 
       const proxyGlobalActionBar = document.querySelector(".action-bar");
       renderProxyList(proxiesList);
-  </script>
-  <script>
-    async function loadInfoPage() {
+    </script>
+    <script>
+      async function loadInfoPage() {
         const infoFrame = document.getElementById("info-frame");
         const cdnUrl = "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/staff.html";
 
@@ -2495,10 +2481,10 @@
         const formatted = shortValue % 1 === 0 ? shortValue.toFixed(0) : shortValue.toFixed(1).replace(/\.0$/, "");
         return formatted + suffixes[suffixIndex];
       }
-  </script>
+    </script>
 
-  <script type="module">
-    import {initializeApp} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
+    <script type="module">
+      import {initializeApp} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-app.js";
       import {getDatabase, ref, set, onDisconnect, onValue, runTransaction, get} from "https://www.gstatic.com/firebasejs/12.12.0/firebase-database.js";
 
       const firebaseConfig = {
@@ -2671,7 +2657,6 @@
       } catch (error) {
         showFirebaseError();
       }
-  </script>
-</body>
-
+    </script>
+  </body>
 </html>
