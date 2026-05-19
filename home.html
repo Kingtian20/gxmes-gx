@@ -2134,6 +2134,12 @@
           cdn: "https://cdn.jsdelivr.net/gh/Kingtian20/gxmes-gx@main/spacewaves/spacewaves.xml",
           webgl: true,
         },
+        {
+          title: "They Are Coming",
+          image: "https://raw.githubusercontent.com/Kingtian20/search-embeds/images/130.png",
+          cdn: "https://raw.githubusercontent.com/Kingtian20/gxmes-gx/main/theyarecoming/theyarecoming.xml",
+          webgl: true,
+        },
       ];
 
       gamesList.sort((a, b) => a.title.localeCompare(b.title, undefined, {numeric: true, sensitivity: "base"}));
@@ -2250,13 +2256,10 @@
           try {
             const code = await fetchText(game.cdn);
             frameContainer.innerHTML = "";
-            const iframe = document.createElement("iframe");
-            iframe.className = "newtab-iframe";
-            iframe.setAttribute("allow", "autoplay; fullscreen; keyboard-events; gamepad");
-            iframe.allowFullscreen = true;
-            const blob = new Blob([code], {type: "text/html"});
-            iframe.src = URL.createObjectURL(blob);
-            frameContainer.appendChild(iframe);
+            const div = document.createElement("div");
+            div.className = "newtab-iframe";
+            div.innerHTML = code;
+            frameContainer.appendChild(div);
           } catch (error) {
             console.error("Load error:", error);
           }
