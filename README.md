@@ -9,4 +9,4 @@ I AM NOT THE CREATOR, NOR THE OWNER OF ANY OF THESE FILES. These are all made by
 
 Also pls help im crashing out :DDDDDDDDDDD
 
-We also just launched GX Craft. And eagler craft server which you can join today and play with your friends. All credits to eagler.host for making this possible. They are LEGENDS
+We also just launched GX Craft. And eagler craft server which you can join today and play with your friends. All credits to eagler.host for making this possible. They are LEGENDS, and you should all use their serivces because they are actually quite fast and reliable.
