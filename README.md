@@ -8,3 +8,5 @@ The site is currently unavailable but were working on it to completely rework it
 I AM NOT THE CREATOR, NOR THE OWNER OF ANY OF THESE FILES. These are all made by different users and are open source, they are all made by various passionate developers such as genizy and bubbls. Most of these files can be found in the Ulimate Game Stash, a google doc filled with hundreds, if not thousands of games all recreated by devs with extreme precision.
 
 Also pls help im crashing out :DDDDDDDDDDD
+
+We also just launched GX Craft. And eagler craft server which you can join today and play with your friends. All credits to eagler.host for making this possible. They are LEGENDS
